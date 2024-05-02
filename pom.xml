@@ -14,4 +14,31 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.gridgo</groupId>
+            <artifactId>gridgo-core</artifactId>
+            <version>0.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.gridgo</groupId>
+            <artifactId>gridgo-vertx-http</artifactId>
+            <version>0.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>3.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.7</version>
+        </dependency>
+    </dependencies>
 </project>
