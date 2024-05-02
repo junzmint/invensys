@@ -16,7 +16,7 @@ import java.util.Properties;
 public class Migration {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseInitializer.class);
 
-    public static void migration() throws IOException {
+    public static void migrate() throws IOException {
         // Database config
         Properties appProps = new Properties();
         appProps.load(new FileInputStream("config/application.properties"));
@@ -45,6 +45,6 @@ public class Migration {
     }
 
     public static void main(String[] args) throws IOException {
-        Migration.migration();
+        Migration.migrate();
     }
 }
