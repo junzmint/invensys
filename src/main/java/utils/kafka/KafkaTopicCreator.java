@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class KafkaTopicCreator {
     private static final Logger logger = LoggerFactory.getLogger(KafkaTopicCreator.class);
@@ -32,8 +33,6 @@ public class KafkaTopicCreator {
 
         // Create Kafka AdminClient
         try (AdminClient adminClient = AdminClient.create(props)) {
-
-            // Tên topic, số partition và replication factor
             int numPartitions = partitions;
             short replicationFactor = replications;
 
@@ -42,8 +41,9 @@ public class KafkaTopicCreator {
                 // If existed, then delete
                 adminClient.deleteTopics(Collections.singletonList(topicName)).all().get();
                 logger.info("Topic '{}' deleted successfully", topicName);
+                // Wait 5 sec to delete
+                TimeUnit.SECONDS.sleep(5);
             }
-
             // Create new topic
             NewTopic newTopic = new NewTopic(topicName, numPartitions, replicationFactor);
             adminClient.createTopics(Collections.singletonList(newTopic)).all().get();
