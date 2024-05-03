@@ -32,6 +32,7 @@ public class DatabaseMigration {
         DatabaseCreator dbCreator = new DatabaseCreator(mySqlConnector.getConnector());
         String status = dbCreator.createDatabase(dbName);
         LoggerUtil.logInfo(status);
+        mySqlConnector.close();
 
         // Create tables
         List<String> createTableList = new ArrayList<>();
@@ -43,6 +44,7 @@ public class DatabaseMigration {
 
         status = tableCreator.createTables(createTableList);
         LoggerUtil.logInfo(status);
+        databaseConnector.close();
     }
 
     public static void main(String[] args) throws IOException, SQLException {

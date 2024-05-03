@@ -15,4 +15,8 @@ public class DatabaseConnector {
     public Connection getConnector() {
         return connector;
     }
+
+    public void close() throws SQLException {
+        connector.close();
+    }
 }
