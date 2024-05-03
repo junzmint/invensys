@@ -1,4 +1,4 @@
-package persistence.database;
+package database;
 
 import java.io.FileInputStream;
 import java.io.IOException;
