@@ -1,8 +1,8 @@
 package utils.database.migration;
 
-import persistence.database.DatabaseConfigLoader;
-import persistence.database.DatabaseConnector;
-import persistence.database.MySqlConnector;
+import database.DatabaseConfigLoader;
+import database.DatabaseConnector;
+import database.MySqlConnector;
 import utils.database.migration.creator.database.DatabaseCreator;
 import utils.database.migration.creator.table.TableCreator;
 import utils.database.migration.migration.CreateInventoryTable_194602052024;

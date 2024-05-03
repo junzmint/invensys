@@ -1,7 +1,7 @@
 package utils.database.seeder;
 
-import persistence.database.DatabaseConfigLoader;
-import persistence.database.DatabaseConnector;
+import database.DatabaseConfigLoader;
+import database.DatabaseConnector;
 import utils.logging.LoggerUtil;
 
 import java.io.IOException;
