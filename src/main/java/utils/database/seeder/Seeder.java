@@ -2,7 +2,7 @@ package utils.database.seeder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.database.migration.Migration;
+import utils.database.migration.DatabaseMigration;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -100,7 +100,7 @@ public class Seeder {
             // If not, then create
             if (!databaseExists) {
                 // Nếu cơ sở dữ liệu chưa tồn tại, chạy Migration.migrater
-                Migration.migrate();
+                DatabaseMigration.migrate();
             }
             conn.close();
 

@@ -1,4 +1,4 @@
-package utils.database.migration.migrations;
+package utils.database.migration.migration;
 
 public class CreateOffsetTable_193402052024 {
     private static final String stmt = "CREATE TABLE IF NOT EXISTS Offset (" +
