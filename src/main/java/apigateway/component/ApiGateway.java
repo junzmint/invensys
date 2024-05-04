@@ -1,6 +1,5 @@
 package apigateway.component;
 
-import apigateway.component.http.HttpConstants;
 import apigateway.component.http.HttpGateway;
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.impl.DefaultGridgoContextBuilder;
@@ -8,9 +7,9 @@ import io.gridgo.framework.impl.NonameComponentLifecycle;
 import utils.logging.LoggerUtil;
 
 public class ApiGateway extends NonameComponentLifecycle {
-    private static final String HTTP_GATEWAY = HttpConstants.getHttpGateway();
+    private static final String HTTP_GATEWAY = ApiGatewayConstants.getHttpGateway();
 
-    private static final String VERTX_URL = HttpConstants.getVertxUrl();
+    private static final String VERTX_URL = ApiGatewayConstants.getVertxUrl();
 
     private static final String API_GATEWAY_NAME = "InvensysApiGateway";
 
