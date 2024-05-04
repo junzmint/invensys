@@ -14,13 +14,14 @@ public class KafkaConsumerConfig {
     private final Properties kafkaProps;
     private final Integer partition;
 
-    public KafkaConsumerConfig(String broker, String keyDeserializerClass, String valueDeserializerClass, String autoOffsetReset, Boolean enableAutoCommit, String topic, Integer partition) {
+    public KafkaConsumerConfig(String broker, String keyDeserializerClass, String valueDeserializerClass, String autoOffsetReset, Boolean enableAutoCommit, String groupId, String topic, Integer partition) {
         var props = new Properties();
         addPropertyIfNotNull(props, ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, broker);
         addPropertyIfNotNull(props, ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, keyDeserializerClass);
         addPropertyIfNotNull(props, ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, valueDeserializerClass);
         addPropertyIfNotNull(props, ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
         addPropertyIfNotNull(props, ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, enableAutoCommit);
+        addPropertyIfNotNull(props, ConsumerConfig.GROUP_ID_CONFIG, groupId);
         this.kafkaProps = props;
         this.topic = topic;
         this.partition = partition;

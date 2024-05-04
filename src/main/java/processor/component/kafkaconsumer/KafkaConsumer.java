@@ -7,7 +7,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.TopicPartition;
-import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.header.Header;
 import utils.logging.LoggerUtil;
 
@@ -30,15 +29,15 @@ public class KafkaConsumer {
 
         populateCommonHeaders(headers, record);
 
-        headers.putAny("kafka.OFFSET", record.offset());
+        headers.putAny(KafkaConsumerConstants.OFFSET, record.offset());
         if (record.key() != null) {
-            headers.putAny("kafka.KEY", record.key());
+            headers.putAny(KafkaConsumerConstants.KEY, record.key());
         }
 
         var isValue = false;
         for (Header header : record.headers()) {
             headers.putAny(header.key(), header.value());
-            if ("kafka.IS_VALUE".equals(header.key()))
+            if (KafkaConsumerConstants.IS_VALUE.equals(header.key()))
                 isValue = true;
         }
 
@@ -46,10 +45,10 @@ public class KafkaConsumer {
         return Message.ofAny(headers, body);
     }
 
-    private void populateCommonHeaders(BObject headers, ConsumerRecord<Object, Object> lastRecord) {
-        headers.putAny("kafka.PARTITION", lastRecord.partition());
-        headers.putAny("kafka.TOPIC", lastRecord.topic());
-        headers.putAny("kafka.TIMESTAMP", lastRecord.timestamp());
+    private void populateCommonHeaders(BObject headers, ConsumerRecord<Object, Object> record) {
+        headers.putAny(KafkaConsumerConstants.PARTITION, record.partition());
+        headers.putAny(KafkaConsumerConstants.TOPIC, record.topic());
+        headers.putAny(KafkaConsumerConstants.TIMESTAMP, record.timestamp());
     }
 
     private BElement deserializeWithFormat(ConsumerRecord<Object, Object> record) {
@@ -63,14 +62,11 @@ public class KafkaConsumer {
         return BElement.ofBytes(responseBody);
     }
 
-
     public void run(Long offSet, Duration pollDuration) {
         try {
             if (!Thread.currentThread().isInterrupted()) {
                 doRun(offSet, pollDuration);
             }
-        } catch (WakeupException e) {
-            LoggerUtil.logError("WakeupException caught on consumer thread", e);
         } catch (KafkaException e) {
             LoggerUtil.logError("KafkaException caught on consumer thread", e);
         } catch (Exception e) {
@@ -92,6 +88,7 @@ public class KafkaConsumer {
             for (ConsumerRecord<Object, Object> record : records) {
                 Message message = buildMessage(record);
                 System.out.println(message.headers().toJson());
+                System.out.println(message.body().toString());
             }
         }
     }
