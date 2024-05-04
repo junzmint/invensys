@@ -34,5 +34,9 @@ public class ApiGatewayConstants {
     public static String getKafkaTopic() {
         return ApiGatewayProps.getProperty("KAFKA_TOPIC");
     }
+
+    public static String getSerializerClassConfig() {
+        return ApiGatewayProps.getProperty("SERIALIZER_CLASS_CONFIG");
+    }
 }
 

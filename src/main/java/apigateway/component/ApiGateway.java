@@ -6,7 +6,6 @@ import apigateway.component.kafkaproducer.KafkaProducerConfig;
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.impl.DefaultGridgoContextBuilder;
 import io.gridgo.framework.impl.NonameComponentLifecycle;
-import org.apache.kafka.common.serialization.StringSerializer;
 import utils.logging.LoggerUtil;
 
 public class ApiGateway extends NonameComponentLifecycle {
@@ -18,28 +17,24 @@ public class ApiGateway extends NonameComponentLifecycle {
 
     private final GridgoContext appContext;
 
-    private final KafkaProducerConfig kafkaProducerConfig = new KafkaProducerConfig(
-            ApiGatewayConstants.getKafkaBroker(),
-            StringSerializer.class.getName(),
-            StringSerializer.class.getName(),
-            "1",
-            ApiGatewayConstants.getKafkaTopic(),
-            0);
-
-    private final HttpGateway httpGateway;
-
-    private final KafkaProducer kafkaProducer;
-
     public ApiGateway() {
         this.appContext = new DefaultGridgoContextBuilder().setName(API_GATEWAY_NAME).setExceptionHandler(this::onException).build();
 
-        this.kafkaProducer = new KafkaProducer(kafkaProducerConfig);
+        KafkaProducerConfig kafkaProducerConfig = new KafkaProducerConfig(
+                ApiGatewayConstants.getKafkaBroker(),
+                ApiGatewayConstants.getSerializerClassConfig(),
+                ApiGatewayConstants.getSerializerClassConfig(),
+                "all",
+                ApiGatewayConstants.getKafkaTopic(),
+                0);
 
-        this.httpGateway = new HttpGateway(HTTP_GATEWAY, this.kafkaProducer);
+        KafkaProducer kafkaProducer = new KafkaProducer(kafkaProducerConfig);
+
+        HttpGateway httpGateway = new HttpGateway(HTTP_GATEWAY, kafkaProducer);
 
         this.appContext.openGateway(HTTP_GATEWAY).attachConnector(VERTX_URL);
         // handle http request
-        this.appContext.attachComponent(this.httpGateway);
+        this.appContext.attachComponent(httpGateway);
     }
 
     private void onException(Throwable ex) {
