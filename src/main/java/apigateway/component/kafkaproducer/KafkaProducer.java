@@ -11,12 +11,12 @@ import org.joo.promise4j.Deferred;
 public class KafkaProducer {
     private final String topic;
     private final Integer partition;
-    private final org.apache.kafka.clients.producer.KafkaProducer<Object, Object> producer;
+    private final org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer;
 
     public KafkaProducer(KafkaProducerConfig config) {
         this.topic = config.getTopic();
         this.partition = config.getPartition();
-        this.producer = new org.apache.kafka.clients.producer.KafkaProducer<>(config.getKafkaProps());
+        this.kafkaProducer = new org.apache.kafka.clients.producer.KafkaProducer<>(config.getKafkaProps());
     }
 
     private void ack(Deferred<Message, Exception> deferred, RecordMetadata metadata, Exception exception) {
@@ -67,14 +67,14 @@ public class KafkaProducer {
 
         var record = buildProducerRecord(this.topic, this.partition, message);
         if (deferred == null) {
-            this.producer.send(record, null);
+            this.kafkaProducer.send(record, null);
         } else {
-            this.producer.send(record, (metadata, ex) -> ack(deferred, metadata, ex));
+            this.kafkaProducer.send(record, (metadata, ex) -> ack(deferred, metadata, ex));
         }
     }
 
     protected void onStop() {
-        if (this.producer != null)
-            this.producer.close();
+        if (this.kafkaProducer != null)
+            this.kafkaProducer.close();
     }
 }
