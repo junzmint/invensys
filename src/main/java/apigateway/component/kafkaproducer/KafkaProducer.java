@@ -27,30 +27,12 @@ public class KafkaProducer {
     private Message buildAckMessage(RecordMetadata metadata) {
         if (metadata == null)
             return null;
-        var headers = BObject.ofEmpty().setAny("kafka.IS_ACK_MSG", "true")
-                .setAny("kafka.TIMESTAMP", metadata.timestamp())
-                .setAny("kafka.OFFSET", metadata.offset())
-                .setAny("kafka.PARTITION", metadata.partition())
-                .setAny("kafka.TOPIC", metadata.topic());
+        var headers = BObject.ofEmpty().setAny(KafkaProducerConstants.IS_ACK_MSG, true)
+                .setAny(KafkaProducerConstants.TIMESTAMP, metadata.timestamp())
+                .setAny(KafkaProducerConstants.OFFSET, metadata.offset())
+                .setAny(KafkaProducerConstants.PARTITION, metadata.partition())
+                .setAny(KafkaProducerConstants.TOPIC, metadata.topic());
         return Message.ofAny(headers, BValue.ofEmpty());
-    }
-
-    private ProducerRecord<Object, Object> buildProducerRecord(String topic, Integer partition, Message message) {
-        var headers = message.headers();
-
-        var body = message.body();
-        var record = new ProducerRecord<Object, Object>(topic, partition, "key", convert(body));
-        if (body != null && body.isValue()) {
-            record.headers().add("kafka.IS_VALUE", new byte[]{1});
-        }
-
-        for (var header : headers.entrySet()) {
-            if (header.getValue().isValue()) {
-                record.headers().add(header.getKey(), header.getValue().asValue().toBytes());
-            }
-        }
-
-        return record;
     }
 
     private Object convert(BElement body) {
@@ -63,9 +45,25 @@ public class KafkaProducer {
         return body.toString();
     }
 
-    public void send(Message message, Deferred<Message, Exception> deferred) {
+    private ProducerRecord<Object, Object> buildProducerRecord(String topic, Integer partition, String key, Message message) {
+        var headers = message.headers();
+        var body = message.body();
 
-        var record = buildProducerRecord(this.topic, this.partition, message);
+        var record = new ProducerRecord<Object, Object>(topic, partition, key, convert(body));
+
+        if (body != null) {
+            record.headers().add(KafkaProducerConstants.IS_VALUE, new byte[]{1});
+        }
+        for (var header : headers.entrySet()) {
+            if (header.getValue().isValue()) {
+                record.headers().add(header.getKey(), header.getValue().asValue().toBytes());
+            }
+        }
+        return record;
+    }
+
+    public void send(Message message, Deferred<Message, Exception> deferred, String key) {
+        var record = buildProducerRecord(this.topic, this.partition, key, message);
         if (deferred == null) {
             this.kafkaProducer.send(record, null);
         } else {
@@ -73,7 +71,7 @@ public class KafkaProducer {
         }
     }
 
-    protected void onStop() {
+    protected void onClose() {
         if (this.kafkaProducer != null)
             this.kafkaProducer.close();
     }

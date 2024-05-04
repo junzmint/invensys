@@ -17,7 +17,11 @@ public class HttpGateway extends HttpGatewayBaseComponent {
         var msg = rc.getMessage();
         var deferred = rc.getDeferred();
 
-        kafkaProducer.send(msg, deferred);
+        System.out.println(msg.body().toString());
+        // Generate Kafka key
+        String key = "Hello, world!!";
+
+        kafkaProducer.send(msg, deferred, key);
         // deferred.resolve(Message.ofAny(msg.body()));
     }
 }
