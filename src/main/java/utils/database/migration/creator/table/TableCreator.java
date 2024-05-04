@@ -43,7 +43,7 @@ public class TableCreator {
                     result = "Failed to close connection: " + se.getMessage();
                 }
             }
-            return result;
         }
+        return result;
     }
 }

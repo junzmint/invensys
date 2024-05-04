@@ -33,8 +33,6 @@ public class KafkaTopicCreator {
 
         // Create Kafka AdminClient
         try (AdminClient adminClient = AdminClient.create(props)) {
-            int numPartitions = partitions;
-            short replicationFactor = replications;
 
             // Check whether if topic is existed
             if (adminClient.listTopics().names().get().contains(topicName)) {
@@ -45,9 +43,9 @@ public class KafkaTopicCreator {
                 TimeUnit.SECONDS.sleep(5);
             }
             // Create new topic
-            NewTopic newTopic = new NewTopic(topicName, numPartitions, replicationFactor);
+            NewTopic newTopic = new NewTopic(topicName, partitions, replications);
             adminClient.createTopics(Collections.singletonList(newTopic)).all().get();
-            logger.info("Topic '{}' created successfully with {} partition(s) and replication factor {}", topicName, numPartitions, replicationFactor);
+            logger.info("Topic '{}' created successfully with {} partition(s) and replication factor {}", topicName, partitions, replications);
         } catch (InterruptedException | ExecutionException e) {
             logger.error("Error creating Kafka topic: {}", e.getMessage());
         }

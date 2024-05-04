@@ -38,8 +38,8 @@ public class DatabaseCreator {
                     result = "Failed to close connection: " + se.getMessage();
                 }
             }
-            return result;
         }
+        return result;
     }
 
     private boolean databaseExists(Connection connector, String databaseName) throws SQLException {
