@@ -6,6 +6,6 @@ import processor.component.disruptor.event.inventory.InventoryEvent;
 public class InventoryEventHandler implements EventHandler<InventoryEvent> {
     @Override
     public void onEvent(InventoryEvent event, long sequence, boolean endOfBatch) {
-        System.out.println(event.getOffSet());
+        System.out.println(event.getMessage().body().toString());
     }
 }

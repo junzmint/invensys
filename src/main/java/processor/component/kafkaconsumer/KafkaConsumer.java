@@ -9,6 +9,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.header.Header;
+import processor.component.disruptor.producer.InventoryEventProducer;
 import utils.logging.LoggerUtil;
 
 import java.time.Duration;
@@ -19,10 +20,13 @@ public class KafkaConsumer {
     private final Integer partition;
     private final org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumer;
 
-    public KafkaConsumer(final @NonNull KafkaConsumerConfig config) {
+    private final InventoryEventProducer inventoryEventProducer;
+
+    public KafkaConsumer(final @NonNull KafkaConsumerConfig config, InventoryEventProducer inventoryEventProducer) {
         this.topic = config.getTopic();
         this.partition = config.getPartition();
         this.kafkaConsumer = new org.apache.kafka.clients.consumer.KafkaConsumer<>(config.getKafkaProps());
+        this.inventoryEventProducer = inventoryEventProducer;
     }
 
     // build message from consumer record
@@ -76,8 +80,7 @@ public class KafkaConsumer {
             ConsumerRecords<Object, Object> records = this.kafkaConsumer.poll(pollDuration);
             for (ConsumerRecord<Object, Object> record : records) {
                 Message message = buildMessage(record);
-                System.out.println(message.headers().toJson());
-                System.out.println(message.body().toString());
+                this.inventoryEventProducer.onData(record.offset(), message);
             }
         }
     }

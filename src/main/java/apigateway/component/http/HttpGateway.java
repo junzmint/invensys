@@ -5,12 +5,9 @@ import io.gridgo.bean.BObject;
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.support.RoutingContext;
 import io.gridgo.framework.support.Message;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import utils.logging.LoggerUtil;
 
 public class HttpGateway extends HttpGatewayBaseComponent {
-    private static final Logger log = LoggerFactory.getLogger(HttpGateway.class);
     private final KafkaProducer kafkaProducer;
 
     public HttpGateway(String gatewayName, KafkaProducer kafkaProducer) {
@@ -62,13 +59,13 @@ public class HttpGateway extends HttpGatewayBaseComponent {
     }
 
     protected void processRequest(RoutingContext rc, GridgoContext gc) {
-        var msg = rc.getMessage();
+        var message = rc.getMessage();
         var deferred = rc.getDeferred();
 
-        if (isValidRequest(msg)) {
+        if (isValidRequest(message)) {
             // Generate Kafka key
             String key = "Hello, world!!";
-            kafkaProducer.produce(msg, deferred, key);
+            kafkaProducer.produce(message, deferred, key);
         } else {
             deferred.resolve(Message.ofAny("Wrong Json format"));
         }
