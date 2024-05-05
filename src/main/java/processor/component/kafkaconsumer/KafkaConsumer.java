@@ -3,6 +3,7 @@ package processor.component.kafkaconsumer;
 import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
 import io.gridgo.framework.support.Message;
+import lombok.NonNull;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.KafkaException;
@@ -18,12 +19,13 @@ public class KafkaConsumer {
     private final Integer partition;
     private final org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumer;
 
-    public KafkaConsumer(KafkaConsumerConfig config) {
+    public KafkaConsumer(final @NonNull KafkaConsumerConfig config) {
         this.topic = config.getTopic();
         this.partition = config.getPartition();
         this.kafkaConsumer = new org.apache.kafka.clients.consumer.KafkaConsumer<>(config.getKafkaProps());
     }
 
+    // build message from consumer record
     private Message buildMessage(ConsumerRecord<Object, Object> record) {
         var headers = BObject.ofEmpty();
 
@@ -62,21 +64,8 @@ public class KafkaConsumer {
         return BElement.ofBytes(responseBody);
     }
 
-    public void run(Long offSet, Duration pollDuration) {
-        try {
-            if (!Thread.currentThread().isInterrupted()) {
-                doRun(offSet, pollDuration);
-            }
-        } catch (KafkaException e) {
-            LoggerUtil.logError("KafkaException caught on consumer thread", e);
-        } catch (Exception e) {
-            LoggerUtil.logError("Exception caught on consumer thread", e);
-        } finally {
-            onClose();
-        }
-    }
-
-    private void doRun(Long offSet, Duration pollDuration) {
+    // consumer poll message
+    private void onRun(Long offSet, Duration pollDuration) {
         // assign topic
         TopicPartition partitionToReadFrom = new TopicPartition(this.topic, this.partition);
         this.kafkaConsumer.assign(List.of(partitionToReadFrom));
@@ -90,6 +79,20 @@ public class KafkaConsumer {
                 System.out.println(message.headers().toJson());
                 System.out.println(message.body().toString());
             }
+        }
+    }
+
+    public void run(Long offSet, Duration pollDuration) {
+        try {
+            if (!Thread.currentThread().isInterrupted()) {
+                onRun(offSet, pollDuration);
+            }
+        } catch (KafkaException e) {
+            LoggerUtil.logError("KafkaException caught on consumer thread", e);
+        } catch (Exception e) {
+            LoggerUtil.logError("Exception caught on consumer thread", e);
+        } finally {
+            onClose();
         }
     }
 

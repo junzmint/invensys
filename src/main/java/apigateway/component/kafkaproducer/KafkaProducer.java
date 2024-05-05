@@ -4,27 +4,34 @@ import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
 import io.gridgo.framework.support.Message;
+import lombok.NonNull;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.joo.promise4j.Deferred;
+import utils.logging.LoggerUtil;
 
 public class KafkaProducer {
     private final String topic;
     private final Integer partition;
     private final org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer;
 
-    public KafkaProducer(KafkaProducerConfig config) {
+    public KafkaProducer(final @NonNull KafkaProducerConfig config) {
         this.topic = config.getTopic();
         this.partition = config.getPartition();
         this.kafkaProducer = new org.apache.kafka.clients.producer.KafkaProducer<>(config.getKafkaProps());
     }
 
-    private void ack(Deferred<Message, Exception> deferred, RecordMetadata metadata, Exception exception) {
-        var msg = buildAckMessage(metadata);
-        deferred.resolve(msg);
+    // call back func for produce
+    private void onProduce(Deferred<Message, Exception> deferred, RecordMetadata metadata, Exception exception) {
+        if (exception == null) {
+            LoggerUtil.logInfo("Kafka producer send: " + buildOnSendMessage(metadata).headers().toString());
+        } else {
+            LoggerUtil.logError("Kafka producer error: ", exception);
+            deferred.resolve(Message.ofAny(exception.getMessage()));
+        }
     }
 
-    private Message buildAckMessage(RecordMetadata metadata) {
+    private Message buildOnSendMessage(RecordMetadata metadata) {
         if (metadata == null)
             return null;
         var headers = BObject.ofEmpty().setAny(KafkaProducerConstants.IS_ACK_MSG, true)
@@ -45,6 +52,7 @@ public class KafkaProducer {
         return body.toString();
     }
 
+    // create record to produce
     private ProducerRecord<Object, Object> buildProducerRecord(String topic, Integer partition, String key, Message message) {
         var headers = message.headers();
         var body = message.body();
@@ -62,13 +70,9 @@ public class KafkaProducer {
         return record;
     }
 
-    public void send(Message message, Deferred<Message, Exception> deferred, String key) {
+    public void produce(Message message, Deferred<Message, Exception> deferred, String key) {
         var record = buildProducerRecord(this.topic, this.partition, key, message);
-        if (deferred == null) {
-            this.kafkaProducer.send(record, null);
-        } else {
-            this.kafkaProducer.send(record, (metadata, ex) -> ack(deferred, metadata, ex));
-        }
+        this.kafkaProducer.send(record, (metadata, ex) -> onProduce(deferred, metadata, ex));
     }
 
     public void onClose() {

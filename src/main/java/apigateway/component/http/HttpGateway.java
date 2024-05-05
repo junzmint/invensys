@@ -21,7 +21,7 @@ public class HttpGateway extends HttpGatewayBaseComponent {
         // Generate Kafka key
         String key = "Hello, world!!";
 
-        kafkaProducer.send(msg, deferred, key);
+        kafkaProducer.produce(msg, deferred, key);
         // deferred.resolve(Message.ofAny(msg.body()));
     }
 }
