@@ -28,7 +28,7 @@ abstract class HttpGatewayBaseComponent extends NonameComponentLifecycle impleme
 
     @Override
     protected void onStop() {
-        // do nothing...
+        this.context.stop();
     }
 
     protected Optional<GatewaySubscription> getGateway() {

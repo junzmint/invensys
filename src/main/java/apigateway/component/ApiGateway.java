@@ -14,8 +14,9 @@ public class ApiGateway extends NonameComponentLifecycle {
     private static final String VERTX_URL = ApiGatewayConstants.getVertxUrl();
 
     private static final String API_GATEWAY_NAME = "InvensysApiGateway";
-
     private final GridgoContext appContext;
+    private final KafkaProducer kafkaProducer;
+    private final HttpGateway httpGateway;
 
     public ApiGateway() {
         this.appContext = new DefaultGridgoContextBuilder().setName(API_GATEWAY_NAME).setExceptionHandler(this::onException).build();
@@ -28,9 +29,9 @@ public class ApiGateway extends NonameComponentLifecycle {
                 ApiGatewayConstants.getKafkaTopic(),
                 0);
 
-        KafkaProducer kafkaProducer = new KafkaProducer(kafkaProducerConfig);
+        this.kafkaProducer = new KafkaProducer(kafkaProducerConfig);
 
-        HttpGateway httpGateway = new HttpGateway(HTTP_GATEWAY, kafkaProducer);
+        this.httpGateway = new HttpGateway(HTTP_GATEWAY, kafkaProducer);
 
         this.appContext.openGateway(HTTP_GATEWAY).attachConnector(VERTX_URL);
         // handle http request
@@ -48,6 +49,8 @@ public class ApiGateway extends NonameComponentLifecycle {
 
     @Override
     protected void onStop() {
+        this.kafkaProducer.onClose();
+        this.httpGateway.stop();
         this.appContext.stop();
     }
 }

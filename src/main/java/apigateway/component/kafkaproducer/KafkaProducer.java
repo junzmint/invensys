@@ -71,7 +71,7 @@ public class KafkaProducer {
         }
     }
 
-    protected void onClose() {
+    public void onClose() {
         if (this.kafkaProducer != null)
             this.kafkaProducer.close();
     }
