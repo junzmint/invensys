@@ -48,8 +48,9 @@ public class Seeder {
         List<Object[]> data = new ArrayList<>();
         for (int sku = 0; sku < 1000; sku++) {
             UUID uuid = UUID.randomUUID();
+            String skuId = uuid.toString().substring(0, 4);
             long randomNumber = random.nextInt(100) + 1;
-            data.add(new Object[]{uuid.toString(), randomNumber});
+            data.add(new Object[]{skuId, randomNumber});
         }
 
         String status = insertData(connector, "Inventory", columnNames, data);
