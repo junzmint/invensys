@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class DatabaseMigration {
 
-    public static void migrate() throws IOException, SQLException {
+    public static void migrate() {
         DatabaseConnector databaseConnector = new DatabaseConnector(
                 DatabaseConstants.getDatabaseConnnection(),
                 DatabaseConstants.getDatabaseHost(),
@@ -29,7 +29,7 @@ public class DatabaseMigration {
         // Create tables
         Connection databaseConnection = databaseConnector.databaseConnect();
         DatabaseQueryExecutor databaseQueryExecutor = new DatabaseQueryExecutor(databaseConnection);
-        
+
         databaseQueryExecutor.createTable(CreateInventoryTable_194602052024.getStatement(), "Inventory");
         databaseQueryExecutor.createTable(CreateOffsetTable_193402052024.getStatement(), "Offset");
         databaseQueryExecutor.close();

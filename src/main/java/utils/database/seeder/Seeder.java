@@ -19,7 +19,7 @@ public class Seeder {
         Seeder.seed();
     }
 
-    public static void seed() throws IOException, SQLException {
+    public static void seed() {
         DatabaseConnector databaseConnector = new DatabaseConnector(
                 DatabaseConstants.getDatabaseConnnection(),
                 DatabaseConstants.getDatabaseHost(),
