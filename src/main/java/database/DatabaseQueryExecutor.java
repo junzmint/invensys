@@ -56,16 +56,19 @@ public class DatabaseQueryExecutor {
 
     // Insert Offset table
     public void insertOffsetTable(String id, Long offset) {
-        String SQL = "INSERT INTO Offset(id, offset) VALUES('" + id + "', " + offset + ")";
+        String SQL = "INSERT INTO Offset(id, offset) VALUES(?, ?)";
         try {
-            Statement statement = this.connection.createStatement();
-            statement.executeUpdate(SQL);
+            PreparedStatement statement = this.connection.prepareStatement(SQL);
+            statement.setString(1, id);
+            statement.setLong(2, offset);
+            statement.executeUpdate();
             statement.close();
             LoggerUtil.logInfo("Insert success");
         } catch (SQLException e) {
             LoggerUtil.logError("SQL exception:", e);
         }
     }
+
 
     // Insert Inventory table batch
     public void insertInventoryTable(Map<String, Long> inventoryBatch) {
@@ -87,10 +90,12 @@ public class DatabaseQueryExecutor {
 
     // Update Offset table
     public void updateOffsetTable(String id, Long offset) {
-        String SQL = "UPDATE Offset SET offset = " + offset + " WHERE id = '" + id + "'";
+        String SQL = "UPDATE Offset SET offset = ? WHERE id = ?";
         try {
-            Statement statement = this.connection.createStatement();
-            statement.executeUpdate(SQL);
+            PreparedStatement statement = this.connection.prepareStatement(SQL);
+            statement.setLong(1, offset);
+            statement.setString(2, id);
+            statement.executeUpdate();
             statement.close();
             LoggerUtil.logInfo("Update success");
         } catch (SQLException e) {
@@ -136,10 +141,11 @@ public class DatabaseQueryExecutor {
 
     // Get MaxOffset
     public Long getMaxOffset(String id) {
-        String SQL = "SELECT offset FROM Offset WHERE id = " + id;
+        String SQL = "SELECT offset FROM Offset WHERE id = ?";
         try {
-            Statement statement = this.connection.createStatement();
-            ResultSet result = statement.executeQuery(SQL);
+            PreparedStatement statement = this.connection.prepareStatement(SQL);
+            statement.setString(1, id);
+            ResultSet result = statement.executeQuery();
             while (result.next()) {
                 return result.getLong("offset");
             }
@@ -150,12 +156,14 @@ public class DatabaseQueryExecutor {
         return null;
     }
 
+
     // Get quantity of a sku
     public Long getSkuQuantity(String skuId) {
-        String SQL = "SELECT quantity FROM Inventory WHERE sku_id = " + skuId;
+        String SQL = "SELECT quantity FROM Inventory WHERE sku_id = ?";
         try {
-            Statement statement = this.connection.createStatement();
-            ResultSet result = statement.executeQuery(SQL);
+            PreparedStatement statement = this.connection.prepareStatement(SQL);
+            statement.setString(1, skuId);
+            ResultSet result = statement.executeQuery();
             while (result.next()) {
                 return result.getLong("quantity");
             }
@@ -165,6 +173,7 @@ public class DatabaseQueryExecutor {
         LoggerUtil.logError("Can't get " + skuId + " quantity");
         return null;
     }
+
 
     // Get quantity of skus to init load cache
     public Map<String, Long> getInventoryRecords(Long numberOfRecords) {
