@@ -38,5 +38,9 @@ public class ApiGatewayConstants {
     public static String getSerializerClassConfig() {
         return ApiGatewayProps.getProperty("SERIALIZER_CLASS_CONFIG");
     }
+
+    public static String getZMQReplyAddress() {
+        return ApiGatewayProps.getProperty("REPLY_TO");
+    }
 }
 
