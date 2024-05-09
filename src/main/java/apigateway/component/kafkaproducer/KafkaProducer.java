@@ -24,7 +24,9 @@ public class KafkaProducer {
     // call back func for produce
     private void onProduce(Deferred<Message, Exception> deferred, RecordMetadata metadata, Exception exception) {
         if (exception == null) {
-            LoggerUtil.logInfo("Kafka producer send: " + buildOnSendMessage(metadata).headers().toString());
+            LoggerUtil.logInfo("Kafka producer sent");
+            // LoggerUtil.logInfo("Kafka producer sent: " + buildOnSendMessage(metadata).headers().toString());
+            // deferred.resolve(buildOnSendMessage(metadata));
         } else {
             LoggerUtil.logError("Kafka producer error: ", exception);
             deferred.resolve(Message.ofAny(exception.getMessage()));
@@ -49,7 +51,7 @@ public class KafkaProducer {
         if (body.isValue()) {
             return body.asValue().getData();
         }
-        return body.toString();
+        return body.toJson();
     }
 
     // create record to produce
@@ -72,7 +74,11 @@ public class KafkaProducer {
 
     public void produce(Message message, Deferred<Message, Exception> deferred, String key) {
         var record = buildProducerRecord(this.topic, this.partition, key, message);
-        this.kafkaProducer.send(record, (metadata, ex) -> onProduce(deferred, metadata, ex));
+        if (record.value() == null) {
+            deferred.resolve(Message.ofAny("Body null value"));
+        } else {
+            this.kafkaProducer.send(record, (metadata, ex) -> onProduce(deferred, metadata, ex));
+        }
     }
 
     public void onClose() {

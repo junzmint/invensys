@@ -3,18 +3,18 @@ package processor.component.disruptor.ringbuffer;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.util.DaemonThreadFactory;
+import processor.component.disruptor.consumer.ClearEventConsumer;
+import processor.component.disruptor.consumer.InventoryEventConsumer;
 import processor.component.disruptor.event.inventory.InventoryEvent;
 import processor.component.disruptor.event.inventory.InventoryEventFactory;
-import processor.component.disruptor.handler.ClearEventHandler;
-import processor.component.disruptor.handler.InventoryEventHandler;
 
 public class InventoryRingBuffer {
     private final InventoryEventFactory factory;
     private final int bufferSize;
-    private final InventoryEventHandler inventoryEventHandler;
-    private final ClearEventHandler<InventoryEvent> clearEventHandler;
+    private final InventoryEventConsumer inventoryEventHandler;
+    private final ClearEventConsumer<InventoryEvent> clearEventHandler;
 
-    public InventoryRingBuffer(InventoryEventFactory factory, int bufferSize, InventoryEventHandler inventoryEventHandler, ClearEventHandler<InventoryEvent> clearEventHandler) {
+    public InventoryRingBuffer(InventoryEventFactory factory, int bufferSize, InventoryEventConsumer inventoryEventHandler, ClearEventConsumer<InventoryEvent> clearEventHandler) {
         this.factory = factory;
         this.bufferSize = bufferSize;
         this.inventoryEventHandler = inventoryEventHandler;

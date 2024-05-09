@@ -46,8 +46,8 @@ public class KafkaConsumer {
             if (KafkaConsumerConstants.IS_VALUE.equals(header.key()))
                 isValue = true;
         }
-
-        var body = isValue ? BElement.ofAny(record.value()) : deserializeWithFormat(record);
+        
+        var body = isValue ? BElement.ofJson(record.value().toString()) : deserializeWithFormat(record);
         return Message.ofAny(headers, body);
     }
 
