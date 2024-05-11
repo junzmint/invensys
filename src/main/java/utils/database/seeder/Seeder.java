@@ -1,7 +1,6 @@
 package utils.database.seeder;
 
 import database.DatabaseConnector;
-import database.DatabaseConstants;
 import database.DatabaseQueryExecutor;
 
 import java.io.IOException;
@@ -20,19 +19,12 @@ public class Seeder {
     }
 
     public static void seed() {
-        DatabaseConnector databaseConnector = new DatabaseConnector(
-                DatabaseConstants.getDatabaseConnnection(),
-                DatabaseConstants.getDatabaseHost(),
-                DatabaseConstants.getDatabasePort(),
-                DatabaseConstants.getDatabaseUser(),
-                DatabaseConstants.getDatabasePassword(),
-                DatabaseConstants.getDatabaseName()
-        );
+        DatabaseConnector databaseConnector = DatabaseConnector.databaseConnectorFactory();
 
         Connection databaseConnection = databaseConnector.databaseConnect();
         DatabaseQueryExecutor databaseQueryExecutor = new DatabaseQueryExecutor(databaseConnection);
 
-        seedInventoryTable(databaseQueryExecutor, 1000);
+        seedInventoryTable(databaseQueryExecutor, 10000);
         seedOffsetTable(databaseQueryExecutor);
         databaseQueryExecutor.close();
     }
@@ -42,7 +34,7 @@ public class Seeder {
         for (long sku = 0; sku < numberOfRecords; sku++) {
             UUID uuid = UUID.randomUUID();
             String skuId = uuid.toString().substring(0, 4);
-            long quantity = random.nextInt(100) + 1;
+            long quantity = random.nextInt(10000) + 1;
             inventoryBatch.put(skuId, quantity);
         }
 

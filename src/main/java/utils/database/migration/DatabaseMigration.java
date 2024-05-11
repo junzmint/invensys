@@ -11,14 +11,7 @@ import java.sql.SQLException;
 public class DatabaseMigration {
 
     public static void migrate() {
-        DatabaseConnector databaseConnector = new DatabaseConnector(
-                DatabaseConstants.getDatabaseConnnection(),
-                DatabaseConstants.getDatabaseHost(),
-                DatabaseConstants.getDatabasePort(),
-                DatabaseConstants.getDatabaseUser(),
-                DatabaseConstants.getDatabasePassword(),
-                DatabaseConstants.getDatabaseName()
-        );
+        DatabaseConnector databaseConnector = DatabaseConnector.databaseConnectorFactory();
 
         // Create database
         Connection mySqlConnection = databaseConnector.mySqlConnect();
