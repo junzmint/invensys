@@ -26,6 +26,11 @@
             <version>0.6.1</version>
         </dependency>
         <dependency>
+            <groupId>io.gridgo</groupId>
+            <artifactId>gridgo-socket-zmq</artifactId>
+            <version>0.6.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
             <version>3.7.0</version>
