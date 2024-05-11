@@ -22,7 +22,7 @@ public class DatabaseQueryExecutor {
 
     private void dropDatabase(String dbName) {
         String sql = "DROP DATABASE IF EXISTS " + dbName;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = this.connection.prepareStatement(sql)) {
             statement.executeUpdate();
             statement.close();
             LoggerUtil.logInfo("Database is dropped");
@@ -33,7 +33,7 @@ public class DatabaseQueryExecutor {
 
     private void createDatabase(String dbName) {
         String sql = "CREATE DATABASE " + dbName;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = this.connection.prepareStatement(sql)) {
             statement.executeUpdate();
             statement.close();
             LoggerUtil.logInfo("Database is created");
@@ -45,7 +45,7 @@ public class DatabaseQueryExecutor {
     // Create table if it not exists
     public void createTable(String queryStatement, String tableName) {
         try {
-            Statement statement = connection.createStatement();
+            Statement statement = this.connection.createStatement();
             statement.executeUpdate(queryStatement);
             statement.close();
             LoggerUtil.logInfo("Table " + tableName + " is created");
@@ -187,6 +187,7 @@ public class DatabaseQueryExecutor {
                 long quantity = result.getLong("quantity");
                 inventoryRecords.put(skuId, quantity);
             }
+            statement.close();
         } catch (SQLException e) {
             LoggerUtil.logError("SQL exception:", e);
         }

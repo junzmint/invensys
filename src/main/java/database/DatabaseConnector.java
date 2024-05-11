@@ -16,7 +16,7 @@ public class DatabaseConnector {
 
     private Connection connection;
 
-    public DatabaseConnector(String dbConnection, String host, String port, String user, String password, String dbName) {
+    private DatabaseConnector(String dbConnection, String host, String port, String user, String password, String dbName) {
         this.dbConnection = dbConnection;
         this.host = host;
         this.port = port;
@@ -25,11 +25,22 @@ public class DatabaseConnector {
         this.dbName = dbName;
     }
 
+    public static DatabaseConnector databaseConnectorFactory() {
+        return new DatabaseConnector(
+                DatabaseConstants.getDatabaseConnnection(),
+                DatabaseConstants.getDatabaseHost(),
+                DatabaseConstants.getDatabasePort(),
+                DatabaseConstants.getDatabaseUser(),
+                DatabaseConstants.getDatabasePassword(),
+                DatabaseConstants.getDatabaseName()
+        );
+    }
+
     public Connection databaseConnect() {
         try {
             String dbUrl = "jdbc:" + this.dbConnection + "://" + this.host + ":" + this.port + "/" + this.dbName;
             this.connection = DriverManager.getConnection(dbUrl, this.user, this.password);
-            return connection;
+            return this.connection;
         } catch (SQLException e) {
             LoggerUtil.logError("SQL exception:", e);
         }
@@ -40,7 +51,7 @@ public class DatabaseConnector {
         try {
             String dbUrl = "jdbc:" + this.dbConnection + "://" + this.host + ":" + this.port + "/";
             this.connection = DriverManager.getConnection(dbUrl, this.user, this.password);
-            return connection;
+            return this.connection;
         } catch (SQLException e) {
             LoggerUtil.logError("SQL exception:", e);
         }
@@ -48,6 +59,6 @@ public class DatabaseConnector {
     }
 
     public void close() throws SQLException {
-        connection.close();
+        this.connection.close();
     }
 }
