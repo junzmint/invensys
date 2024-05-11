@@ -3,15 +3,22 @@ package apigateway.component;
 import apigateway.component.http.HttpGateway;
 import apigateway.component.kafkaproducer.KafkaProducer;
 import apigateway.component.kafkaproducer.KafkaProducerConfig;
+import apigateway.component.message.MessageReceiveGateway;
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.impl.DefaultGridgoContextBuilder;
 import io.gridgo.framework.impl.NonameComponentLifecycle;
+import io.gridgo.framework.support.Message;
+import org.joo.promise4j.Deferred;
 import utils.logging.LoggerUtil;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ApiGateway extends NonameComponentLifecycle {
     private static final String HTTP_GATEWAY = ApiGatewayConstants.getHttpGateway();
+
+    private static final String ZMQ_PULL_GATEWAY = "zero.mq.pull";
 
     private static final String VERTX_URL = ApiGatewayConstants.getVertxUrl();
 
@@ -21,8 +28,11 @@ public class ApiGateway extends NonameComponentLifecycle {
     private final GridgoContext appContext;
     private final KafkaProducer kafkaProducer;
     private final HttpGateway httpGateway;
+    private final Map<String, Deferred<Message, Exception>> deferredMap;
+    private final MessageReceiveGateway messageReceiveGateway;
 
     public ApiGateway() {
+        this.deferredMap = new ConcurrentHashMap<>(2048, 1, 64);
         this.appContext = new DefaultGridgoContextBuilder().setName(API_GATEWAY_NAME).setExceptionHandler(this::onException).build();
 
         KafkaProducerConfig kafkaProducerConfig = new KafkaProducerConfig(
@@ -37,13 +47,18 @@ public class ApiGateway extends NonameComponentLifecycle {
 
         this.httpGateway = new HttpGateway(
                 HTTP_GATEWAY,
-                kafkaProducer,
-                new AtomicLong(0),
+                this.kafkaProducer,
+                this.deferredMap,
+                new AtomicLong(127),
                 ZMQ_REPLY_ADR);
 
+        this.messageReceiveGateway = new MessageReceiveGateway(ZMQ_PULL_GATEWAY, this.deferredMap);
+
         this.appContext.openGateway(HTTP_GATEWAY).attachConnector(VERTX_URL);
+        this.appContext.openGateway(ZMQ_PULL_GATEWAY).attachConnector("zmq:pull:" + ZMQ_REPLY_ADR);
         // handle http request
-        this.appContext.attachComponent(httpGateway);
+        this.appContext.attachComponent(this.httpGateway);
+        this.appContext.attachComponent(this.messageReceiveGateway);
     }
 
     private void onException(Throwable ex) {

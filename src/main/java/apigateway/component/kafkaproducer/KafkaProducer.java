@@ -22,18 +22,20 @@ public class KafkaProducer {
     }
 
     // call back func for produce
-    private void onProduce(Deferred<Message, Exception> deferred, RecordMetadata metadata, Exception exception) {
+    private void onProduce(Boolean isAck, Deferred<Message, Exception> deferred, RecordMetadata metadata, Exception exception) {
         if (exception == null) {
             LoggerUtil.logInfo("Kafka producer sent");
-            // LoggerUtil.logInfo("Kafka producer sent: " + buildOnSendMessage(metadata).headers().toString());
-            // deferred.resolve(buildOnSendMessage(metadata));
+            if (isAck) {
+                LoggerUtil.logInfo("Kafka producer sent: " + buildAckMessage(metadata).headers().toString());
+                deferred.resolve(buildAckMessage(metadata));
+            }
         } else {
             LoggerUtil.logError("Kafka producer error: ", exception);
             deferred.resolve(Message.ofAny(exception.getMessage()));
         }
     }
 
-    private Message buildOnSendMessage(RecordMetadata metadata) {
+    private Message buildAckMessage(RecordMetadata metadata) {
         if (metadata == null)
             return null;
         var headers = BObject.ofEmpty().setAny(KafkaProducerConstants.IS_ACK_MSG, true)
@@ -72,12 +74,12 @@ public class KafkaProducer {
         return record;
     }
 
-    public void produce(Message message, Deferred<Message, Exception> deferred, String key) {
+    public void produce(Message message, Deferred<Message, Exception> deferred, String key, Boolean isAck) {
         var record = buildProducerRecord(this.topic, this.partition, key, message);
         if (record.value() == null) {
             deferred.resolve(Message.ofAny("Body null value"));
         } else {
-            this.kafkaProducer.send(record, (metadata, ex) -> onProduce(deferred, metadata, ex));
+            this.kafkaProducer.send(record, (metadata, ex) -> onProduce(isAck, deferred, metadata, ex));
         }
     }
 

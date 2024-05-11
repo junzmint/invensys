@@ -1,4 +1,4 @@
-package apigateway.component.http;
+package apigateway.component.message;
 
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.support.ContextAwareComponent;
@@ -11,13 +11,13 @@ import lombok.Setter;
 
 import java.util.Optional;
 
-abstract class HttpGatewayBaseComponent extends NonameComponentLifecycle implements ContextAwareComponent {
+abstract class MessageReceiveGatewayBaseComponent extends NonameComponentLifecycle implements ContextAwareComponent {
     private final String gatewayName;
     @Setter
     @Getter(AccessLevel.PROTECTED)
     private GridgoContext context;
 
-    protected HttpGatewayBaseComponent(String gatewayName) {
+    protected MessageReceiveGatewayBaseComponent(String gatewayName) {
         this.gatewayName = gatewayName;
     }
 
