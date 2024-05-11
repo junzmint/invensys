@@ -46,7 +46,7 @@ public class KafkaConsumer {
             if (KafkaConsumerConstants.IS_VALUE.equals(header.key()))
                 isValue = true;
         }
-        
+
         var body = isValue ? BElement.ofJson(record.value().toString()) : deserializeWithFormat(record);
         return Message.ofAny(headers, body);
     }
@@ -69,18 +69,25 @@ public class KafkaConsumer {
     }
 
     // consumer poll message
-    private void onRun(Long offSet, Duration pollDuration) {
+    private void onRun(Long offset, Duration pollDuration) {
+        // assign MaxOffset
+        Long maxOffset = offset + 1;
         // assign topic
         TopicPartition partitionToReadFrom = new TopicPartition(this.topic, this.partition);
         this.kafkaConsumer.assign(List.of(partitionToReadFrom));
         // seek
-        this.kafkaConsumer.seek(partitionToReadFrom, offSet);
+        this.kafkaConsumer.seek(partitionToReadFrom, maxOffset);
 
         while (true) {
             ConsumerRecords<Object, Object> records = this.kafkaConsumer.poll(pollDuration);
             for (ConsumerRecord<Object, Object> record : records) {
-                Message message = buildMessage(record);
-                this.inventoryEventProducer.onData(record.offset(), message);
+                if (maxOffset > record.offset()) {
+                    // nothing to do
+                } else {
+                    Message message = buildMessage(record);
+                    maxOffset = record.offset();
+                    this.inventoryEventProducer.onData(maxOffset, message);
+                }
             }
         }
     }
@@ -99,7 +106,7 @@ public class KafkaConsumer {
         }
     }
 
-    private void onClose() {
+    public void onClose() {
         if (this.kafkaConsumer != null) {
             this.kafkaConsumer.unsubscribe();
             this.kafkaConsumer.close();
