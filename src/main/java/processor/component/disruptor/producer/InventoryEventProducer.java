@@ -9,7 +9,7 @@ public class InventoryEventProducer {
     private static final EventTranslatorTwoArg<InventoryEvent, Long, Message> TRANSLATOR =
             new EventTranslatorTwoArg<InventoryEvent, Long, Message>() {
                 @Override
-                public void translateTo(InventoryEvent event, long l, Long offSet, Message message) {
+                public void translateTo(InventoryEvent event, long sequence, Long offSet, Message message) {
                     event.setOffSet(offSet);
                     event.setMessage(message);
                 }
@@ -22,6 +22,10 @@ public class InventoryEventProducer {
     }
 
     public void onData(Long offSet, Message message) {
-        ringBuffer.publishEvent(TRANSLATOR, offSet, message);
+        this.ringBuffer.publishEvent(TRANSLATOR, offSet, message);
+    }
+
+    public void close() {
+        // nothing to here
     }
 }

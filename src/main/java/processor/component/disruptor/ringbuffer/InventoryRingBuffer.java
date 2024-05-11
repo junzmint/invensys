@@ -11,20 +11,20 @@ import processor.component.disruptor.event.inventory.InventoryEventFactory;
 public class InventoryRingBuffer {
     private final InventoryEventFactory factory;
     private final int bufferSize;
-    private final InventoryEventConsumer inventoryEventHandler;
-    private final ClearEventConsumer<InventoryEvent> clearEventHandler;
+    private final InventoryEventConsumer inventoryEventConsumer;
+    private final ClearEventConsumer<InventoryEvent> clearEventConsumer;
 
-    public InventoryRingBuffer(InventoryEventFactory factory, int bufferSize, InventoryEventConsumer inventoryEventHandler, ClearEventConsumer<InventoryEvent> clearEventHandler) {
+    public InventoryRingBuffer(InventoryEventFactory factory, int bufferSize, InventoryEventConsumer inventoryEventConsumer, ClearEventConsumer<InventoryEvent> clearEventConsumer) {
         this.factory = factory;
         this.bufferSize = bufferSize;
-        this.inventoryEventHandler = inventoryEventHandler;
-        this.clearEventHandler = clearEventHandler;
+        this.inventoryEventConsumer = inventoryEventConsumer;
+        this.clearEventConsumer = clearEventConsumer;
     }
 
     public RingBuffer<InventoryEvent> getRingBuffer() {
         Disruptor<InventoryEvent> disruptor =
-                new Disruptor<>(factory, bufferSize, DaemonThreadFactory.INSTANCE);
-        disruptor.handleEventsWith(inventoryEventHandler).then(clearEventHandler);
+                new Disruptor<>(this.factory, this.bufferSize, DaemonThreadFactory.INSTANCE);
+        disruptor.handleEventsWith(this.inventoryEventConsumer).then(this.clearEventConsumer);
         disruptor.start();
 
         return disruptor.getRingBuffer();

@@ -13,6 +13,6 @@ public class InventoryEventConsumer implements EventHandler<InventoryEvent> {
 
     @Override
     public void onEvent(InventoryEvent event, long sequence, boolean endOfBatch) {
-        inventoryHandler.handle(event.getMessage());
+        this.inventoryHandler.handle(event.getMessage(), event.getOffSet(), endOfBatch);
     }
 }
