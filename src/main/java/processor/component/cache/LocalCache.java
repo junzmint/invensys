@@ -68,4 +68,18 @@ public class LocalCache {
     public CacheStats getStats() {
         return this.cache.stats();
     }
+
+    public void printStats() {
+        CacheStats stats = this.cache.stats();
+        System.out.println("Hit count: " + stats.hitCount());
+        System.out.println("Miss count: " + stats.missCount());
+        System.out.println("Load success count: " + stats.loadSuccessCount());
+        System.out.println("Load exception count: " + stats.loadExceptionCount());
+        System.out.println("Total load time (nanoseconds): " + stats.totalLoadTime());
+        System.out.println("Eviction count: " + stats.evictionCount());
+    }
+
+    public void onStop() {
+        this.cache.cleanUp();
+    }
 }
