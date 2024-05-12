@@ -32,7 +32,7 @@ public class ApiGateway extends NonameComponentLifecycle {
     private final MessageReceiveGateway messageReceiveGateway;
 
     public ApiGateway() {
-        this.deferredMap = new ConcurrentHashMap<>(2048, 1, 64);
+        this.deferredMap = new ConcurrentHashMap<>();
         this.appContext = new DefaultGridgoContextBuilder().setName(API_GATEWAY_NAME).setExceptionHandler(this::onException).build();
 
         KafkaProducerConfig kafkaProducerConfig = new KafkaProducerConfig(

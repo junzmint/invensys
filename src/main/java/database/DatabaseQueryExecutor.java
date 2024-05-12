@@ -3,6 +3,7 @@ package database;
 import utils.logging.LoggerUtil;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ public class DatabaseQueryExecutor {
         this.connection = connection;
     }
 
-    // Create database, drop database if it exists
+    // create database, drop database if it exists
     public void dropAndCreateDatabase(String dbName) {
         dropDatabase(dbName);
         createDatabase(dbName);
@@ -42,7 +43,7 @@ public class DatabaseQueryExecutor {
         }
     }
 
-    // Create table if it not exists
+    // create table if it not exists
     public void createTable(String queryStatement, String tableName) {
         try {
             Statement statement = this.connection.createStatement();
@@ -54,7 +55,7 @@ public class DatabaseQueryExecutor {
         }
     }
 
-    // Insert Offset table
+    // insert Offset table
     public void insertOffsetTable(String id, Long offset) {
         String SQL = "INSERT INTO Offset(id, offset) VALUES(?, ?)";
         try {
@@ -70,7 +71,7 @@ public class DatabaseQueryExecutor {
     }
 
 
-    // Insert Inventory table batch
+    // insert Inventory table batch
     public void insertInventoryTable(Map<String, Long> inventoryBatch) {
         String SQL = "INSERT INTO Inventory(sku_id,quantity) " + "VALUES(?, ?)";
         try {
@@ -88,7 +89,7 @@ public class DatabaseQueryExecutor {
         }
     }
 
-    // Update Offset table
+    // update Offset table
     public void updateOffsetTable(String id, Long offset) {
         String SQL = "UPDATE Offset SET offset = ? WHERE id = ?";
         try {
@@ -104,7 +105,7 @@ public class DatabaseQueryExecutor {
     }
 
 
-    // Update Inventory table batch
+    // update Inventory table batch
     public void updateInventoryTable(Map<String, Long> inventoryBatch) {
         String SQL = "UPDATE Inventory SET quantity = ? WHERE sku_id = ?";
         try {
@@ -122,7 +123,7 @@ public class DatabaseQueryExecutor {
         }
     }
 
-    // Delete Inventory table batch
+    // delete Inventory table batch
     public void deleteInventoryTable(List<String> skuList) {
         String SQL = "DELETE FROM Inventory WHERE sku_id = ?";
         try {
@@ -139,7 +140,7 @@ public class DatabaseQueryExecutor {
         }
     }
 
-    // Get MaxOffset
+    // get MaxOffset
     public Long getMaxOffset(String id) {
         String SQL = "SELECT offset FROM Offset WHERE id = ?";
         try {
@@ -157,7 +158,7 @@ public class DatabaseQueryExecutor {
     }
 
 
-    // Get quantity of a sku
+    // get quantity of a sku
     public Long getSkuQuantity(String skuId) {
         String SQL = "SELECT quantity FROM Inventory WHERE sku_id = ?";
         try {
@@ -175,7 +176,7 @@ public class DatabaseQueryExecutor {
     }
 
 
-    // Get quantity of skus to init load cache
+    // get quantity of skus to init load cache
     public Map<String, Long> getInventoryRecords(Long numberOfRecords) {
         Map<String, Long> inventoryRecords = new HashMap<>();
         String SQL = "SELECT sku_id, quantity FROM Inventory LIMIT " + numberOfRecords;
@@ -192,6 +193,24 @@ public class DatabaseQueryExecutor {
             LoggerUtil.logError("SQL exception:", e);
         }
         return inventoryRecords;
+    }
+
+    // get skuId from inventory to generate CSV data test
+    public List<String> getInventorySkuIds() {
+        List<String> inventorySkuIds = new ArrayList<>();
+        String SQL = "SELECT sku_id FROM Inventory";
+        try {
+            Statement statement = this.connection.createStatement();
+            ResultSet result = statement.executeQuery(SQL);
+            while (result.next()) {
+                String skuId = result.getString("sku_id");
+                inventorySkuIds.add(skuId);
+            }
+            statement.close();
+        } catch (SQLException e) {
+            LoggerUtil.logError("SQL exception:", e);
+        }
+        return inventorySkuIds;
     }
 
     // Close connection

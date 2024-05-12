@@ -2,7 +2,6 @@ package processor.component;
 
 import database.DatabaseConnector;
 import database.DatabaseQueryExecutor;
-import io.gridgo.framework.impl.NonameComponentLifecycle;
 import processor.component.cache.LocalCache;
 import processor.component.disruptor.consumer.BatchEventConsumer;
 import processor.component.disruptor.consumer.ClearEventConsumer;
@@ -28,7 +27,7 @@ import processor.component.kafkaconsumer.KafkaConsumerConfig;
 import java.sql.Connection;
 import java.time.Duration;
 
-public class Processor extends NonameComponentLifecycle {
+public class Processor {
     private final DatabaseQueryExecutor databaseQueryExecutor;
     private final MessageEventProducer messageEventProducer;
     private final BatchEventProducer batchEventProducer;
@@ -41,7 +40,7 @@ public class Processor extends NonameComponentLifecycle {
     private final Long maxOffset;
 
     public Processor() {
-        // monnect to database and create a query executor instance
+        // connect to database and create a query executor instance
         DatabaseConnector databaseConnector = DatabaseConnector.databaseConnectorFactory();
         Connection databaseConnection = databaseConnector.databaseConnect();
         this.databaseQueryExecutor = new DatabaseQueryExecutor(databaseConnection);
@@ -101,13 +100,11 @@ public class Processor extends NonameComponentLifecycle {
         this.maxOffset = this.databaseQueryExecutor.getMaxOffset("MaxOffset");
     }
 
-    @Override
-    protected void onStart() {
+    public void start() {
         this.consumer.run(this.maxOffset, Duration.ofMillis(100));
     }
 
-    @Override
-    protected void onStop() {
+    public void stop() {
         // get local cache stats
         this.localCache.printStats();
 

@@ -107,9 +107,6 @@ public class KafkaConsumer {
     }
 
     public void onClose() {
-        if (this.kafkaConsumer != null) {
-            this.kafkaConsumer.unsubscribe();
-            this.kafkaConsumer.close();
-        }
+        // nothing to do here
     }
 }
