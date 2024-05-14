@@ -4,11 +4,11 @@ import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
 import io.gridgo.framework.support.Message;
+import logging.LoggerUtil;
 import lombok.NonNull;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.joo.promise4j.Deferred;
-import utils.logging.LoggerUtil;
 
 public class KafkaProducer {
     private final String topic;
@@ -67,9 +67,8 @@ public class KafkaProducer {
             record.headers().add(KafkaProducerConstants.IS_VALUE, new byte[]{1});
         }
         for (var header : headers.entrySet()) {
-            if (header.getValue().isValue()) {
+            if (header.getValue().isValue())
                 record.headers().add(header.getKey(), header.getValue().asValue().toBytes());
-            }
         }
         return record;
     }
@@ -78,9 +77,9 @@ public class KafkaProducer {
         var record = buildProducerRecord(this.topic, this.partition, key, message);
         if (record.value() == null) {
             deferred.resolve(Message.ofAny("Body null value"));
-        } else {
-            this.kafkaProducer.send(record, (metadata, ex) -> onProduce(isAck, deferred, metadata, ex));
+            return;
         }
+        this.kafkaProducer.send(record, (metadata, ex) -> onProduce(isAck, deferred, metadata, ex));
     }
 
     public void onClose() {

@@ -41,4 +41,4 @@ build/
 config/application.properties
 
 ### File generate ###
-src/main/java/utils/testing/csv/file
+src/main/java/performance/generator/data

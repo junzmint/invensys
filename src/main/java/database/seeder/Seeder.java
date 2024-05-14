@@ -1,4 +1,4 @@
-package utils.database.seeder;
+package database.seeder;
 
 import database.DatabaseConnector;
 import database.DatabaseQueryExecutor;

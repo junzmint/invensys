@@ -8,8 +8,8 @@ import io.gridgo.core.GridgoContext;
 import io.gridgo.core.impl.DefaultGridgoContextBuilder;
 import io.gridgo.framework.impl.NonameComponentLifecycle;
 import io.gridgo.framework.support.Message;
+import logging.LoggerUtil;
 import org.joo.promise4j.Deferred;
-import utils.logging.LoggerUtil;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,7 +49,7 @@ public class ApiGateway extends NonameComponentLifecycle {
                 HTTP_GATEWAY,
                 this.kafkaProducer,
                 this.deferredMap,
-                new AtomicLong(127),
+                new AtomicLong(0),
                 ZMQ_REPLY_ADR);
 
         this.messageReceiveGateway = new MessageReceiveGateway(ZMQ_PULL_GATEWAY, this.deferredMap);

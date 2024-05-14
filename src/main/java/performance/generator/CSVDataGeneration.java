@@ -1,11 +1,11 @@
-package utils.testing.csv;
+package performance.generator;
 
 import com.google.gson.Gson;
 import database.DatabaseConnector;
 import database.DatabaseQueryExecutor;
+import logging.LoggerUtil;
 import lombok.Getter;
 import lombok.Setter;
-import utils.logging.LoggerUtil;
 
 import java.io.FileWriter;
 import java.io.IOException;

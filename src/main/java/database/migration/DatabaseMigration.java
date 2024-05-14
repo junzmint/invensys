@@ -1,4 +1,4 @@
-package utils.database.migration;
+package database.migration;
 
 import database.DatabaseConnector;
 import database.DatabaseConstants;

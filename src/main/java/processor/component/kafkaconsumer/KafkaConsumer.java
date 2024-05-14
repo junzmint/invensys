@@ -3,6 +3,7 @@ package processor.component.kafkaconsumer;
 import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
 import io.gridgo.framework.support.Message;
+import logging.LoggerUtil;
 import lombok.NonNull;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -10,7 +11,6 @@ import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.header.Header;
 import processor.component.disruptor.producer.InventoryEventProducer;
-import utils.logging.LoggerUtil;
 
 import java.time.Duration;
 import java.util.List;

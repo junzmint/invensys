@@ -1,4 +1,4 @@
-package utils.kafka;
+package processor.lib.kafka;
 
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;

@@ -2,8 +2,8 @@ package processor.component.handler.message.zeromq;
 
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.impl.DefaultGridgoContextBuilder;
+import logging.LoggerUtil;
 import lombok.Getter;
-import utils.logging.LoggerUtil;
 
 @Getter
 public class MessageProduceGateway {
