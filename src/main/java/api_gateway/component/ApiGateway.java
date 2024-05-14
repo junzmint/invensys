@@ -1,9 +1,9 @@
-package apigateway.component;
+package api_gateway.component;
 
-import apigateway.component.http.HttpGateway;
-import apigateway.component.kafkaproducer.KafkaProducer;
-import apigateway.component.kafkaproducer.KafkaProducerConfig;
-import apigateway.component.message.MessageReceiveGateway;
+import api_gateway.component.http.HttpGateway;
+import api_gateway.component.kafka.producer.KafkaProducer;
+import api_gateway.component.kafka.producer.KafkaProducerConfig;
+import api_gateway.component.message.MessageReceiveGateway;
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.impl.DefaultGridgoContextBuilder;
 import io.gridgo.framework.impl.NonameComponentLifecycle;

@@ -1,4 +1,4 @@
-package processor.component.kafkaconsumer;
+package processor.component.kafka.consumer;
 
 import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;

@@ -1,4 +1,4 @@
-package apigateway.component.kafkaproducer;
+package api_gateway.component.kafka.producer;
 
 import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;

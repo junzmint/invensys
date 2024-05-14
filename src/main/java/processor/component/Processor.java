@@ -21,8 +21,8 @@ import processor.component.disruptor.ringbuffer.MessageRingBuffer;
 import processor.component.handler.batch.BatchHandler;
 import processor.component.handler.inventory.InventoryHandler;
 import processor.component.handler.message.MessageHandler;
-import processor.component.kafkaconsumer.KafkaConsumer;
-import processor.component.kafkaconsumer.KafkaConsumerConfig;
+import processor.component.kafka.consumer.KafkaConsumer;
+import processor.component.kafka.consumer.KafkaConsumerConfig;
 
 import java.sql.Connection;
 import java.time.Duration;

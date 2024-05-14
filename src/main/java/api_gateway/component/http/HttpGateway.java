@@ -1,6 +1,6 @@
-package apigateway.component.http;
+package api_gateway.component.http;
 
-import apigateway.component.kafkaproducer.KafkaProducer;
+import api_gateway.component.kafka.producer.KafkaProducer;
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.support.RoutingContext;
 import io.gridgo.framework.support.Message;

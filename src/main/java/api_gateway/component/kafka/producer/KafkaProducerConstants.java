@@ -1,4 +1,4 @@
-package apigateway.component.kafkaproducer;
+package api_gateway.component.kafka.producer;
 
 public class KafkaProducerConstants {
     public static final String PARTITION = "kafka.PARTITION";

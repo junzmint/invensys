@@ -1,6 +1,6 @@
-package apigateway;
+package api_gateway;
 
-import apigateway.component.ApiGateway;
+import api_gateway.component.ApiGateway;
 import io.gridgo.utils.ThreadUtils;
 
 public class ApiGatewayApplication {

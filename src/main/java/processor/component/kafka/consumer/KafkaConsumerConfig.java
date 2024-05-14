@@ -1,4 +1,4 @@
-package processor.component.kafkaconsumer;
+package processor.component.kafka.consumer;
 
 import lombok.Data;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package apigateway.component.http;
+package api_gateway.component.http;
 
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.support.ContextAwareComponent;

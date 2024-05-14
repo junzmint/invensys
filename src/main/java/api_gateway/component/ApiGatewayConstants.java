@@ -1,4 +1,4 @@
-package apigateway.component;
+package api_gateway.component;
 
 import logging.LoggerUtil;
 

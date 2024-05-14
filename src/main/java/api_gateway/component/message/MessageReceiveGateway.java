@@ -1,4 +1,4 @@
-package apigateway.component.message;
+package api_gateway.component.message;
 
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.support.RoutingContext;
