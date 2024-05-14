@@ -1,6 +1,6 @@
 package database;
 
-import utils.logging.LoggerUtil;
+import logging.LoggerUtil;
 
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -39,3 +39,6 @@ build/
 
 ### Config ###
 config/application.properties
+
+### File generate ###
+src/main/java/performance_test/generator/data
