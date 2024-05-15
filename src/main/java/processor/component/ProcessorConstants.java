@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class ProcessorConstants {
-    private static final String CONFIG_FILE_PATH = "config/application.properties";
+    private static final String CONFIG_FILE_PATH = "config/processor.properties";
     private static final Properties ProcessorProps;
 
     static {
@@ -34,4 +34,17 @@ public class ProcessorConstants {
     public static String getGroupId() {
         return ProcessorProps.getProperty("GROUP_ID");
     }
+
+    public static String getAutoOffsetReset() {
+        return ProcessorProps.getProperty("AUTO_OFFSET_RESET");
+    }
+
+    public static Long getCacheSize() {
+        return Long.parseLong(ProcessorProps.getProperty("CACHE_SIZE"));
+    }
+
+    public static Long getCacheInitRecords() {
+        return Long.parseLong(ProcessorProps.getProperty("CACHE_INIT_RECORDS"));
+    }
+
 }

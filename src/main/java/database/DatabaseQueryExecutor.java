@@ -26,9 +26,9 @@ public class DatabaseQueryExecutor {
         try (PreparedStatement statement = this.connection.prepareStatement(sql)) {
             statement.executeUpdate();
             statement.close();
-            LoggerUtil.logInfo("Database is dropped");
+            LoggerUtil.logInfo("DB_DROPPED");
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL exception:", e);
+            LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
     }
 
@@ -37,9 +37,9 @@ public class DatabaseQueryExecutor {
         try (PreparedStatement statement = this.connection.prepareStatement(sql)) {
             statement.executeUpdate();
             statement.close();
-            LoggerUtil.logInfo("Database is created");
+            LoggerUtil.logInfo("DB_CREATED");
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL exception:", e);
+            LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
     }
 
@@ -49,9 +49,9 @@ public class DatabaseQueryExecutor {
             Statement statement = this.connection.createStatement();
             statement.executeUpdate(queryStatement);
             statement.close();
-            LoggerUtil.logInfo("Table " + tableName + " is created");
+            LoggerUtil.logInfo("TABLE_CREATED: " + tableName);
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL exception:", e);
+            LoggerUtil.logError("SQL_EXCEPTION:", e);
         }
     }
 
@@ -64,9 +64,9 @@ public class DatabaseQueryExecutor {
             statement.setLong(2, offset);
             statement.executeUpdate();
             statement.close();
-            LoggerUtil.logInfo("Insert success");
+            LoggerUtil.logInfo("OFFSET_INSERTED");
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL exception:", e);
+            LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
     }
 
@@ -83,9 +83,9 @@ public class DatabaseQueryExecutor {
             }
             statement.executeBatch();
             statement.close();
-            LoggerUtil.logInfo("Insert success");
+            LoggerUtil.logInfo("INVENTORY_INSERTED");
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL exception:", e);
+            LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
     }
 
@@ -98,9 +98,9 @@ public class DatabaseQueryExecutor {
             statement.setString(2, id);
             statement.executeUpdate();
             statement.close();
-            LoggerUtil.logInfo("Update success");
+            LoggerUtil.logInfo("OFFSET_UPDATED");
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL exception:", e);
+            LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
     }
 
@@ -117,9 +117,9 @@ public class DatabaseQueryExecutor {
             }
             statement.executeBatch();
             statement.close();
-            LoggerUtil.logInfo("Update success");
+            LoggerUtil.logInfo("INVENTORY_UPDATED");
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL exception:", e);
+            LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
     }
 
@@ -134,9 +134,9 @@ public class DatabaseQueryExecutor {
             }
             statement.executeBatch();
             statement.close();
-            LoggerUtil.logInfo("Delete success");
+            LoggerUtil.logInfo("INVENTORY_DELETED");
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL exception:", e);
+            LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
     }
 
@@ -151,9 +151,9 @@ public class DatabaseQueryExecutor {
                 return result.getLong("offset");
             }
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL exception:", e);
+            LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
-        LoggerUtil.logError("Can't get MaxOffset");
+        LoggerUtil.logError("CANNOT_GET_MAX_OFFSET");
         return null;
     }
 
@@ -169,9 +169,9 @@ public class DatabaseQueryExecutor {
                 return result.getLong("quantity");
             }
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL exception:", e);
+            LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
-        LoggerUtil.logError("Can't get " + skuId + " quantity");
+        LoggerUtil.logError("CANNOT_GET_SKU: " + skuId);
         return null;
     }
 
@@ -190,7 +190,7 @@ public class DatabaseQueryExecutor {
             }
             statement.close();
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL exception:", e);
+            LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
         return inventoryRecords;
     }
@@ -208,7 +208,7 @@ public class DatabaseQueryExecutor {
             }
             statement.close();
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL exception:", e);
+            LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
         return inventorySkuIds;
     }
@@ -218,7 +218,7 @@ public class DatabaseQueryExecutor {
         try {
             this.connection.close();
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL exception:", e);
+            LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
     }
 }

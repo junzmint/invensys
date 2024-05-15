@@ -27,7 +27,7 @@ public class DatabaseConnector {
 
     public static DatabaseConnector databaseConnectorFactory() {
         return new DatabaseConnector(
-                DatabaseConstants.getDatabaseConnnection(),
+                DatabaseConstants.getDatabaseConnection(),
                 DatabaseConstants.getDatabaseHost(),
                 DatabaseConstants.getDatabasePort(),
                 DatabaseConstants.getDatabaseUser(),
@@ -42,7 +42,7 @@ public class DatabaseConnector {
             this.connection = DriverManager.getConnection(dbUrl, this.user, this.password);
             return this.connection;
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL exception:", e);
+            LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
         return null;
     }
@@ -53,7 +53,7 @@ public class DatabaseConnector {
             this.connection = DriverManager.getConnection(dbUrl, this.user, this.password);
             return this.connection;
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL exception:", e);
+            LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
         return null;
     }

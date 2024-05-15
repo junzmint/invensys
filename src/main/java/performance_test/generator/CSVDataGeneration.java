@@ -76,7 +76,7 @@ public class CSVDataGeneration {
             writer.flush();
             writer.close();
 
-            System.out.println("Success write to CSV");
+            System.out.println("GENERATE_SUCCESS");
         } catch (IOException e) {
             LoggerUtil.logError(e.getMessage());
         }

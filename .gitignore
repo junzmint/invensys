@@ -38,7 +38,10 @@ build/
 .DS_Store
 
 ### Config ###
-config/application.properties
+config/api_gateway.properties
+config/processor.properties
+config/database.properties
+
 
 ### File generate ###
 src/main/java/performance_test/generator/data

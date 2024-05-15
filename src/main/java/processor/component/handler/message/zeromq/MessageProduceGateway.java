@@ -24,6 +24,6 @@ public class MessageProduceGateway {
     }
 
     private void onException(Throwable ex) {
-        LoggerUtil.logError("Internal error", ex);
+        LoggerUtil.logError("INTERNAL_ERROR: ", ex);
     }
 }

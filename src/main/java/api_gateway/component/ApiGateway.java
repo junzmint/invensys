@@ -18,13 +18,14 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ApiGateway extends NonameComponentLifecycle {
     private static final String HTTP_GATEWAY = ApiGatewayConstants.getHttpGateway();
 
-    private static final String ZMQ_PULL_GATEWAY = "zero.mq.pull";
+    private static final String ZMQ_PULL_GATEWAY = ApiGatewayConstants.getZMQPullGateway();
 
     private static final String VERTX_URL = ApiGatewayConstants.getVertxUrl();
 
     private static final String ZMQ_REPLY_ADR = ApiGatewayConstants.getZMQReplyAddress();
 
-    private static final String API_GATEWAY_NAME = "InvensysApiGateway";
+    private static final String API_GATEWAY = ApiGatewayConstants.getApiGateway();
+
     private final GridgoContext appContext;
     private final KafkaProducer kafkaProducer;
     private final HttpGateway httpGateway;
@@ -33,7 +34,7 @@ public class ApiGateway extends NonameComponentLifecycle {
 
     public ApiGateway() {
         this.deferredMap = new ConcurrentHashMap<>();
-        this.appContext = new DefaultGridgoContextBuilder().setName(API_GATEWAY_NAME).setExceptionHandler(this::onException).build();
+        this.appContext = new DefaultGridgoContextBuilder().setName(API_GATEWAY).setExceptionHandler(this::onException).build();
 
         KafkaProducerConfig kafkaProducerConfig = new KafkaProducerConfig(
                 ApiGatewayConstants.getKafkaBroker(),
@@ -62,7 +63,7 @@ public class ApiGateway extends NonameComponentLifecycle {
     }
 
     private void onException(Throwable ex) {
-        LoggerUtil.logError("Internal error", ex);
+        LoggerUtil.logError("INTERNAL_ERROR: ", ex);
     }
 
     @Override
@@ -74,6 +75,8 @@ public class ApiGateway extends NonameComponentLifecycle {
     protected void onStop() {
         this.kafkaProducer.onClose();
         this.httpGateway.stop();
+        this.messageReceiveGateway.stop();
+        this.deferredMap.clear();
         this.appContext.stop();
     }
 }

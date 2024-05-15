@@ -27,15 +27,16 @@ public class HttpGateway extends HttpGatewayBaseComponent {
         var message = rc.getMessage();
         var deferred = rc.getDeferred();
 
-        // Attach corrId and reply address to header
+        // generate corrId and reply address
         long id = this.corrId.getAndIncrement();
-        message.headers().setAny("corrId", Long.toString(id));
+        // create kafka message key
+        String key = Long.toString(id);
+        // attach corrId and reply address to header
+        message.headers().setAny("corrId", key);
         message.headers().setAny("replyTo", this.replyTo);
-
+        // store corrId
         this.deferredMap.put(Long.toString(id), deferred);
-
-        // Generate Kafka keys
-        String key = "Hello, world!!";
+        // produce
         this.kafkaProducer.produce(message, deferred, key, false);
     }
 }

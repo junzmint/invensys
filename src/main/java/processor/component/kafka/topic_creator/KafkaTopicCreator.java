@@ -1,5 +1,6 @@
 package processor.component.kafka.topic_creator;
 
+import logging.LoggerUtil;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -38,16 +39,16 @@ public class KafkaTopicCreator {
             if (adminClient.listTopics().names().get().contains(topicName)) {
                 // If existed, then delete
                 adminClient.deleteTopics(Collections.singletonList(topicName)).all().get();
-                logger.info("Topic '{}' deleted successfully", topicName);
+                LoggerUtil.logInfo("TOPIC_DELETED: " + topicName);
                 // Wait 5 sec to delete
                 TimeUnit.SECONDS.sleep(5);
             }
             // Create new topic
             NewTopic newTopic = new NewTopic(topicName, partitions, replications);
             adminClient.createTopics(Collections.singletonList(newTopic)).all().get();
-            logger.info("Topic '{}' created successfully with {} partition(s) and replication factor {}", topicName, partitions, replications);
+            LoggerUtil.logInfo("TOPIC_CREATED: " + topicName);
         } catch (InterruptedException | ExecutionException e) {
-            logger.error("Error creating Kafka topic: {}", e.getMessage());
+            LoggerUtil.logError("KAFKA_TOPIC_CREATE_ERROR: ", e);
         }
     }
 }

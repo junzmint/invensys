@@ -18,6 +18,9 @@ public class InventoryHandler {
 
     private final LocalCache localCache;
 
+    // this map is using for update sku quantity after serving order in a batch
+    // if endOfBatch then batch produce then clear
+    // we need to check endOfBatch on every message we handle
     private final Map<String, Long> inventoryOrderBatch;
 
     private final MessageEventProducer messageEventProducer;
@@ -32,55 +35,34 @@ public class InventoryHandler {
     }
 
     public void close() {
-        // nothing to here
+        // nothing to do here
     }
 
-    private void insert(Long offset, InventoryRequest inventoryRequest, String corrId, String replyTo, Boolean endOfBatch) {
+    private void insert(Long offset, InventoryRequest inventoryRequest, String corrId, String replyTo) {
         // update local cache
         this.localCache.putAll(inventoryRequest.getSkuList());
         // batch produce and message produce
         this.batchEventProducer.onData("insert", offset, inventoryRequest.getSkuList());
         this.messageEventProducer.onData(corrId, replyTo, "INSERTED");
-
-        if (endOfBatch) {
-            // batch produce
-            this.batchEventProducer.onData("order", offset, inventoryOrderBatch);
-            // clear batch for a new batch
-            this.inventoryOrderBatch.clear();
-        }
     }
 
-    private void update(Long offset, InventoryRequest inventoryRequest, String corrId, String replyTo, Boolean endOfBatch) {
+    private void update(Long offset, InventoryRequest inventoryRequest, String corrId, String replyTo) {
         // update local cache
         this.localCache.putAll(inventoryRequest.getSkuList());
         // batch produce and message produce
         this.batchEventProducer.onData("update", offset, inventoryRequest.getSkuList());
         this.messageEventProducer.onData(corrId, replyTo, "UPDATED");
-
-        if (endOfBatch) {
-            // batch produce
-            this.batchEventProducer.onData("order", offset, inventoryOrderBatch);
-            // clear batch for a new batch
-            this.inventoryOrderBatch.clear();
-        }
     }
 
-    private void delete(Long offset, InventoryRequest inventoryRequest, String corrId, String replyTo, Boolean endOfBatch) {
+    private void delete(Long offset, InventoryRequest inventoryRequest, String corrId, String replyTo) {
         // update local cache
         this.localCache.deleteAll(inventoryRequest.getSkuList().keySet());
         // batch produce and message produce
         this.batchEventProducer.onData("delete", offset, inventoryRequest.getSkuList());
         this.messageEventProducer.onData(corrId, replyTo, "DELETED");
-
-        if (endOfBatch) {
-            // batch produce
-            this.batchEventProducer.onData("order", offset, inventoryOrderBatch);
-            // clear batch for a new batch
-            this.inventoryOrderBatch.clear();
-        }
     }
 
-    private void order(Long offset, InventoryRequest inventoryRequest, String corrId, String replyTo, Boolean endOfBatch) {
+    private void order(Long offset, InventoryRequest inventoryRequest, String corrId, String replyTo) {
         Map<String, Long> skuList = inventoryRequest.getSkuList();
         Map<String, Long> inventoryOrder = new HashMap<>();
         // Check quantity
@@ -107,16 +89,9 @@ public class InventoryHandler {
         this.messageEventProducer.onData(corrId, replyTo, "RESERVED");
         // update batching map after serving an order
         this.inventoryOrderBatch.putAll(inventoryOrder);
-
-        if (endOfBatch) {
-            // batch produce
-            this.batchEventProducer.onData("order", offset, inventoryOrderBatch);
-            // clear batch for a new batch
-            this.inventoryOrderBatch.clear();
-        }
     }
 
-    private void rollback(Long offset, InventoryRequest inventoryRequest, String corrId, String replyTo, Boolean endOfBatch) {
+    private void rollback(Long offset, InventoryRequest inventoryRequest, String corrId, String replyTo) {
         Map<String, Long> skuList = inventoryRequest.getSkuList();
 
         // rollback quantity
@@ -132,13 +107,6 @@ public class InventoryHandler {
 
         // message
         this.messageEventProducer.onData(corrId, replyTo, "ROLLBACK");
-
-        if (endOfBatch) {
-            // batch produce
-            this.batchEventProducer.onData("order", offset, inventoryOrderBatch);
-            // clear batch for a new batch
-            this.inventoryOrderBatch.clear();
-        }
     }
 
     public void handle(Message message, Long offset, Boolean endOfBatch) {
@@ -146,7 +114,7 @@ public class InventoryHandler {
         String replyTo = getReplyAdr(message);
         InventoryRequest inventoryRequest = objectMap(message);
 
-        if (corrId == null || replyTo == null) {
+        if (corrId.isEmpty() || replyTo.isEmpty()) {
             // reply produce
             this.messageEventProducer.onData(corrId, replyTo, DEFERRED_ERROR);
             return;
@@ -157,22 +125,30 @@ public class InventoryHandler {
         }
         switch (inventoryRequest.type) {
             case "order":
-                this.order(offset, inventoryRequest, corrId, replyTo, endOfBatch);
+                this.order(offset, inventoryRequest, corrId, replyTo);
                 break;
             case "insert":
-                this.insert(offset, inventoryRequest, corrId, replyTo, endOfBatch);
+                this.insert(offset, inventoryRequest, corrId, replyTo);
                 break;
             case "update":
-                this.update(offset, inventoryRequest, corrId, replyTo, endOfBatch);
+                this.update(offset, inventoryRequest, corrId, replyTo);
                 break;
             case "delete":
-                this.delete(offset, inventoryRequest, corrId, replyTo, endOfBatch);
+                this.delete(offset, inventoryRequest, corrId, replyTo);
                 break;
-            case "rollbacl":
-                this.rollback(offset, inventoryRequest, corrId, replyTo, endOfBatch);
+            case "rollback":
+                this.rollback(offset, inventoryRequest, corrId, replyTo);
                 break;
             default:
                 break;
+        }
+
+        // if endOfBatch then batch produce then clear
+        if (endOfBatch) {
+            // batch produce
+            this.batchEventProducer.onData("order", offset, inventoryOrderBatch);
+            // clear batch for a new batch
+            this.inventoryOrderBatch.clear();
         }
     }
 

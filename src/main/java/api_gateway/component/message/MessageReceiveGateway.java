@@ -3,6 +3,7 @@ package api_gateway.component.message;
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.support.RoutingContext;
 import io.gridgo.framework.support.Message;
+import logging.LoggerUtil;
 import org.joo.promise4j.Deferred;
 
 import java.util.Map;
@@ -17,8 +18,14 @@ public class MessageReceiveGateway extends MessageReceiveGatewayBaseComponent {
 
     protected void processRequest(RoutingContext rc, GridgoContext gc) {
         var message = rc.getMessage();
+        // get connect using message corrId
+        var deferred = this.deferredMap.remove(message.headers().get("corrId").toString());
 
-        var deferred = this.deferredMap.remove(message.headers().get("corrId"));
-        deferred.resolve(Message.ofAny(message.body()));
+        if (deferred == null) {
+            LoggerUtil.logError("NULL_DEFERRED");
+        } else {
+            // http respond
+            deferred.resolve(Message.ofAny(message.body()));
+        }
     }
 }

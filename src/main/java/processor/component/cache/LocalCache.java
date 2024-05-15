@@ -72,7 +72,9 @@ public class LocalCache {
     public void printStats() {
         CacheStats stats = this.cache.stats();
         System.out.println("Hit count: " + stats.hitCount());
+        System.out.println("Hit rate: " + stats.hitRate());
         System.out.println("Miss count: " + stats.missCount());
+        System.out.println("Miss rate: " + stats.missRate());
         System.out.println("Load success count: " + stats.loadSuccessCount());
         System.out.println("Load exception count: " + stats.loadExceptionCount());
         System.out.println("Total load time (nanoseconds): " + stats.totalLoadTime());

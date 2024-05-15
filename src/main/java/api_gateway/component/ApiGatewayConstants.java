@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class ApiGatewayConstants {
-    private static final String CONFIG_FILE_PATH = "config/application.properties";
+    private static final String CONFIG_FILE_PATH = "config/api_gateway.properties";
     private static final Properties ApiGatewayProps;
 
     static {
@@ -23,8 +23,20 @@ public class ApiGatewayConstants {
         return ApiGatewayProps.getProperty("VERTX_URL");
     }
 
+    public static String getApiGateway() {
+        return ApiGatewayProps.getProperty("API_GATEWAY");
+    }
+
     public static String getHttpGateway() {
         return ApiGatewayProps.getProperty("HTTP_GATEWAY");
+    }
+
+    public static String getZMQPullGateway() {
+        return ApiGatewayProps.getProperty("ZMQ_PULL_GATEWAY");
+    }
+
+    public static String getZMQReplyAddress() {
+        return ApiGatewayProps.getProperty("REPLY_TO");
     }
 
     public static String getKafkaBroker() {
@@ -37,10 +49,6 @@ public class ApiGatewayConstants {
 
     public static String getSerializerClassConfig() {
         return ApiGatewayProps.getProperty("SERIALIZER_CLASS_CONFIG");
-    }
-
-    public static String getZMQReplyAddress() {
-        return ApiGatewayProps.getProperty("REPLY_TO");
     }
 }
 

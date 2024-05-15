@@ -2,6 +2,7 @@ package database.seeder;
 
 import database.DatabaseConnector;
 import database.DatabaseQueryExecutor;
+import logging.LoggerUtil;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -15,16 +16,24 @@ public class Seeder {
     private static final Random random = new Random();
 
     public static void main(String[] args) throws IOException, SQLException {
-        Seeder.seed();
+        if (args.length < 1) {
+            LoggerUtil.logError("MISSING_NUMBER_OF_RECORDS_PARAM");
+        }
+        try {
+            Long numberOfRecords = Long.parseLong(args[0]);
+            Seeder.seed(numberOfRecords);
+        } catch (NumberFormatException e) {
+            LoggerUtil.logError(e.getMessage());
+        }
     }
 
-    public static void seed() {
+    public static void seed(Long numberOfRecords) {
         DatabaseConnector databaseConnector = DatabaseConnector.databaseConnectorFactory();
 
         Connection databaseConnection = databaseConnector.databaseConnect();
         DatabaseQueryExecutor databaseQueryExecutor = new DatabaseQueryExecutor(databaseConnection);
 
-        seedInventoryTable(databaseQueryExecutor, 10000);
+        seedInventoryTable(databaseQueryExecutor, numberOfRecords);
         seedOffsetTable(databaseQueryExecutor);
         databaseQueryExecutor.close();
     }
@@ -34,7 +43,7 @@ public class Seeder {
         for (long sku = 0; sku < numberOfRecords; sku++) {
             UUID uuid = UUID.randomUUID();
             String skuId = uuid.toString().substring(0, 4);
-            long quantity = random.nextInt(10000) + 1;
+            long quantity = random.nextInt(1000) + 1;
             inventoryBatch.put(skuId, quantity);
         }
 

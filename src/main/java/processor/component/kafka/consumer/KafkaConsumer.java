@@ -70,8 +70,8 @@ public class KafkaConsumer {
 
     // consumer poll message
     private void onRun(Long offset, Duration pollDuration) {
-        // assign MaxOffset
-        Long maxOffset = offset + 1;
+        // assign MaxOffset we will consume from
+        long maxOffset = offset + 1;
         // assign topic
         TopicPartition partitionToReadFrom = new TopicPartition(this.topic, this.partition);
         this.kafkaConsumer.assign(List.of(partitionToReadFrom));
@@ -81,13 +81,9 @@ public class KafkaConsumer {
         while (true) {
             ConsumerRecords<Object, Object> records = this.kafkaConsumer.poll(pollDuration);
             for (ConsumerRecord<Object, Object> record : records) {
-                if (maxOffset > record.offset()) {
-                    // nothing to do
-                } else {
-                    Message message = buildMessage(record);
-                    maxOffset = record.offset();
-                    this.inventoryEventProducer.onData(maxOffset, message);
-                }
+                Message message = buildMessage(record);
+                maxOffset = record.offset();
+                this.inventoryEventProducer.onData(maxOffset, message);
             }
         }
     }
@@ -98,9 +94,9 @@ public class KafkaConsumer {
                 onRun(offSet, pollDuration);
             }
         } catch (KafkaException e) {
-            LoggerUtil.logError("KafkaException caught on consumer thread", e);
+            LoggerUtil.logError("KAFKA_EXCEPTION_CONSUMER_THREAD: ", e);
         } catch (Exception e) {
-            LoggerUtil.logError("Exception caught on consumer thread", e);
+            LoggerUtil.logError("EXCEPTION_CONSUMER_THREAD: ", e);
         } finally {
             onClose();
         }

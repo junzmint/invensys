@@ -28,6 +28,6 @@ public class BatchEventProducer {
     }
 
     public void close() {
-        // nothing to here
+        // nothing to do here
     }
 }

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class DatabaseConstants {
-    private static final String CONFIG_FILE_PATH = "config/application.properties";
+    private static final String CONFIG_FILE_PATH = "config/database.properties";
     private static final Properties DatabaseProps;
 
     static {
@@ -19,7 +19,7 @@ public class DatabaseConstants {
         }
     }
 
-    public static String getDatabaseConnnection() {
+    public static String getDatabaseConnection() {
         return DatabaseProps.getProperty("DB_CONNECTION");
     }
 

@@ -28,6 +28,14 @@ import java.sql.Connection;
 import java.time.Duration;
 
 public class Processor {
+    private final static String KAFKA_BROKER = ProcessorConstants.getKafkaBroker();
+    private final static String KAFKA_TOPIC = ProcessorConstants.getKafkaTopic();
+    private final static String DESERIALIZER_CLASS_CONFIG = ProcessorConstants.getDeserializerClassConfig();
+    private final static String GROUP_ID = ProcessorConstants.getGroupId();
+    private final static String AUTO_OFFSET_RESET = ProcessorConstants.getAutoOffsetReset();
+    private final static Long CACHE_SIZE = ProcessorConstants.getCacheSize();
+    private final static Long CACHE_INIT_RECORDS = ProcessorConstants.getCacheInitRecords();
+
     private final DatabaseQueryExecutor databaseQueryExecutor;
     private final MessageEventProducer messageEventProducer;
     private final BatchEventProducer batchEventProducer;
@@ -43,7 +51,7 @@ public class Processor {
         // connect to database and create a query executor instance
         DatabaseConnector databaseConnector = DatabaseConnector.databaseConnectorFactory();
         Connection databaseConnection = databaseConnector.databaseConnect();
-        this.databaseQueryExecutor = new DatabaseQueryExecutor(databaseConnection);
+        databaseQueryExecutor = new DatabaseQueryExecutor(databaseConnection);
 
         // message producer
         this.messageHandler = new MessageHandler();
@@ -55,7 +63,7 @@ public class Processor {
         ).getRingBuffer());
 
         // batch producer
-        this.batchHandler = new BatchHandler(this.databaseQueryExecutor);
+        this.batchHandler = new BatchHandler(databaseQueryExecutor);
         this.batchEventProducer = new BatchEventProducer(new BatchRingBuffer(
                 new BatchEventFactory(),
                 2048,
@@ -64,10 +72,10 @@ public class Processor {
         ).getRingBuffer());
 
         // create a local cache for in memory processing
-        this.localCache = new LocalCache(this.databaseQueryExecutor, 10000L);
-        localCache.initCache(2000L);
+        this.localCache = new LocalCache(databaseQueryExecutor, CACHE_SIZE);
+        localCache.initCache(CACHE_INIT_RECORDS);
 
-        // create a inventory handler
+        // create an inventory handler
         this.inventoryHandler = new InventoryHandler(
                 this.localCache,
                 this.messageEventProducer,
@@ -82,22 +90,21 @@ public class Processor {
         ).getRingBuffer());
 
         // kafka consumer config
-
         KafkaConsumerConfig config = new KafkaConsumerConfig(
-                ProcessorConstants.getKafkaBroker(),
-                ProcessorConstants.getDeserializerClassConfig(),
-                ProcessorConstants.getDeserializerClassConfig(),
-                "earliest",
+                KAFKA_BROKER,
+                DESERIALIZER_CLASS_CONFIG,
+                DESERIALIZER_CLASS_CONFIG,
+                AUTO_OFFSET_RESET,
                 false,
-                ProcessorConstants.getGroupId(),
-                ProcessorConstants.getKafkaTopic(),
+                GROUP_ID,
+                KAFKA_TOPIC,
                 0
         );
 
         this.consumer = new KafkaConsumer(config, inventoryEventProducer);
 
-        // Get max offset from database
-        this.maxOffset = this.databaseQueryExecutor.getMaxOffset("MaxOffset");
+        // get max offset from database
+        this.maxOffset = databaseQueryExecutor.getMaxOffset("MaxOffset");
     }
 
     public void start() {
@@ -105,7 +112,7 @@ public class Processor {
     }
 
     public void stop() {
-        // get local cache stats
+        // log local cache stats
         this.localCache.printStats();
 
         // close components
@@ -117,6 +124,6 @@ public class Processor {
         this.batchHandler.close();
         this.messageEventProducer.close();
         this.messageHandler.close();
-        this.databaseQueryExecutor.close();
+        databaseQueryExecutor.close();
     }
 }

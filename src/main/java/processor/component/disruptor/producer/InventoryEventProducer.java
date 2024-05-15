@@ -26,6 +26,6 @@ public class InventoryEventProducer {
     }
 
     public void close() {
-        // nothing to here
+        // nothing to do here
     }
 }

@@ -36,6 +36,6 @@ public class BatchHandler {
     }
 
     public void close() {
-        // nothing to here
+        // nothing to do here
     }
 }

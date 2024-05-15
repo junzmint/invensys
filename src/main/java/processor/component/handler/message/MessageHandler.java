@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MessageHandler {
+    // we can have many api gateways, so we need to open a message produce gateway for each of the api gateways
+    // this map is message produce gateways by reply address
     private final Map<String, MessageProduceGateway> messageProduceGatewayMap;
 
     public MessageHandler() {
@@ -19,6 +21,7 @@ public class MessageHandler {
         message.headers().setAny("corrId", corrId);
 
         MessageProduceGateway messageProduceGateway = this.messageProduceGatewayMap.get(replyTo);
+
         if (messageProduceGateway != null) {
             messageProduceGateway.getContext().findGatewayMandatory(replyTo).send(message);
         } else {
@@ -29,7 +32,7 @@ public class MessageHandler {
     }
 
     private void onStart() {
-        // nothing to do
+        // nothing to do here
     }
 
     public void close() {
