@@ -23,9 +23,6 @@ services:
 
   app:
     build: .
-    ports:
-      - "8080:8080"
-      - "3306:3306"
     depends_on:
       - kafka
     restart: on-failure

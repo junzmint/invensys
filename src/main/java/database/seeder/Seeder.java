@@ -21,6 +21,7 @@ public class Seeder {
         }
         try {
             Long numberOfRecords = Long.parseLong(args[0]);
+            System.out.println("Seeding");
             Seeder.seed(numberOfRecords);
         } catch (NumberFormatException e) {
             LoggerUtil.logError(e.getMessage());

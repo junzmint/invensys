@@ -4,10 +4,8 @@ import logging.LoggerUtil;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import processor.component.ProcessorConstants;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Properties;
@@ -15,18 +13,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class KafkaTopicCreator {
-    private static final Logger logger = LoggerFactory.getLogger(KafkaTopicCreator.class);
-
     public static void main(String[] args) throws IOException {
         KafkaTopicCreator.create(1, (short) 1);
     }
 
     public static void create(int partitions, short replications) throws IOException {
         // App config
-        Properties appProps = new Properties();
-        appProps.load(new FileInputStream("config/application.properties"));
-        String bootstrapServer = appProps.getProperty("KAFKA_BROKER");
-        String topicName = appProps.getProperty("KAFKA_TOPIC");
+        String bootstrapServer = ProcessorConstants.getKafkaBroker();
+        String topicName = ProcessorConstants.getKafkaTopic();
 
         // AdminClient config
         Properties props = new Properties();

@@ -24,7 +24,7 @@ public class CSVDataGeneration {
     }
 
     public void generate() {
-        String path = "src/main/java/utils/testing/csv/file/json_data.csv";
+        String path = "src/main/java/performance_test/generator/data/json_data.csv";
         List<String> skuIds = this.getSkuIds();
         List<Map<String, Long>> data = this.createDataSet(skuIds);
         this.csvGenerate(data, path);
