@@ -35,7 +35,7 @@ public class HttpGateway extends HttpGatewayBaseComponent {
         message.headers().setAny("corrId", key);
         message.headers().setAny("replyTo", this.replyTo);
         // store corrId
-        this.deferredMap.put(Long.toString(id), deferred);
+        this.deferredMap.put(key, deferred);
         // produce
         this.kafkaProducer.produce(message, deferred, key, false);
     }

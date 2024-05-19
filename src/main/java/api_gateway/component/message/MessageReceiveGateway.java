@@ -19,7 +19,7 @@ public class MessageReceiveGateway extends MessageReceiveGatewayBaseComponent {
     protected void processRequest(RoutingContext rc, GridgoContext gc) {
         var message = rc.getMessage();
         // get connect using message corrId
-        var deferred = this.deferredMap.remove(message.headers().get("corrId").toString());
+        var deferred = this.deferredMap.remove(message.headers().get("corrId"));
 
         if (deferred == null) {
             LoggerUtil.logError("NULL_DEFERRED");

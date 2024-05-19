@@ -83,7 +83,7 @@ public class DatabaseQueryExecutor {
             }
             statement.executeBatch();
             statement.close();
-            LoggerUtil.logInfo("INVENTORY_INSERTED");
+            LoggerUtil.logInfo("INVENTORY_BATCH_INSERTED");
         } catch (SQLException e) {
             LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
@@ -117,7 +117,7 @@ public class DatabaseQueryExecutor {
             }
             statement.executeBatch();
             statement.close();
-            LoggerUtil.logInfo("INVENTORY_UPDATED");
+            LoggerUtil.logInfo("INVENTORY_BATCH_UPDATED");
         } catch (SQLException e) {
             LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
@@ -134,7 +134,7 @@ public class DatabaseQueryExecutor {
             }
             statement.executeBatch();
             statement.close();
-            LoggerUtil.logInfo("INVENTORY_DELETED");
+            LoggerUtil.logInfo("INVENTORY_BATCH_DELETED");
         } catch (SQLException e) {
             LoggerUtil.logError("SQL_EXCEPTION: ", e);
         }
