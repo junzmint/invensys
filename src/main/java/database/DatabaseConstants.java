@@ -1,7 +1,5 @@
 package database;
 
-import logging.LoggerUtil;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -15,7 +13,7 @@ public class DatabaseConstants {
         try {
             DatabaseProps.load(new FileInputStream(CONFIG_FILE_PATH));
         } catch (IOException e) {
-            LoggerUtil.logError(e.getMessage());
+            DatabaseLogger.logDatabaseError("IO_ERROR", e);
         }
     }
 

@@ -1,0 +1,53 @@
+<configuration>
+    <!-- database logs -->
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>DATABASE_INFO</Marker>
+        <OnMatch>ACCEPT</OnMatch>
+    </turboFilter>
+    <appender name="DATABASE_INFO_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/database/database_info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/database/database_info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>3GB</maxFileSize>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>DATABASE_INFO</marker>
+            </evaluator>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+    </appender>
+
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>DATABASE_ERROR</Marker>
+        <OnMatch>ACCEPT</OnMatch>
+    </turboFilter>
+    <appender name="DATABASE_ERROR_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/database/database_error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/database/database_error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>3GB</maxFileSize>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n%ex</pattern>
+            <charset>UTF-8</charset>
+            <outputPatternAsHeader>false</outputPatternAsHeader>
+        </encoder>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>DATABASE_ERROR</marker>
+            </evaluator>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+    </appender>
+    <root>
+        <!-- database logs -->
+        <appender-ref ref="DATABASE_INFO_FILE"/>
+        <appender-ref ref="DATABASE_ERROR_FILE"/>
+    </root>
+</configuration>

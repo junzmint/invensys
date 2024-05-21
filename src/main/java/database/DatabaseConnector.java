@@ -1,7 +1,5 @@
 package database;
 
-import logging.LoggerUtil;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -42,7 +40,7 @@ public class DatabaseConnector {
             this.connection = DriverManager.getConnection(dbUrl, this.user, this.password);
             return this.connection;
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL_EXCEPTION: ", e);
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
         }
         return null;
     }
@@ -53,7 +51,7 @@ public class DatabaseConnector {
             this.connection = DriverManager.getConnection(dbUrl, this.user, this.password);
             return this.connection;
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL_EXCEPTION: ", e);
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
         }
         return null;
     }

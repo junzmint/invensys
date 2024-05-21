@@ -1,30 +1,27 @@
 package database.seeder;
 
 import database.DatabaseConnector;
+import database.DatabaseLogger;
 import database.DatabaseQueryExecutor;
-import logging.LoggerUtil;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class Seeder {
     private static final Random random = new Random();
 
     public static void main(String[] args) throws IOException, SQLException {
         if (args.length < 1) {
-            LoggerUtil.logError("MISSING_NUMBER_OF_RECORDS_PARAM");
+            DatabaseLogger.logDatabaseError("MISSING_NUMBER_OF_RECORDS_PARAM", new MissingFormatArgumentException("NUMBER_OF_RECORDS"));
         }
         try {
             Long numberOfRecords = Long.parseLong(args[0]);
             System.out.println("Seeding");
             Seeder.seed(numberOfRecords);
         } catch (NumberFormatException e) {
-            LoggerUtil.logError(e.getMessage());
+            DatabaseLogger.logDatabaseError("SEED_ERROR", e);
         }
     }
 
@@ -49,9 +46,12 @@ public class Seeder {
         }
 
         databaseQueryExecutor.insertInventoryTable(inventoryBatch);
+        DatabaseLogger.logDatabaseInfo("INVENTORY_SEEDED", Thread.currentThread().getStackTrace());
     }
 
     public static void seedOffsetTable(DatabaseQueryExecutor databaseQueryExecutor) {
         databaseQueryExecutor.insertOffsetTable("MaxOffset", (long) -1);
+
+        DatabaseLogger.logDatabaseInfo("OFFSET_SEEDED", Thread.currentThread().getStackTrace());
     }
 }

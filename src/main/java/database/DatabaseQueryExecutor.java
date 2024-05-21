@@ -1,7 +1,5 @@
 package database;
 
-import logging.LoggerUtil;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,9 +24,9 @@ public class DatabaseQueryExecutor {
         try (PreparedStatement statement = this.connection.prepareStatement(sql)) {
             statement.executeUpdate();
             statement.close();
-            LoggerUtil.logInfo("DB_DROPPED");
+            DatabaseLogger.logDatabaseInfo("DB_DROPPED", Thread.currentThread().getStackTrace());
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL_EXCEPTION: ", e);
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
         }
     }
 
@@ -37,9 +35,9 @@ public class DatabaseQueryExecutor {
         try (PreparedStatement statement = this.connection.prepareStatement(sql)) {
             statement.executeUpdate();
             statement.close();
-            LoggerUtil.logInfo("DB_CREATED");
+            DatabaseLogger.logDatabaseInfo("DB_CREATED", Thread.currentThread().getStackTrace());
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL_EXCEPTION: ", e);
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
         }
     }
 
@@ -49,9 +47,9 @@ public class DatabaseQueryExecutor {
             Statement statement = this.connection.createStatement();
             statement.executeUpdate(queryStatement);
             statement.close();
-            LoggerUtil.logInfo("TABLE_CREATED: " + tableName);
+            DatabaseLogger.logDatabaseInfo("TABLE_CREATED: " + tableName, Thread.currentThread().getStackTrace());
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL_EXCEPTION:", e);
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
         }
     }
 
@@ -64,9 +62,9 @@ public class DatabaseQueryExecutor {
             statement.setLong(2, offset);
             statement.executeUpdate();
             statement.close();
-            LoggerUtil.logInfo("OFFSET_INSERTED");
+            DatabaseLogger.logDatabaseInfo("OFFSET_INSERTED: ", Thread.currentThread().getStackTrace());
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL_EXCEPTION: ", e);
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
         }
     }
 
@@ -83,9 +81,9 @@ public class DatabaseQueryExecutor {
             }
             statement.executeBatch();
             statement.close();
-            LoggerUtil.logInfo("INVENTORY_BATCH_INSERTED");
+            DatabaseLogger.logDatabaseInfo("INVENTORY_BATCH_INSERTED: ", Thread.currentThread().getStackTrace());
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL_EXCEPTION: ", e);
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
         }
     }
 
@@ -98,9 +96,9 @@ public class DatabaseQueryExecutor {
             statement.setString(2, id);
             statement.executeUpdate();
             statement.close();
-            LoggerUtil.logInfo("OFFSET_UPDATED");
+            DatabaseLogger.logDatabaseInfo("OFFSET_UPDATED: ", Thread.currentThread().getStackTrace());
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL_EXCEPTION: ", e);
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
         }
     }
 
@@ -117,9 +115,9 @@ public class DatabaseQueryExecutor {
             }
             statement.executeBatch();
             statement.close();
-            LoggerUtil.logInfo("INVENTORY_BATCH_UPDATED");
+            DatabaseLogger.logDatabaseInfo("INVENTORY_BATCH_UPDATED: ", Thread.currentThread().getStackTrace());
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL_EXCEPTION: ", e);
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
         }
     }
 
@@ -134,9 +132,9 @@ public class DatabaseQueryExecutor {
             }
             statement.executeBatch();
             statement.close();
-            LoggerUtil.logInfo("INVENTORY_BATCH_DELETED");
+            DatabaseLogger.logDatabaseInfo("INVENTORY_BATCH_DELETED: ", Thread.currentThread().getStackTrace());
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL_EXCEPTION: ", e);
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
         }
     }
 
@@ -151,9 +149,9 @@ public class DatabaseQueryExecutor {
                 return result.getLong("offset");
             }
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL_EXCEPTION: ", e);
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
         }
-        LoggerUtil.logError("CANNOT_GET_MAX_OFFSET");
+        DatabaseLogger.logDatabaseInfo("CANNOT_GET_MAX_OFFSET", Thread.currentThread().getStackTrace());
         return null;
     }
 
@@ -169,9 +167,9 @@ public class DatabaseQueryExecutor {
                 return result.getLong("quantity");
             }
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL_EXCEPTION: ", e);
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
         }
-        LoggerUtil.logError("CANNOT_GET_SKU: " + skuId);
+        DatabaseLogger.logDatabaseInfo("CANNOT_GET_SKU: " + skuId, Thread.currentThread().getStackTrace());
         return null;
     }
 
@@ -190,7 +188,7 @@ public class DatabaseQueryExecutor {
             }
             statement.close();
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL_EXCEPTION: ", e);
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
         }
         return inventoryRecords;
     }
@@ -208,7 +206,7 @@ public class DatabaseQueryExecutor {
             }
             statement.close();
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL_EXCEPTION: ", e);
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
         }
         return inventorySkuIds;
     }
@@ -218,7 +216,7 @@ public class DatabaseQueryExecutor {
         try {
             this.connection.close();
         } catch (SQLException e) {
-            LoggerUtil.logError("SQL_EXCEPTION: ", e);
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
         }
     }
 }

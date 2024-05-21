@@ -42,6 +42,8 @@ config/api_gateway.properties
 config/processor.properties
 config/database.properties
 
-
 ### File generate ###
 src/main/java/performance_test/generator/data
+
+### Logging ###
+logs
