@@ -26,8 +26,10 @@ import processor.component.kafka.consumer.KafkaConsumerConfig;
 
 import java.sql.Connection;
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 public class Processor {
+    // constants
     private final static String KAFKA_BROKER = ProcessorConstants.getKafkaBroker();
     private final static String KAFKA_TOPIC = ProcessorConstants.getKafkaTopic();
     private final static String DESERIALIZER_CLASS_CONFIG = ProcessorConstants.getDeserializerClassConfig();
@@ -35,7 +37,9 @@ public class Processor {
     private final static String AUTO_OFFSET_RESET = ProcessorConstants.getAutoOffsetReset();
     private final static Long CACHE_SIZE = ProcessorConstants.getCacheSize();
     private final static Long CACHE_INIT_RECORDS = ProcessorConstants.getCacheInitRecords();
+    private final static Long CACHE_STAT_LOG_AFTER = ProcessorConstants.getCacheStatLogAfter();
 
+    // components
     private final DatabaseQueryExecutor databaseQueryExecutor;
     private final MessageEventProducer messageEventProducer;
     private final BatchEventProducer batchEventProducer;
@@ -45,8 +49,10 @@ public class Processor {
     private final MessageHandler messageHandler;
     private final BatchHandler batchHandler;
     private final KafkaConsumer consumer;
+    // offset we will consume from after start/restart
     private final Long maxOffset;
 
+    // construct components
     public Processor() {
         // connect to database and create a query executor instance
         DatabaseConnector databaseConnector = DatabaseConnector.databaseConnectorFactory();
@@ -108,13 +114,13 @@ public class Processor {
     }
 
     public void start() {
+        // schedule log for local cache
+        this.localCache.scheduleCacheLogging(CACHE_STAT_LOG_AFTER, TimeUnit.SECONDS);
+        // run consumer
         this.consumer.run(this.maxOffset, Duration.ofMillis(100));
     }
 
     public void stop() {
-        // log local cache stats
-        this.localCache.printStats();
-
         // close components
         this.consumer.onClose();
         this.inventoryEventProducer.close();
@@ -124,6 +130,6 @@ public class Processor {
         this.batchHandler.close();
         this.messageEventProducer.close();
         this.messageHandler.close();
-        databaseQueryExecutor.close();
+        this.databaseQueryExecutor.close();
     }
 }

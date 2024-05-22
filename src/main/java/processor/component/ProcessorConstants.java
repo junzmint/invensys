@@ -47,4 +47,8 @@ public class ProcessorConstants {
         return Long.parseLong(ProcessorProps.getProperty("CACHE_INIT_RECORDS"));
     }
 
+    // after CACHE_LOG_AFTER secs, logs cache statistics
+    public static Long getCacheStatLogAfter() {
+        return Long.parseLong(ProcessorProps.getProperty("CACHE_STAT_LOG_AFTER"));
+    }
 }

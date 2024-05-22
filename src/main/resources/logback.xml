@@ -14,6 +14,7 @@
                 <marker>KAFKA_PRODUCER_INFO</marker>
                 <marker>HTTP_RESPOND</marker>
 
+                <appender-ref ref="CACHE_STAT_FILE"/>
             </evaluator>
             <OnMismatch>DENY</OnMismatch>
         </filter>
@@ -157,6 +158,29 @@
         </filter>
     </appender>
 
+    <!-- processor logs -->
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>CACHE_STAT</Marker>
+        <OnMatch>ACCEPT</OnMatch>
+    </turboFilter>
+    <appender name="CACHE_STAT_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/processor/cache_stat.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/processor/cache_stat.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>3GB</maxFileSize>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>CACHE_STAT</marker>
+            </evaluator>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+    </appender>
+
     <root>
         <!-- console logs -->
         <appender-ref ref="CONSOLE"/>
@@ -168,5 +192,7 @@
         <appender-ref ref="HTTP_REQUEST_FILE"/>
         <appender-ref ref="KAFKA_PRODUCER_INFO_FILE"/>
         <appender-ref ref="HTTP_RESPOND_FILE"/>
+        <!-- processor logs -->
+        <appender-ref ref="CACHE_STAT_FILE"/>
     </root>
 </configuration>

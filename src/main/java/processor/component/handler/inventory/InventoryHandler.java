@@ -71,7 +71,7 @@ public class InventoryHandler {
             Long inventoryQuantity = this.localCache.get(skuId);
             if (inventoryQuantity == (long) -1) {
                 // key not existed message produce
-                this.messageEventProducer.onData(corrId, replyTo, "INVALID_SKU");
+                this.messageEventProducer.onData(corrId, replyTo, "INVALID_SKU: " + skuId);
                 return;
             }
             inventoryQuantity = inventoryQuantity - entry.getValue();

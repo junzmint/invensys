@@ -3,7 +3,6 @@ package performance_test.generator;
 import com.google.gson.Gson;
 import database.DatabaseConnector;
 import database.DatabaseQueryExecutor;
-import logging.LoggerUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -78,7 +77,7 @@ public class CSVDataGeneration {
 
             System.out.println("GENERATE_SUCCESS");
         } catch (IOException e) {
-            LoggerUtil.logError(e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 

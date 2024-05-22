@@ -6,13 +6,18 @@ import com.google.common.cache.CacheStats;
 import com.google.common.cache.LoadingCache;
 import database.DatabaseQueryExecutor;
 import lombok.Getter;
+import processor.component.ProcessorLogger;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 public class LocalCache {
+    private final ScheduledExecutorService logScheduler = Executors.newScheduledThreadPool(1);
     private final DatabaseQueryExecutor databaseQueryExecutor;
     private final LoadingCache<String, Long> cache;
 
@@ -65,23 +70,41 @@ public class LocalCache {
         this.putAll(inventoryRecords);
     }
 
-    public CacheStats getStats() {
-        return this.cache.stats();
+    private String getStats() {
+        CacheStats stats = this.cache.stats();
+
+        return String.format(
+                "Cache statistics: Total requests=%d, Hit count=%d, Miss count=%d, Eviction count=%d, Hit rate=%.2f%%, Miss rate=%.2f%%, Total entries=%d, Total load time=%d nanoseconds",
+                stats.requestCount(),
+                stats.hitCount(),
+                stats.missCount(),
+                stats.evictionCount(),
+                stats.hitRate() * 100,
+                stats.missRate() * 100,
+                cache.size(),
+                stats.totalLoadTime());
     }
 
-    public void printStats() {
-        CacheStats stats = this.cache.stats();
-        System.out.println("Hit count: " + stats.hitCount());
-        System.out.println("Hit rate: " + stats.hitRate());
-        System.out.println("Miss count: " + stats.missCount());
-        System.out.println("Miss rate: " + stats.missRate());
-        System.out.println("Load success count: " + stats.loadSuccessCount());
-        System.out.println("Load exception count: " + stats.loadExceptionCount());
-        System.out.println("Total load time (nanoseconds): " + stats.totalLoadTime());
-        System.out.println("Eviction count: " + stats.evictionCount());
+    private void printStats() {
+        System.out.println(this.getStats());
+    }
+
+    public void scheduleCacheLogging(long interval, TimeUnit timeUnit) {
+        this.logScheduler.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                ProcessorLogger.logCacheStat(getStats());
+            }
+        }, 0, interval, timeUnit);
+    }
+
+    private void shutdownLogScheduler() {
+        this.logScheduler.shutdown();
     }
 
     public void onStop() {
+        this.printStats();
         this.cache.cleanUp();
+        this.shutdownLogScheduler();
     }
 }
