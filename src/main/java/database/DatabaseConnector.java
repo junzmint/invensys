@@ -39,8 +39,8 @@ public class DatabaseConnector {
             String dbUrl = "jdbc:" + this.dbConnection + "://" + this.host + ":" + this.port + "/" + this.dbName;
             this.connection = DriverManager.getConnection(dbUrl, this.user, this.password);
             return this.connection;
-        } catch (SQLException e) {
-            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
+        } catch (SQLException exception) {
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
         return null;
     }
@@ -50,8 +50,8 @@ public class DatabaseConnector {
             String dbUrl = "jdbc:" + this.dbConnection + "://" + this.host + ":" + this.port + "/";
             this.connection = DriverManager.getConnection(dbUrl, this.user, this.password);
             return this.connection;
-        } catch (SQLException e) {
-            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
+        } catch (SQLException exception) {
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
         return null;
     }

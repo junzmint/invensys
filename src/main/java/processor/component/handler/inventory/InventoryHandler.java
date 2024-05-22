@@ -3,8 +3,8 @@ package processor.component.handler.inventory;
 import com.google.gson.Gson;
 import io.gridgo.bean.BElement;
 import io.gridgo.framework.support.Message;
-import logging.LoggerUtil;
 import lombok.Getter;
+import processor.component.ProcessorLogger;
 import processor.component.cache.LocalCache;
 import processor.component.disruptor.producer.BatchEventProducer;
 import processor.component.disruptor.producer.MessageEventProducer;
@@ -35,7 +35,7 @@ public class InventoryHandler {
     }
 
     public void close() {
-        // nothing to do here
+        this.inventoryOrderBatch.clear();
     }
 
     private void insert(Long offset, InventoryRequest inventoryRequest, String corrId, String replyTo) {
@@ -202,8 +202,8 @@ public class InventoryHandler {
             }
 
             return inventoryRequest;
-        } catch (Exception e) {
-            LoggerUtil.logError(e.getMessage());
+        } catch (Exception exception) {
+            ProcessorLogger.logProcessorError("PARSE_OBJECT_ERROR", exception);
             return null;
         }
     }

@@ -20,8 +20,8 @@ public class Seeder {
             Long numberOfRecords = Long.parseLong(args[0]);
             System.out.println("Seeding");
             Seeder.seed(numberOfRecords);
-        } catch (NumberFormatException e) {
-            DatabaseLogger.logDatabaseError("SEED_ERROR", e);
+        } catch (NumberFormatException exception) {
+            DatabaseLogger.logDatabaseError("SEED_ERROR", exception);
         }
     }
 

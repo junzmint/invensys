@@ -12,8 +12,8 @@ public class DatabaseConstants {
         DatabaseProps = new Properties();
         try {
             DatabaseProps.load(new FileInputStream(CONFIG_FILE_PATH));
-        } catch (IOException e) {
-            DatabaseLogger.logDatabaseError("IO_ERROR", e);
+        } catch (IOException exception) {
+            DatabaseLogger.logDatabaseError("CONFIG_LOADER_ERROR", exception);
         }
     }
 

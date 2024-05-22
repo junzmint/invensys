@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MessageHandler {
     // we can have many api gateways, so we need to open a message produce gateway for each of the api gateways
-    // this map is message produce gateways by reply address
+    // this map has keys are reply address and values are message produce gateways
     private final Map<String, MessageProduceGateway> messageProduceGatewayMap;
 
     public MessageHandler() {

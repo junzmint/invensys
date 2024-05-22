@@ -1,7 +1,5 @@
 package processor.component;
 
-import logging.LoggerUtil;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -14,8 +12,8 @@ public class ProcessorConstants {
         ProcessorProps = new Properties();
         try {
             ProcessorProps.load(new FileInputStream(CONFIG_FILE_PATH));
-        } catch (IOException e) {
-            LoggerUtil.logError(e.getMessage());
+        } catch (IOException exception) {
+            ProcessorLogger.logProcessorError("CONFIG_LOADER_ERROR", exception);
         }
     }
 

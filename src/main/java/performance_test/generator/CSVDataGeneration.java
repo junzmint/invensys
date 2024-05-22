@@ -76,8 +76,8 @@ public class CSVDataGeneration {
             writer.close();
 
             System.out.println("GENERATE_SUCCESS");
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        } catch (IOException exception) {
+            System.out.println(exception.getMessage());
         }
     }
 

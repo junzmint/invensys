@@ -25,8 +25,8 @@ public class DatabaseQueryExecutor {
             statement.executeUpdate();
             statement.close();
             DatabaseLogger.logDatabaseInfo("DB_DROPPED", Thread.currentThread().getStackTrace());
-        } catch (SQLException e) {
-            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
+        } catch (SQLException exception) {
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
     }
 
@@ -36,8 +36,8 @@ public class DatabaseQueryExecutor {
             statement.executeUpdate();
             statement.close();
             DatabaseLogger.logDatabaseInfo("DB_CREATED", Thread.currentThread().getStackTrace());
-        } catch (SQLException e) {
-            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
+        } catch (SQLException exception) {
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
     }
 
@@ -48,8 +48,8 @@ public class DatabaseQueryExecutor {
             statement.executeUpdate(queryStatement);
             statement.close();
             DatabaseLogger.logDatabaseInfo("TABLE_CREATED: " + tableName, Thread.currentThread().getStackTrace());
-        } catch (SQLException e) {
-            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
+        } catch (SQLException exception) {
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
     }
 
@@ -63,8 +63,8 @@ public class DatabaseQueryExecutor {
             statement.executeUpdate();
             statement.close();
             DatabaseLogger.logDatabaseInfo("OFFSET_INSERTED", Thread.currentThread().getStackTrace());
-        } catch (SQLException e) {
-            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
+        } catch (SQLException exception) {
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
     }
 
@@ -82,8 +82,8 @@ public class DatabaseQueryExecutor {
             statement.executeBatch();
             statement.close();
             DatabaseLogger.logDatabaseInfo("INVENTORY_BATCH_INSERTED", Thread.currentThread().getStackTrace());
-        } catch (SQLException e) {
-            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
+        } catch (SQLException exception) {
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
     }
 
@@ -97,8 +97,8 @@ public class DatabaseQueryExecutor {
             statement.executeUpdate();
             statement.close();
             DatabaseLogger.logDatabaseInfo("OFFSET_UPDATED", Thread.currentThread().getStackTrace());
-        } catch (SQLException e) {
-            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
+        } catch (SQLException exception) {
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
     }
 
@@ -116,8 +116,8 @@ public class DatabaseQueryExecutor {
             statement.executeBatch();
             statement.close();
             DatabaseLogger.logDatabaseInfo("INVENTORY_BATCH_UPDATED", Thread.currentThread().getStackTrace());
-        } catch (SQLException e) {
-            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
+        } catch (SQLException exception) {
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
     }
 
@@ -133,8 +133,8 @@ public class DatabaseQueryExecutor {
             statement.executeBatch();
             statement.close();
             DatabaseLogger.logDatabaseInfo("INVENTORY_BATCH_DELETED", Thread.currentThread().getStackTrace());
-        } catch (SQLException e) {
-            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
+        } catch (SQLException exception) {
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
     }
 
@@ -148,8 +148,8 @@ public class DatabaseQueryExecutor {
             while (result.next()) {
                 return result.getLong("offset");
             }
-        } catch (SQLException e) {
-            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
+        } catch (SQLException exception) {
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
         DatabaseLogger.logDatabaseInfo("CANNOT_GET_MAX_OFFSET", Thread.currentThread().getStackTrace());
         return null;
@@ -166,8 +166,8 @@ public class DatabaseQueryExecutor {
             while (result.next()) {
                 return result.getLong("quantity");
             }
-        } catch (SQLException e) {
-            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
+        } catch (SQLException exception) {
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
         DatabaseLogger.logDatabaseInfo("CANNOT_GET_SKU: " + skuId, Thread.currentThread().getStackTrace());
         return null;
@@ -187,8 +187,8 @@ public class DatabaseQueryExecutor {
                 inventoryRecords.put(skuId, quantity);
             }
             statement.close();
-        } catch (SQLException e) {
-            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
+        } catch (SQLException exception) {
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
         return inventoryRecords;
     }
@@ -205,8 +205,8 @@ public class DatabaseQueryExecutor {
                 inventorySkuIds.add(skuId);
             }
             statement.close();
-        } catch (SQLException e) {
-            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
+        } catch (SQLException exception) {
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
         return inventorySkuIds;
     }
@@ -215,8 +215,8 @@ public class DatabaseQueryExecutor {
     public void close() {
         try {
             this.connection.close();
-        } catch (SQLException e) {
-            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", e);
+        } catch (SQLException exception) {
+            DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
     }
 }

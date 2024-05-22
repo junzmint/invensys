@@ -61,8 +61,8 @@ public class ApiGateway extends NonameComponentLifecycle {
         this.appContext.attachComponent(this.messageReceiveGateway);
     }
 
-    private void onException(Throwable ex) {
-        ApiGatewayLogger.logApiGatewayError("INTERNAL_ERROR", ex);
+    private void onException(Throwable exception) {
+        ApiGatewayLogger.logApiGatewayError("INTERNAL_ERROR", exception);
     }
 
     @Override

@@ -2,8 +2,8 @@ package processor.component.handler.message.zeromq;
 
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.impl.DefaultGridgoContextBuilder;
-import logging.LoggerUtil;
 import lombok.Getter;
+import processor.component.ProcessorLogger;
 
 @Getter
 public class MessageProduceGateway {
@@ -23,7 +23,7 @@ public class MessageProduceGateway {
         this.context.stop();
     }
 
-    private void onException(Throwable ex) {
-        LoggerUtil.logError("INTERNAL_ERROR: ", ex);
+    private void onException(Throwable exception) {
+        ProcessorLogger.logProcessorError("INTERNAL_ERROR", exception);
     }
 }

@@ -3,13 +3,13 @@ package processor.component.kafka.consumer;
 import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
 import io.gridgo.framework.support.Message;
-import logging.LoggerUtil;
 import lombok.NonNull;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.header.Header;
+import processor.component.ProcessorLogger;
 import processor.component.disruptor.producer.InventoryEventProducer;
 
 import java.time.Duration;
@@ -93,16 +93,16 @@ public class KafkaConsumer {
             if (!Thread.currentThread().isInterrupted()) {
                 onRun(offSet, pollDuration);
             }
-        } catch (KafkaException e) {
-            LoggerUtil.logError("KAFKA_EXCEPTION_CONSUMER_THREAD: ", e);
-        } catch (Exception e) {
-            LoggerUtil.logError("EXCEPTION_CONSUMER_THREAD: ", e);
+        } catch (KafkaException exception) {
+            ProcessorLogger.logProcessorError("KAFKA_EXCEPTION_CONSUMER_THREAD", exception);
+        } catch (Exception exception) {
+            ProcessorLogger.logProcessorError("EXCEPTION_CONSUMER_THREAD", exception);
         } finally {
             onClose();
         }
     }
 
     public void onClose() {
-        // nothing to do here
+        this.kafkaConsumer.close();
     }
 }

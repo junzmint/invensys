@@ -14,8 +14,8 @@ public class ApiGatewayLogger {
     private static final Marker KAFKA_PRODUCER_INFO_MARKER = MarkerFactory.getMarker("KAFKA_PRODUCER_INFO");
     private static final Marker HTTP_RESPOND_MARKER = MarkerFactory.getMarker("HTTP_RESPOND");
 
-    public static void logApiGatewayError(String message, Throwable ex) {
-        logger.error(API_GATEWAY_ERROR_MARKER, message, ex);
+    public static void logApiGatewayError(String message, Throwable exception) {
+        logger.error(API_GATEWAY_ERROR_MARKER, message, exception);
     }
 
     public static void logApiGatewayError(String message, Exception exception) {
