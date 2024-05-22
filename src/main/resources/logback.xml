@@ -14,8 +14,9 @@
                 <marker>KAFKA_PRODUCER_INFO</marker>
                 <marker>HTTP_RESPOND</marker>
 
-                <appender-ref ref="PROCESSOR_ERROR"/>
-                <appender-ref ref="CACHE_STAT_FILE"/>
+                <marker>PROCESSOR_ERROR</marker>
+                <marker>CACHE_STAT</marker>
+                <Marker>KAFKA_CONSUMER_INFO</Marker>
             </evaluator>
             <OnMismatch>DENY</OnMismatch>
         </filter>
@@ -206,6 +207,28 @@
         </filter>
     </appender>
 
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>KAFKA_CONSUMER_INFO</Marker>
+        <OnMatch>ACCEPT</OnMatch>
+    </turboFilter>
+    <appender name="KAFKA_CONSUMER_INFO_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/processor/kafka_consumer_info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/processor/kafka_consumer_info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>3GB</maxFileSize>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>KAFKA_CONSUMER_INFO</marker>
+            </evaluator>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+    </appender>
+
     <root>
         <!-- console logs -->
         <appender-ref ref="CONSOLE"/>
@@ -219,6 +242,7 @@
         <appender-ref ref="HTTP_RESPOND_FILE"/>
         <!-- processor logs -->
         <appender-ref ref="CACHE_STAT_FILE"/>
-        <appender-ref ref="PROCESSOR_ERROR"/>
+        <appender-ref ref="PROCESSOR_ERROR_FILE"/>
+        <appender-ref ref="KAFKA_CONSUMER_INFO_FILE"/>
     </root>
 </configuration>
