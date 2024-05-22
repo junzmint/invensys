@@ -1,10 +1,10 @@
 package api_gateway.component.kafka.producer;
 
+import api_gateway.component.ApiGatewayLogger;
 import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
 import io.gridgo.framework.support.Message;
-import logging.LoggerUtil;
 import lombok.NonNull;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -24,13 +24,13 @@ public class KafkaProducer {
     // call back func for produce
     private void onProduce(Boolean isAck, Deferred<Message, Exception> deferred, RecordMetadata metadata, Exception exception) {
         if (exception == null) {
-            LoggerUtil.logInfo("KAFKA_PRODUCED");
+            ApiGatewayLogger.logKafkaProducerInfo("KAFKA_PRODUCED", deferred);
             if (isAck) {
-                LoggerUtil.logInfo("KAFKA_PRODUCED: " + buildAckMessage(metadata).headers().toString());
+                ApiGatewayLogger.logKafkaProducerInfo("KAFKA_PRODUCED: ", buildAckMessage(metadata).headers().toString(), deferred);
                 deferred.resolve(buildAckMessage(metadata));
             }
         } else {
-            LoggerUtil.logError("KAFKA_PRODUCE_ERROR: ", exception);
+            ApiGatewayLogger.logApiGatewayError("KAFKA_PRODUCE_ERROR", exception);
             deferred.resolve(Message.ofAny(exception.getMessage()));
         }
     }

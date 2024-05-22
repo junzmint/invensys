@@ -8,7 +8,6 @@ import io.gridgo.core.GridgoContext;
 import io.gridgo.core.impl.DefaultGridgoContextBuilder;
 import io.gridgo.framework.impl.NonameComponentLifecycle;
 import io.gridgo.framework.support.Message;
-import logging.LoggerUtil;
 import org.joo.promise4j.Deferred;
 
 import java.util.Map;
@@ -63,7 +62,7 @@ public class ApiGateway extends NonameComponentLifecycle {
     }
 
     private void onException(Throwable ex) {
-        LoggerUtil.logError("INTERNAL_ERROR: ", ex);
+        ApiGatewayLogger.logApiGatewayError("INTERNAL_ERROR", ex);
     }
 
     @Override

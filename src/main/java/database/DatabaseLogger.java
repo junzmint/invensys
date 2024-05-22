@@ -17,9 +17,4 @@ public class DatabaseLogger {
     public static void logDatabaseError(String message, Exception exception) {
         logger.error(DATABASE_ERROR_MARKER, message, exception);
     }
-
-    public static void main(String[] args) {
-        DatabaseLogger.logDatabaseInfo("SQL done", Thread.currentThread().getStackTrace());
-        DatabaseLogger.logDatabaseError("MISSING_NUMBER_OF_RECORDS_PARAM", new IllegalArgumentException("NUMBER_OF_RECORDS"));
-    }
 }

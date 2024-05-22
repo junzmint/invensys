@@ -1,7 +1,5 @@
 package api_gateway.component;
 
-import logging.LoggerUtil;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -14,8 +12,8 @@ public class ApiGatewayConstants {
         ApiGatewayProps = new Properties();
         try {
             ApiGatewayProps.load(new FileInputStream(CONFIG_FILE_PATH));
-        } catch (IOException e) {
-            LoggerUtil.logError(e.getMessage());
+        } catch (IOException exception) {
+            ApiGatewayLogger.logApiGatewayError("CONFIG_LOADER_ERROR", exception);
         }
     }
 

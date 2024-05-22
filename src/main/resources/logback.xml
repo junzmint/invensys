@@ -1,4 +1,24 @@
 <configuration>
+    <!-- console logs -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n%ex</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>DATABASE_INFO</marker>
+                <Marker>DATABASE_ERROR</Marker>
+
+                <marker>API_GATEWAY_ERROR</marker>
+                <marker>HTTP_REQUEST</marker>
+                <marker>KAFKA_PRODUCER_INFO</marker>
+                <marker>HTTP_RESPOND</marker>
+
+            </evaluator>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+    </appender>
+
     <!-- database logs -->
     <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
         <Marker>DATABASE_INFO</Marker>
@@ -45,9 +65,108 @@
             <OnMismatch>DENY</OnMismatch>
         </filter>
     </appender>
+
+    <!-- api gateway logs -->
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>API_GATEWAY_ERROR</Marker>
+        <OnMatch>ACCEPT</OnMatch>
+    </turboFilter>
+    <appender name="API_GATEWAY_ERROR_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/api_gateway/api_gateway_error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/api_gateway/api_gateway_error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>3GB</maxFileSize>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n%ex</pattern>
+            <charset>UTF-8</charset>
+            <outputPatternAsHeader>false</outputPatternAsHeader>
+        </encoder>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>API_GATEWAY_ERROR</marker>
+            </evaluator>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+    </appender>
+
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>HTTP_REQUEST</Marker>
+        <OnMatch>ACCEPT</OnMatch>
+    </turboFilter>
+    <appender name="HTTP_REQUEST_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/api_gateway/http_request.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/api_gateway/http_request.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>3GB</maxFileSize>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>HTTP_REQUEST</marker>
+            </evaluator>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+    </appender>
+
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>KAFKA_PRODUCER_INFO</Marker>
+        <OnMatch>ACCEPT</OnMatch>
+    </turboFilter>
+    <appender name="KAFKA_PRODUCER_INFO_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/api_gateway/kafka_producer_info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/api_gateway/kafka_producer_info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>3GB</maxFileSize>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>KAFKA_PRODUCER_INFO</marker>
+            </evaluator>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+    </appender>
+
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>HTTP_RESPOND</Marker>
+        <OnMatch>ACCEPT</OnMatch>
+    </turboFilter>
+    <appender name="HTTP_RESPOND_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/api_gateway/http_respond.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/api_gateway/http_respond.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>3GB</maxFileSize>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>HTTP_RESPOND</marker>
+            </evaluator>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+    </appender>
+
     <root>
+        <!-- console logs -->
+        <appender-ref ref="CONSOLE"/>
         <!-- database logs -->
         <appender-ref ref="DATABASE_INFO_FILE"/>
         <appender-ref ref="DATABASE_ERROR_FILE"/>
+        <!-- api gateway logs -->
+        <appender-ref ref="API_GATEWAY_ERROR_FILE"/>
+        <appender-ref ref="HTTP_REQUEST_FILE"/>
+        <appender-ref ref="KAFKA_PRODUCER_INFO_FILE"/>
+        <appender-ref ref="HTTP_RESPOND_FILE"/>
     </root>
 </configuration>

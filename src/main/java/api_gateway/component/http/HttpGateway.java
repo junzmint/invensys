@@ -1,5 +1,6 @@
 package api_gateway.component.http;
 
+import api_gateway.component.ApiGatewayLogger;
 import api_gateway.component.kafka.producer.KafkaProducer;
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.support.RoutingContext;
@@ -26,7 +27,8 @@ public class HttpGateway extends HttpGatewayBaseComponent {
     protected void processRequest(RoutingContext rc, GridgoContext gc) {
         var message = rc.getMessage();
         var deferred = rc.getDeferred();
-
+        // log client request
+        ApiGatewayLogger.logHttpRequest(message, deferred);
         // generate corrId and reply address
         long id = this.corrId.getAndIncrement();
         // create kafka message key
