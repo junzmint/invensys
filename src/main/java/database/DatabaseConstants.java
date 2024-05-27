@@ -41,4 +41,3 @@ public class DatabaseConstants {
         return DatabaseProps.getProperty("DB_PASSWORD");
     }
 }
-
