@@ -17,7 +17,7 @@ public class BatchEventProducer {
                 }
             };
 
-    private final RingBuffer<BatchEvent> ringBuffer;
+    private RingBuffer<BatchEvent> ringBuffer;
 
     public BatchEventProducer(RingBuffer<BatchEvent> ringBuffer) {
         this.ringBuffer = ringBuffer;
@@ -28,6 +28,6 @@ public class BatchEventProducer {
     }
 
     public void close() {
-        // nothing to do here
+        this.ringBuffer = null;
     }
 }

@@ -30,11 +30,7 @@ public class MessageHandler {
             this.messageProduceGatewayMap.put(replyTo, messageProduceGateway);
         }
     }
-
-    private void onStart() {
-        // nothing to do here
-    }
-
+    
     public void close() {
         for (Map.Entry<String, MessageProduceGateway> entry : this.messageProduceGatewayMap.entrySet()) {
             entry.getValue().onStop();

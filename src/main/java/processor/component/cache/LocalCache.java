@@ -102,7 +102,7 @@ public class LocalCache {
         this.logScheduler.shutdown();
     }
 
-    public void onStop() {
+    public void stop() {
         this.printStats();
         this.cache.cleanUp();
         this.shutdownLogScheduler();

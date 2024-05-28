@@ -12,25 +12,23 @@ import org.joo.promise4j.Deferred;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class ApiGateway extends NonameComponentLifecycle {
+    // constants
     private static final String HTTP_GATEWAY = ApiGatewayConstants.getHttpGateway();
-
     private static final String ZMQ_PULL_GATEWAY = ApiGatewayConstants.getZMQPullGateway();
-
     private static final String VERTX_URL = ApiGatewayConstants.getVertxUrl();
-
     private static final String ZMQ_REPLY_ADR = ApiGatewayConstants.getZMQReplyAddress();
-
     private static final String API_GATEWAY = ApiGatewayConstants.getApiGateway();
 
+    // components
     private final GridgoContext appContext;
     private final KafkaProducer kafkaProducer;
     private final HttpGateway httpGateway;
     private final Map<String, Deferred<Message, Exception>> deferredMap;
     private final MessageReceiveGateway messageReceiveGateway;
 
+    // init components and inject components
     public ApiGateway() {
         this.deferredMap = new ConcurrentHashMap<>();
         this.appContext = new DefaultGridgoContextBuilder().setName(API_GATEWAY).setExceptionHandler(this::onException).build();
@@ -49,15 +47,16 @@ public class ApiGateway extends NonameComponentLifecycle {
                 HTTP_GATEWAY,
                 this.kafkaProducer,
                 this.deferredMap,
-                new AtomicLong(0),
                 ZMQ_REPLY_ADR);
 
         this.messageReceiveGateway = new MessageReceiveGateway(ZMQ_PULL_GATEWAY, this.deferredMap);
 
+        // open gateway
         this.appContext.openGateway(HTTP_GATEWAY).attachConnector(VERTX_URL);
         this.appContext.openGateway(ZMQ_PULL_GATEWAY).attachConnector("zmq:pull:" + ZMQ_REPLY_ADR);
         // handle http request
         this.appContext.attachComponent(this.httpGateway);
+        // handle zero mq message
         this.appContext.attachComponent(this.messageReceiveGateway);
     }
 

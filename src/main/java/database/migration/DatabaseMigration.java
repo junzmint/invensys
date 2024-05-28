@@ -13,16 +13,16 @@ public class DatabaseMigration {
     public static void migrate() {
         DatabaseConnector databaseConnector = DatabaseConnector.databaseConnectorFactory();
 
-        // Create database
+        // create database
         Connection mySqlConnection = databaseConnector.mySqlConnect();
         DatabaseQueryExecutor MySqlQueryExecutor = new DatabaseQueryExecutor(mySqlConnection);
         MySqlQueryExecutor.dropAndCreateDatabase(DatabaseConstants.getDatabaseName());
         MySqlQueryExecutor.close();
 
-        // Create tables
+        // create tables
         Connection databaseConnection = databaseConnector.databaseConnect();
         DatabaseQueryExecutor databaseQueryExecutor = new DatabaseQueryExecutor(databaseConnection);
-
+        
         databaseQueryExecutor.createTable(CreateInventoryTable_194602052024.getStatement(), "Inventory");
         databaseQueryExecutor.createTable(CreateOffsetTable_193402052024.getStatement(), "Offset");
         databaseQueryExecutor.close();

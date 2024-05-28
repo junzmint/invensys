@@ -15,7 +15,7 @@ public class InventoryEventProducer {
                 }
             };
 
-    private final RingBuffer<InventoryEvent> ringBuffer;
+    private RingBuffer<InventoryEvent> ringBuffer;
 
     public InventoryEventProducer(RingBuffer<InventoryEvent> ringBuffer) {
         this.ringBuffer = ringBuffer;
@@ -26,6 +26,6 @@ public class InventoryEventProducer {
     }
 
     public void close() {
-        // nothing to do here
+        this.ringBuffer = null;
     }
 }

@@ -16,10 +16,10 @@ public class HttpGateway extends HttpGatewayBaseComponent {
     private final String replyTo;
     private final Map<String, Deferred<Message, Exception>> deferredMap;
 
-    public HttpGateway(String gatewayName, KafkaProducer kafkaProducer, Map<String, Deferred<Message, Exception>> deferredMap, AtomicLong corrId, String replyTo) {
+    public HttpGateway(String gatewayName, KafkaProducer kafkaProducer, Map<String, Deferred<Message, Exception>> deferredMap, String replyTo) {
         super(gatewayName);
         this.kafkaProducer = kafkaProducer;
-        this.corrId = corrId;
+        this.corrId = new AtomicLong(0);
         this.replyTo = replyTo;
         this.deferredMap = deferredMap;
     }
@@ -38,7 +38,7 @@ public class HttpGateway extends HttpGatewayBaseComponent {
         message.headers().setAny("replyTo", this.replyTo);
         // store corrId
         this.deferredMap.put(key, deferred);
-        // produce
+        // kafka produce
         this.kafkaProducer.produce(message, deferred, key, false);
     }
 }

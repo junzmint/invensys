@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class BatchHandler {
-    private final DatabaseQueryExecutor databaseQueryExecutor;
+    private DatabaseQueryExecutor databaseQueryExecutor;
 
     public BatchHandler(DatabaseQueryExecutor databaseQueryExecutor) {
         this.databaseQueryExecutor = databaseQueryExecutor;
@@ -36,6 +36,6 @@ public class BatchHandler {
     }
 
     public void close() {
-        // nothing to do here
+        this.databaseQueryExecutor = null;
     }
 }

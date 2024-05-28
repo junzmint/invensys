@@ -29,6 +29,41 @@ public class KafkaConsumer {
         this.inventoryEventProducer = inventoryEventProducer;
     }
 
+    public void run(Long offSet, Duration pollDuration) {
+        try {
+            if (!Thread.currentThread().isInterrupted()) {
+                onRun(offSet, pollDuration);
+            }
+        } catch (KafkaException exception) {
+            ProcessorLogger.logProcessorError("KAFKA_EXCEPTION_CONSUMER_THREAD", exception);
+        } catch (Exception exception) {
+            ProcessorLogger.logProcessorError("EXCEPTION_CONSUMER_THREAD", exception);
+        } finally {
+            close();
+        }
+    }
+
+    // consumer poll message
+    private void onRun(Long offset, Duration pollDuration) {
+        // assign MaxOffset we will consume from
+        long maxOffset = offset + 1;
+        // assign topic
+        TopicPartition partitionToReadFrom = new TopicPartition(this.topic, this.partition);
+        this.kafkaConsumer.assign(List.of(partitionToReadFrom));
+        // seek
+        this.kafkaConsumer.seek(partitionToReadFrom, maxOffset);
+
+        while (true) {
+            ConsumerRecords<Object, Object> records = this.kafkaConsumer.poll(pollDuration);
+            for (ConsumerRecord<Object, Object> record : records) {
+                Message message = buildMessage(record);
+                maxOffset = record.offset();
+                this.inventoryEventProducer.onData(maxOffset, message);
+                ProcessorLogger.logKafkaConsumerInfo("KAFKA_CONSUMED_OFFSET: " + maxOffset);
+            }
+        }
+    }
+
     // build message from consumer record
     private Message buildMessage(ConsumerRecord<Object, Object> record) {
         var headers = BObject.ofEmpty();
@@ -68,42 +103,7 @@ public class KafkaConsumer {
         return BElement.ofBytes(responseBody);
     }
 
-    // consumer poll message
-    private void onRun(Long offset, Duration pollDuration) {
-        // assign MaxOffset we will consume from
-        long maxOffset = offset + 1;
-        // assign topic
-        TopicPartition partitionToReadFrom = new TopicPartition(this.topic, this.partition);
-        this.kafkaConsumer.assign(List.of(partitionToReadFrom));
-        // seek
-        this.kafkaConsumer.seek(partitionToReadFrom, maxOffset);
-
-        while (true) {
-            ConsumerRecords<Object, Object> records = this.kafkaConsumer.poll(pollDuration);
-            for (ConsumerRecord<Object, Object> record : records) {
-                Message message = buildMessage(record);
-                maxOffset = record.offset();
-                this.inventoryEventProducer.onData(maxOffset, message);
-                ProcessorLogger.logKafkaConsumerInfo("KAFKA_CONSUMED_OFFSET: " + maxOffset);
-            }
-        }
-    }
-
-    public void run(Long offSet, Duration pollDuration) {
-        try {
-            if (!Thread.currentThread().isInterrupted()) {
-                onRun(offSet, pollDuration);
-            }
-        } catch (KafkaException exception) {
-            ProcessorLogger.logProcessorError("KAFKA_EXCEPTION_CONSUMER_THREAD", exception);
-        } catch (Exception exception) {
-            ProcessorLogger.logProcessorError("EXCEPTION_CONSUMER_THREAD", exception);
-        } finally {
-            onClose();
-        }
-    }
-
-    public void onClose() {
+    public void close() {
         this.kafkaConsumer.close();
     }
 }

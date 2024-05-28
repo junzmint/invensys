@@ -62,7 +62,7 @@ public class InventoryHandler {
         this.messageEventProducer.onData(corrId, replyTo, "DELETED");
     }
 
-    private void order(Long offset, InventoryRequest inventoryRequest, String corrId, String replyTo) {
+    private void order(InventoryRequest inventoryRequest, String corrId, String replyTo) {
         Map<String, Long> skuList = inventoryRequest.getSkuList();
         Map<String, Long> inventoryOrder = new HashMap<>();
         // Check quantity
@@ -91,7 +91,7 @@ public class InventoryHandler {
         this.inventoryOrderBatch.putAll(inventoryOrder);
     }
 
-    private void rollback(Long offset, InventoryRequest inventoryRequest, String corrId, String replyTo) {
+    private void rollback(InventoryRequest inventoryRequest, String corrId, String replyTo) {
         Map<String, Long> skuList = inventoryRequest.getSkuList();
 
         // rollback quantity
@@ -125,7 +125,7 @@ public class InventoryHandler {
         }
         switch (inventoryRequest.type) {
             case "order":
-                this.order(offset, inventoryRequest, corrId, replyTo);
+                this.order(inventoryRequest, corrId, replyTo);
                 break;
             case "insert":
                 this.insert(offset, inventoryRequest, corrId, replyTo);
@@ -137,7 +137,7 @@ public class InventoryHandler {
                 this.delete(offset, inventoryRequest, corrId, replyTo);
                 break;
             case "rollback":
-                this.rollback(offset, inventoryRequest, corrId, replyTo);
+                this.rollback(inventoryRequest, corrId, replyTo);
                 break;
             default:
                 break;
@@ -162,7 +162,7 @@ public class InventoryHandler {
         return message.headers().getString("replyTo", null).replaceAll("[^\\x00-\\x7F]", "");
     }
 
-    // get request content
+    // unmarshall
     private InventoryRequest objectMap(Message message) {
         BElement body = message.body();
 

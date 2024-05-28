@@ -15,7 +15,7 @@ public class MessageEventProducer {
                 }
             };
 
-    private final RingBuffer<MessageEvent> ringBuffer;
+    private RingBuffer<MessageEvent> ringBuffer;
 
     public MessageEventProducer(RingBuffer<MessageEvent> ringBuffer) {
         this.ringBuffer = ringBuffer;
@@ -26,6 +26,6 @@ public class MessageEventProducer {
     }
 
     public void close() {
-        // nothing to do here
+        this.ringBuffer = null;
     }
 }

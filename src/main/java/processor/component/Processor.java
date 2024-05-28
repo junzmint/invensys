@@ -121,11 +121,11 @@ public class Processor {
     }
 
     public void stop() {
-        // close components
-        this.consumer.onClose();
+        // clear components
+        this.consumer.close();
         this.inventoryEventProducer.close();
         this.inventoryHandler.close();
-        this.localCache.onStop();
+        this.localCache.stop();
         this.batchEventProducer.close();
         this.batchHandler.close();
         this.messageEventProducer.close();
