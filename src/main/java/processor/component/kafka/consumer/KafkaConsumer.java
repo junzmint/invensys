@@ -59,7 +59,7 @@ public class KafkaConsumer {
                 Message message = buildMessage(record);
                 maxOffset = record.offset();
                 this.inventoryEventProducer.onData(maxOffset, message);
-                ProcessorLogger.logKafkaConsumerInfo("KAFKA_CONSUMED_OFFSET: " + maxOffset);
+                // ProcessorLogger.logKafkaConsumerInfo("KAFKA_CONSUMED_OFFSET: " + maxOffset);
             }
         }
     }

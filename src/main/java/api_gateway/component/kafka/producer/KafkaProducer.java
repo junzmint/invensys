@@ -60,9 +60,9 @@ public class KafkaProducer {
     // call back func for produce
     private void onProduce(Boolean isAck, Deferred<Message, Exception> deferred, RecordMetadata metadata, Exception exception) {
         if (exception == null) {
-            ApiGatewayLogger.logKafkaProducerInfo("KAFKA_PRODUCED", deferred);
+            // ApiGatewayLogger.logKafkaProducerInfo("KAFKA_PRODUCED", deferred);
             if (isAck) {
-                ApiGatewayLogger.logKafkaProducerInfo("KAFKA_PRODUCED: ", buildAckMessage(metadata).headers().toString(), deferred);
+                // ApiGatewayLogger.logKafkaProducerInfo("KAFKA_PRODUCED: ", buildAckMessage(metadata).headers().toString(), deferred);
                 deferred.resolve(buildAckMessage(metadata));
             }
         } else {

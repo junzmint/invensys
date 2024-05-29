@@ -62,7 +62,7 @@ public class DatabaseQueryExecutor {
             statement.setLong(2, offset);
             statement.executeUpdate();
             statement.close();
-            DatabaseLogger.logDatabaseInfo("OFFSET_INSERTED", Thread.currentThread().getStackTrace());
+            // DatabaseLogger.logDatabaseInfo("OFFSET_INSERTED", Thread.currentThread().getStackTrace());
         } catch (SQLException exception) {
             DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
@@ -81,7 +81,7 @@ public class DatabaseQueryExecutor {
             }
             statement.executeBatch();
             statement.close();
-            DatabaseLogger.logDatabaseInfo("INVENTORY_BATCH_INSERTED", Thread.currentThread().getStackTrace());
+            // DatabaseLogger.logDatabaseInfo("INVENTORY_BATCH_INSERTED", Thread.currentThread().getStackTrace());
         } catch (SQLException exception) {
             DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
@@ -96,7 +96,7 @@ public class DatabaseQueryExecutor {
             statement.setString(2, id);
             statement.executeUpdate();
             statement.close();
-            DatabaseLogger.logDatabaseInfo("OFFSET_UPDATED", Thread.currentThread().getStackTrace());
+            // DatabaseLogger.logDatabaseInfo("OFFSET_UPDATED", Thread.currentThread().getStackTrace());
         } catch (SQLException exception) {
             DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
@@ -115,7 +115,7 @@ public class DatabaseQueryExecutor {
             }
             statement.executeBatch();
             statement.close();
-            DatabaseLogger.logDatabaseInfo("INVENTORY_BATCH_UPDATED", Thread.currentThread().getStackTrace());
+            // DatabaseLogger.logDatabaseInfo("INVENTORY_BATCH_UPDATED", Thread.currentThread().getStackTrace());
         } catch (SQLException exception) {
             DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
@@ -132,7 +132,7 @@ public class DatabaseQueryExecutor {
             }
             statement.executeBatch();
             statement.close();
-            DatabaseLogger.logDatabaseInfo("INVENTORY_BATCH_DELETED", Thread.currentThread().getStackTrace());
+            // DatabaseLogger.logDatabaseInfo("INVENTORY_BATCH_DELETED", Thread.currentThread().getStackTrace());
         } catch (SQLException exception) {
             DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
