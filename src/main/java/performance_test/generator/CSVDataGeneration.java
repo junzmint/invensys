@@ -59,8 +59,6 @@ public class CSVDataGeneration {
         try {
             FileWriter writer = new FileWriter(path);
 
-            writer.append("JSON_DATA");
-            writer.append("\n");
             for (Map<String, Long> skuList : data) {
                 inventoryRequest.setSkuList(skuList);
                 // object -> JSON
