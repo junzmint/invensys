@@ -33,14 +33,14 @@ public class KafkaTopicCreator {
             if (adminClient.listTopics().names().get().contains(topicName)) {
                 // If existed, then delete
                 adminClient.deleteTopics(Collections.singletonList(topicName)).all().get();
-                ProcessorLogger.logKafkaConsumerInfo("TOPIC_DELETED: " + topicName);
+                System.out.println("TOPIC_DELETED: " + topicName);
                 // Wait 5 sec to delete
                 TimeUnit.SECONDS.sleep(5);
             }
             // Create new topic
             NewTopic newTopic = new NewTopic(topicName, partitions, replications);
             adminClient.createTopics(Collections.singletonList(newTopic)).all().get();
-            ProcessorLogger.logKafkaConsumerInfo("TOPIC_CREATED: " + topicName);
+            System.out.println("TOPIC_CREATED: " + topicName);
         } catch (InterruptedException | ExecutionException exception) {
             ProcessorLogger.logProcessorError("KAFKA_TOPIC_CREATE_ERROR", exception);
         }

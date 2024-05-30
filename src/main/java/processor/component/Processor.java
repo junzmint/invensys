@@ -2,15 +2,12 @@ package processor.component;
 
 import database.DatabaseConnector;
 import database.DatabaseQueryExecutor;
-import processor.component.cache.LocalCache;
 import processor.component.disruptor.consumer.BatchEventConsumer;
 import processor.component.disruptor.consumer.ClearEventConsumer;
 import processor.component.disruptor.consumer.InventoryEventConsumer;
 import processor.component.disruptor.consumer.MessageEventConsumer;
-import processor.component.disruptor.event.batch.BatchEvent;
 import processor.component.disruptor.event.batch.BatchEventFactory;
 import processor.component.disruptor.event.inventory.InventoryEventFactory;
-import processor.component.disruptor.event.message.MessageEvent;
 import processor.component.disruptor.event.message.MessageEventFactory;
 import processor.component.disruptor.producer.BatchEventProducer;
 import processor.component.disruptor.producer.InventoryEventProducer;
@@ -26,7 +23,6 @@ import processor.component.kafka.consumer.KafkaConsumerConfig;
 
 import java.sql.Connection;
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 public class Processor {
     // constants
@@ -40,57 +36,44 @@ public class Processor {
     private final static Long CACHE_STAT_LOG_AFTER = ProcessorConstants.getCacheStatLogAfter();
 
     // components
-    private final DatabaseQueryExecutor databaseQueryExecutor;
     private final MessageEventProducer messageEventProducer;
     private final BatchEventProducer batchEventProducer;
-    private final LocalCache localCache;
     private final InventoryHandler inventoryHandler;
     private final InventoryEventProducer inventoryEventProducer;
     private final MessageHandler messageHandler;
     private final BatchHandler batchHandler;
     private final KafkaConsumer consumer;
-    // offset we will consume from after start/restart
-    private final Long maxOffset;
 
     // construct components
     public Processor() {
-        // connect to database and create a query executor instance
-        DatabaseConnector databaseConnector = DatabaseConnector.databaseConnectorFactory();
-        Connection databaseConnection = databaseConnector.databaseConnect();
-        databaseQueryExecutor = new DatabaseQueryExecutor(databaseConnection);
-
         // message producer
         this.messageHandler = new MessageHandler();
         this.messageEventProducer = new MessageEventProducer(new MessageRingBuffer(
                 new MessageEventFactory(),
-                2048,
+                4096,
                 new MessageEventConsumer(this.messageHandler),
-                new ClearEventConsumer<MessageEvent>()
+                new ClearEventConsumer<>()
         ).getRingBuffer());
 
         // batch producer
-        this.batchHandler = new BatchHandler(databaseQueryExecutor);
+        this.batchHandler = new BatchHandler();
         this.batchEventProducer = new BatchEventProducer(new BatchRingBuffer(
                 new BatchEventFactory(),
-                2048,
+                4096,
                 new BatchEventConsumer(this.batchHandler),
-                new ClearEventConsumer<BatchEvent>()
+                new ClearEventConsumer<>()
         ).getRingBuffer());
-
-        // create a local cache for in memory processing
-        this.localCache = new LocalCache(databaseQueryExecutor, CACHE_SIZE);
-        localCache.initCache(CACHE_INIT_RECORDS);
 
         // create an inventory handler
         this.inventoryHandler = new InventoryHandler(
-                this.localCache,
+                CACHE_SIZE,
                 this.messageEventProducer,
                 this.batchEventProducer);
 
         // inventory producer
         this.inventoryEventProducer = new InventoryEventProducer(new InventoryRingBuffer(
                 new InventoryEventFactory(),
-                4096,
+                8192,
                 new InventoryEventConsumer(inventoryHandler),
                 new ClearEventConsumer<>()
         ).getRingBuffer());
@@ -108,16 +91,19 @@ public class Processor {
         );
 
         this.consumer = new KafkaConsumer(config, inventoryEventProducer);
-
-        // get max offset from database
-        this.maxOffset = databaseQueryExecutor.getMaxOffset("MaxOffset");
     }
 
     public void start() {
-        // schedule log for local cache
-        this.localCache.scheduleCacheLogging(CACHE_STAT_LOG_AFTER, TimeUnit.SECONDS);
+        // get max offset from database
+        DatabaseConnector databaseConnector = DatabaseConnector.databaseConnectorFactory();
+        Connection databaseConnection = databaseConnector.databaseConnect();
+        DatabaseQueryExecutor databaseQueryExecutor = new DatabaseQueryExecutor(databaseConnection);
+        Long maxOffset = databaseQueryExecutor.getMaxOffset("MaxOffset");
+        databaseQueryExecutor.close();
+        // inventory start action
+        this.inventoryHandler.start(CACHE_INIT_RECORDS, CACHE_STAT_LOG_AFTER);
         // run consumer
-        this.consumer.run(this.maxOffset, Duration.ofMillis(100));
+        this.consumer.run(maxOffset, Duration.ofMillis(100));
     }
 
     public void stop() {
@@ -125,11 +111,9 @@ public class Processor {
         this.consumer.close();
         this.inventoryEventProducer.close();
         this.inventoryHandler.close();
-        this.localCache.stop();
         this.batchEventProducer.close();
         this.batchHandler.close();
         this.messageEventProducer.close();
         this.messageHandler.close();
-        this.databaseQueryExecutor.close();
     }
 }

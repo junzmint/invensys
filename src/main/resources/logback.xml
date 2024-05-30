@@ -16,7 +16,7 @@
 
                 <marker>PROCESSOR_ERROR</marker>
                 <marker>CACHE_STAT</marker>
-                <Marker>KAFKA_CONSUMER_INFO</Marker>
+                <!--                <Marker>KAFKA_CONSUMER_INFO</Marker>-->
             </evaluator>
             <OnMismatch>DENY</OnMismatch>
         </filter>

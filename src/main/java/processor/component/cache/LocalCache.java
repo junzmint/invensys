@@ -4,11 +4,13 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.CacheStats;
 import com.google.common.cache.LoadingCache;
+import database.DatabaseConnector;
 import database.DatabaseQueryExecutor;
 import lombok.Getter;
 import processor.component.ProcessorLogger;
 
 import javax.annotation.Nonnull;
+import java.sql.Connection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executors;
@@ -17,12 +19,16 @@ import java.util.concurrent.TimeUnit;
 
 @Getter
 public class LocalCache {
-    private final ScheduledExecutorService logScheduler = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService logScheduler;
     private final DatabaseQueryExecutor databaseQueryExecutor;
     private final LoadingCache<String, Long> cache;
 
-    public LocalCache(DatabaseQueryExecutor databaseQueryExecutor, Long size) {
-        this.databaseQueryExecutor = databaseQueryExecutor;
+    public LocalCache(Long size) {
+        DatabaseConnector databaseConnector = DatabaseConnector.databaseConnectorFactory();
+        Connection databaseConnection = databaseConnector.databaseConnect();
+        this.databaseQueryExecutor = new DatabaseQueryExecutor(databaseConnection);
+
+        this.logScheduler = Executors.newScheduledThreadPool(1);
 
         CacheLoader<String, Long> loader = new CacheLoader<>() {
             @Override
@@ -31,6 +37,7 @@ public class LocalCache {
                 return loadWhenCacheMiss(key);
             }
         };
+
         this.cache = CacheBuilder.newBuilder().recordStats().maximumSize(size).build(loader);
     }
 
@@ -81,7 +88,7 @@ public class LocalCache {
                 stats.evictionCount(),
                 stats.hitRate() * 100,
                 stats.missRate() * 100,
-                cache.size(),
+                this.cache.size(),
                 stats.totalLoadTime());
     }
 
@@ -104,6 +111,7 @@ public class LocalCache {
 
     public void stop() {
         this.printStats();
+        this.databaseQueryExecutor.close();
         this.cache.cleanUp();
         this.shutdownLogScheduler();
     }

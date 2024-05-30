@@ -1,15 +1,19 @@
 package processor.component.handler.batch;
 
+import database.DatabaseConnector;
 import database.DatabaseQueryExecutor;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Map;
 
 public class BatchHandler {
     private DatabaseQueryExecutor databaseQueryExecutor;
 
-    public BatchHandler(DatabaseQueryExecutor databaseQueryExecutor) {
-        this.databaseQueryExecutor = databaseQueryExecutor;
+    public BatchHandler() {
+        DatabaseConnector databaseConnector = DatabaseConnector.databaseConnectorFactory();
+        Connection databaseConnection = databaseConnector.databaseConnect();
+        this.databaseQueryExecutor = new DatabaseQueryExecutor(databaseConnection);
     }
 
     public void handle(String type, Long offset, Map<String, Long> batch) {

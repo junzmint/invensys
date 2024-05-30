@@ -11,6 +11,7 @@ import processor.component.disruptor.producer.MessageEventProducer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class InventoryHandler {
     private static final String DEFERRED_ERROR = "DEFERRED_ERROR";
@@ -27,15 +28,23 @@ public class InventoryHandler {
 
     private final BatchEventProducer batchEventProducer;
 
-    public InventoryHandler(LocalCache localCache, MessageEventProducer messageEventProducer, BatchEventProducer batchEventProducer) {
-        this.localCache = localCache;
+    public InventoryHandler(Long cacheSize, MessageEventProducer messageEventProducer, BatchEventProducer batchEventProducer) {
+        this.localCache = new LocalCache(cacheSize);
         this.inventoryOrderBatch = new HashMap<>();
         this.messageEventProducer = messageEventProducer;
         this.batchEventProducer = batchEventProducer;
     }
 
+    public void start(Long cacheInitRecords, Long cacheStatLogAfter) {
+        // init cache load records
+        this.localCache.initCache(cacheInitRecords);
+        // set up cache statistics logging
+        this.localCache.scheduleCacheLogging(cacheStatLogAfter, TimeUnit.SECONDS);
+    }
+
     public void close() {
         this.inventoryOrderBatch.clear();
+        this.localCache.stop();
     }
 
     private void insert(Long offset, InventoryRequest inventoryRequest, String corrId, String replyTo) {

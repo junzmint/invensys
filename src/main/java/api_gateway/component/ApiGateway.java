@@ -30,7 +30,9 @@ public class ApiGateway extends NonameComponentLifecycle {
 
     // init components and inject components
     public ApiGateway() {
+        // attach corrId for a message, wait for result and use this map to get deferred instances to http respond
         this.deferredMap = new ConcurrentHashMap<>();
+        // app context to attach gateway components
         this.appContext = new DefaultGridgoContextBuilder().setName(API_GATEWAY).setExceptionHandler(this::onException).build();
 
         KafkaProducerConfig kafkaProducerConfig = new KafkaProducerConfig(
