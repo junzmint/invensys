@@ -28,7 +28,7 @@
     <!--        <OnMatch>ACCEPT</OnMatch>-->
     <!--    </turboFilter>-->
     <!--    <appender name="DATABASE_INFO_FILE" class="ch.qos.logback.core.FileAppender">-->
-    <!--        <file>logs/processor.component.database/database_info.log</file>-->
+    <!--        <file>logs/database/database_info.log</file>-->
     <!--        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
     <!--            <fileNamePattern>logs/processor.component.database/database_info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>-->
     <!--            <maxFileSize>3GB</maxFileSize>-->
@@ -50,7 +50,7 @@
         <OnMatch>ACCEPT</OnMatch>
     </turboFilter>
     <appender name="DATABASE_ERROR_FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/processor.database/database_error.log</file>
+        <file>logs/database/database_error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/processor.database/database_error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>3GB</maxFileSize>
