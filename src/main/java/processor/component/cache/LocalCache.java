@@ -4,10 +4,10 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.CacheStats;
 import com.google.common.cache.LoadingCache;
-import database.DatabaseConnector;
-import database.DatabaseQueryExecutor;
 import lombok.Getter;
 import processor.component.ProcessorLogger;
+import processor.component.database.DatabaseConnector;
+import processor.component.database.DatabaseQueryExecutor;
 
 import javax.annotation.Nonnull;
 import java.sql.Connection;

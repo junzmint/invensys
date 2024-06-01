@@ -38,12 +38,14 @@ build/
 .DS_Store
 
 ### Config ###
-config/api_gateway.properties
-config/processor.properties
-config/database.properties
+config/api_gateway/api_gateway.properties
+config/processor/processor.properties
+config/processor/database.properties
+config/kafka/server.properties
+config/kafka/zookeeper.properties
 
 ### File generate ###
-src/main/java/performance_test/generator/data
+src/main/java/performance/generator/data
 
 ### Logging ###
 logs

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class ApiGatewayConstants {
-    private static final String CONFIG_FILE_PATH = "config/api_gateway.properties";
+    private static final String CONFIG_FILE_PATH = "config/api_gateway/api_gateway.properties";
     private static final Properties ApiGatewayProps;
 
     static {

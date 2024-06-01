@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class ProcessorConstants {
-    private static final String CONFIG_FILE_PATH = "config/processor.properties";
+    private static final String CONFIG_FILE_PATH = "config/processor/processor.properties";
     private static final Properties ProcessorProps;
 
     static {

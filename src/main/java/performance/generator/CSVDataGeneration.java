@@ -1,10 +1,10 @@
-package performance_test.generator;
+package performance.generator;
 
 import com.google.gson.Gson;
-import database.DatabaseConnector;
-import database.DatabaseQueryExecutor;
 import lombok.Getter;
 import lombok.Setter;
+import processor.component.database.DatabaseConnector;
+import processor.component.database.DatabaseQueryExecutor;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class CSVDataGeneration {
     }
 
     public void generate() {
-        String path = "src/main/java/performance_test/generator/data/json_data.csv";
+        String path = "src/main/java/performance/generator/data/json_data.csv";
         List<String> skuIds = this.getSkuIds();
         List<Map<String, Long>> data = this.createDataSet(skuIds);
         this.csvGenerate(data, path);

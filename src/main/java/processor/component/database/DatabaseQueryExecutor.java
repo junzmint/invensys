@@ -1,4 +1,4 @@
-package database;
+package processor.component.database;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class DatabaseQueryExecutor {
         this.connection = connection;
     }
 
-    // create database, drop database if it exists
+    // create processor.component.database, drop processor.component.database if it exists
     public void dropAndCreateDatabase(String dbName) {
         dropDatabase(dbName);
         createDatabase(dbName);

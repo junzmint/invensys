@@ -22,15 +22,15 @@
         </filter>
     </appender>
 
-    <!-- database logs -->
+    <!-- processor.component.database logs -->
     <!--    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">-->
     <!--        <Marker>DATABASE_INFO</Marker>-->
     <!--        <OnMatch>ACCEPT</OnMatch>-->
     <!--    </turboFilter>-->
     <!--    <appender name="DATABASE_INFO_FILE" class="ch.qos.logback.core.FileAppender">-->
-    <!--        <file>logs/database/database_info.log</file>-->
+    <!--        <file>logs/processor.component.database/database_info.log</file>-->
     <!--        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
-    <!--            <fileNamePattern>logs/database/database_info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>-->
+    <!--            <fileNamePattern>logs/processor.component.database/database_info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>-->
     <!--            <maxFileSize>3GB</maxFileSize>-->
     <!--            <maxHistory>3</maxHistory>-->
     <!--        </rollingPolicy>-->
@@ -50,9 +50,9 @@
         <OnMatch>ACCEPT</OnMatch>
     </turboFilter>
     <appender name="DATABASE_ERROR_FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/database/database_error.log</file>
+        <file>logs/processor.database/database_error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/database/database_error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>logs/processor.database/database_error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>3GB</maxFileSize>
             <maxHistory>3</maxHistory>
         </rollingPolicy>
@@ -232,7 +232,7 @@
     <root>
         <!-- console logs -->
         <appender-ref ref="CONSOLE"/>
-        <!-- database logs -->
+        <!-- processor.component.database logs -->
         <!--        <appender-ref ref="DATABASE_INFO_FILE"/>-->
         <appender-ref ref="DATABASE_ERROR_FILE"/>
         <!-- api gateway logs -->

@@ -1,4 +1,4 @@
-package database.migration;
+package processor.other.database.migration;
 
 public class CreateInventoryTable_194602052024 {
     private static final String stmt = "CREATE TABLE IF NOT EXISTS Inventory (" +

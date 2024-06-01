@@ -1,7 +1,7 @@
 package processor.component;
 
-import database.DatabaseConnector;
-import database.DatabaseQueryExecutor;
+import processor.component.database.DatabaseConnector;
+import processor.component.database.DatabaseQueryExecutor;
 import processor.component.disruptor.consumer.BatchEventConsumer;
 import processor.component.disruptor.consumer.ClearEventConsumer;
 import processor.component.disruptor.consumer.InventoryEventConsumer;
@@ -94,7 +94,7 @@ public class Processor {
     }
 
     public void start() {
-        // get max offset from database
+        // get max offset from processor.component.database
         DatabaseConnector databaseConnector = DatabaseConnector.databaseConnectorFactory();
         Connection databaseConnection = databaseConnector.databaseConnect();
         DatabaseQueryExecutor databaseQueryExecutor = new DatabaseQueryExecutor(databaseConnection);

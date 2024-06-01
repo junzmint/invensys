@@ -1,8 +1,8 @@
-package database.seeder;
+package processor.other.database.seeder;
 
-import database.DatabaseConnector;
-import database.DatabaseLogger;
-import database.DatabaseQueryExecutor;
+import processor.component.database.DatabaseConnector;
+import processor.component.database.DatabaseLogger;
+import processor.component.database.DatabaseQueryExecutor;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -39,7 +39,7 @@ public class Seeder {
         List<Callable<Void>> tasks = new ArrayList<>();
 
         long recordsPerThread = numberOfRecords / numThreads;
-        
+
         for (int i = 0; i < numThreads; i++) {
             long start = i * recordsPerThread;
             long end = (i == numThreads - 1) ? numberOfRecords : (i + 1) * recordsPerThread;

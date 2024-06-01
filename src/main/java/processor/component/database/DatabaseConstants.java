@@ -1,11 +1,11 @@
-package database;
+package processor.component.database;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
 public class DatabaseConstants {
-    private static final String CONFIG_FILE_PATH = "config/database.properties";
+    private static final String CONFIG_FILE_PATH = "config/processor/database.properties";
     private static final Properties DatabaseProps;
 
     static {
