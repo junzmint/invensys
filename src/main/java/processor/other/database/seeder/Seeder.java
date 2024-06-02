@@ -52,7 +52,7 @@ public class Seeder {
                 for (long sku = start; sku < end; sku++) {
                     UUID uuid = UUID.randomUUID();
                     String skuId = uuid.toString();
-                    long quantity = random.nextInt(1000) + 1;
+                    long quantity = random.nextInt(2000) + 1;
                     inventoryBatch.put(skuId, quantity);
                 }
                 databaseQueryExecutor.insertInventoryTable(inventoryBatch);
