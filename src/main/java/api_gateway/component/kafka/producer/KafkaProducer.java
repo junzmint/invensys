@@ -66,8 +66,8 @@ public class KafkaProducer {
                 deferred.resolve(buildAckMessage(metadata));
             }
         } else {
-            ApiGatewayLogger.logApiGatewayError("KAFKA_PRODUCE_ERROR", exception);
             deferred.resolve(Message.ofAny(exception.getMessage()));
+            ApiGatewayLogger.logApiGatewayError("KAFKA_PRODUCE_ERROR", exception);
         }
     }
 

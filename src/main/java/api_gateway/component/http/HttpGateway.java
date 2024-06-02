@@ -27,8 +27,6 @@ public class HttpGateway extends HttpGatewayBaseComponent {
     protected void processRequest(RoutingContext rc, GridgoContext gc) {
         var message = rc.getMessage();
         var deferred = rc.getDeferred();
-        // log client request
-        ApiGatewayLogger.logHttpRequest(message, deferred);
         // generate corrId and reply address
         long id = this.corrId.getAndIncrement();
         // create kafka message key
@@ -40,5 +38,7 @@ public class HttpGateway extends HttpGatewayBaseComponent {
         this.deferredMap.put(key, deferred);
         // kafka produce
         this.kafkaProducer.produce(message, deferred, key, false);
+        // log client request
+        ApiGatewayLogger.logHttpRequest(message, deferred);
     }
 }
