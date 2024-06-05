@@ -5,7 +5,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.CacheStats;
 import com.google.common.cache.LoadingCache;
 import lombok.Getter;
-import processor.component.ProcessorLogger;
 import processor.component.database.DatabaseConnector;
 import processor.component.database.DatabaseQueryExecutor;
 
@@ -100,7 +99,7 @@ public class LocalCache {
         this.logScheduler.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                ProcessorLogger.logCacheStat(getStats());
+                LocalCacheLogger.logCacheStat(getStats());
             }
         }, 0, interval, timeUnit);
     }

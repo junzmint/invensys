@@ -1,6 +1,5 @@
 package api_gateway.component.http;
 
-import api_gateway.component.ApiGatewayLogger;
 import api_gateway.component.kafka.producer.KafkaProducer;
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.support.RoutingContext;
@@ -39,6 +38,6 @@ public class HttpGateway extends HttpGatewayBaseComponent {
         // kafka produce
         this.kafkaProducer.produce(message, deferred, key, false);
         // log client request
-        ApiGatewayLogger.logHttpRequest(message, deferred);
+        HttpGatewayLogger.logHttpRequest(message, deferred);
     }
 }

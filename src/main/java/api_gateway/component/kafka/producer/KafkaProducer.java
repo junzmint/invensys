@@ -1,6 +1,5 @@
 package api_gateway.component.kafka.producer;
 
-import api_gateway.component.ApiGatewayLogger;
 import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
@@ -60,14 +59,14 @@ public class KafkaProducer {
     // call back func for produce
     private void onProduce(Boolean isAck, Deferred<Message, Exception> deferred, RecordMetadata metadata, Exception exception) {
         if (exception == null) {
-            // ApiGatewayLogger.logKafkaProducerInfo("KAFKA_PRODUCED", deferred);
+            // KafkaProducerLogger.logKafkaProducerInfo("KAFKA_PRODUCED", deferred);
             if (isAck) {
-                // ApiGatewayLogger.logKafkaProducerInfo("KAFKA_PRODUCED: ", buildAckMessage(metadata).headers().toString(), deferred);
+                // KafkaProducerLogger.logKafkaProducerInfo("KAFKA_PRODUCED: ", buildAckMessage(metadata).headers().toString(), deferred);
                 deferred.resolve(buildAckMessage(metadata));
             }
         } else {
             deferred.resolve(Message.ofAny(exception.getMessage()));
-            ApiGatewayLogger.logApiGatewayError("KAFKA_PRODUCE_ERROR", exception);
+            KafkaProducerLogger.logApiGatewayError("KAFKA_PRODUCE_ERROR", exception);
         }
     }
 
@@ -86,4 +85,19 @@ public class KafkaProducer {
         if (this.kafkaProducer != null)
             this.kafkaProducer.close();
     }
+
+    private static class KafkaProducerConstants {
+        public static final String PARTITION = "kafka.PARTITION";
+
+        public static final String TOPIC = "kafka.TOPIC";
+
+        public static final String OFFSET = "kafka.OFFSET";
+
+        public static final String TIMESTAMP = "kafka.TIMESTAMP";
+
+        public static final String IS_ACK_MSG = "kafka.IS_ACK_MSG";
+
+        public static final String IS_VALUE = "kafka.IS_VALUE";
+    }
+
 }

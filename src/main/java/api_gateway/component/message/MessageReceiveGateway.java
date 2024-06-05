@@ -1,6 +1,5 @@
 package api_gateway.component.message;
 
-import api_gateway.component.ApiGatewayLogger;
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.support.RoutingContext;
 import io.gridgo.framework.support.Message;
@@ -22,15 +21,15 @@ public class MessageReceiveGateway extends MessageReceiveGatewayBaseComponent {
         var deferred = this.deferredMap.remove(message.headers().get("corrId"));
 
         if (deferred == null) {
-            ApiGatewayLogger.logApiGatewayError("NULL_DEFERRED", new NullPointerException("deferred"));
+            MessageReceiveGatewayLogger.logApiGatewayError("NULL_DEFERRED", new NullPointerException("deferred"));
         } else {
             // http respond
             try {
                 deferred.resolve(Message.ofAny(message.body()));
-                ApiGatewayLogger.logHttpRespond(message.body().toString(), deferred);
+                MessageReceiveGatewayLogger.logHttpRespond(message.body().toString(), deferred);
             } catch (Exception exception) {
                 deferred.reject(exception);
-                ApiGatewayLogger.logApiGatewayError("INTERNAL_ERROR", exception);
+                MessageReceiveGatewayLogger.logApiGatewayError("INTERNAL_ERROR", exception);
             }
         }
     }

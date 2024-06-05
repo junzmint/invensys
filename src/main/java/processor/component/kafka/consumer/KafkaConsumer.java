@@ -9,7 +9,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.header.Header;
-import processor.component.ProcessorLogger;
 import processor.component.disruptor.producer.InventoryEventProducer;
 
 import java.time.Duration;
@@ -35,9 +34,9 @@ public class KafkaConsumer {
                 onRun(offSet, pollDuration);
             }
         } catch (KafkaException exception) {
-            ProcessorLogger.logProcessorError("KAFKA_EXCEPTION_CONSUMER_THREAD", exception);
+            KafkaConsumerLogger.logProcessorError("KAFKA_EXCEPTION_CONSUMER_THREAD", exception);
         } catch (Exception exception) {
-            ProcessorLogger.logProcessorError("EXCEPTION_CONSUMER_THREAD", exception);
+            KafkaConsumerLogger.logProcessorError("EXCEPTION_CONSUMER_THREAD", exception);
         } finally {
             close();
         }
@@ -59,7 +58,7 @@ public class KafkaConsumer {
                 Message message = buildMessage(record);
                 maxOffset = record.offset();
                 this.inventoryEventProducer.onData(maxOffset, message);
-                // ProcessorLogger.logKafkaConsumerInfo("KAFKA_CONSUMED_OFFSET: " + maxOffset);
+                // KafkaConsumerLogger.logKafkaConsumerInfo("KAFKA_CONSUMED_OFFSET: " + maxOffset);
             }
         }
     }
@@ -106,4 +105,19 @@ public class KafkaConsumer {
     public void close() {
         this.kafkaConsumer.close();
     }
+
+    private static class KafkaConsumerConstants {
+        public static final String KEY = "kafka.KEY";
+
+        public static final String PARTITION = "kafka.PARTITION";
+
+        public static final String TOPIC = "kafka.TOPIC";
+
+        public static final String OFFSET = "kafka.OFFSET";
+
+        public static final String TIMESTAMP = "kafka.TIMESTAMP";
+
+        public static final String IS_VALUE = "kafka.IS_VALUE";
+    }
+
 }

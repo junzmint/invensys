@@ -4,7 +4,7 @@ import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import processor.component.ProcessorConstants;
-import processor.component.ProcessorLogger;
+import processor.component.kafka.consumer.KafkaConsumerLogger;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -42,7 +42,7 @@ public class KafkaTopicCreator {
             adminClient.createTopics(Collections.singletonList(newTopic)).all().get();
             System.out.println("TOPIC_CREATED: " + topicName);
         } catch (InterruptedException | ExecutionException exception) {
-            ProcessorLogger.logProcessorError("KAFKA_TOPIC_CREATE_ERROR", exception);
+            KafkaConsumerLogger.logProcessorError("KAFKA_TOPIC_CREATE_ERROR", exception);
         }
     }
 }
