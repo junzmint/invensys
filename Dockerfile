@@ -14,5 +14,3 @@ COPY src /app/src
 
 RUN mvn clean package
 
-RUN mvn package
-
