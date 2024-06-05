@@ -1,4 +1,4 @@
-package processor.other.database.seeder;
+package other.database.seeder;
 
 import processor.component.database.DatabaseConnector;
 import processor.component.database.DatabaseLogger;

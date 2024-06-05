@@ -15,6 +15,13 @@ import java.time.Duration;
 import java.util.List;
 
 public class KafkaConsumer {
+    public static final String KEY = "kafka.KEY";
+    public static final String PARTITION = "kafka.PARTITION";
+    public static final String TOPIC = "kafka.TOPIC";
+    public static final String OFFSET = "kafka.OFFSET";
+    public static final String TIMESTAMP = "kafka.TIMESTAMP";
+    public static final String IS_VALUE = "kafka.IS_VALUE";
+
     private final String topic;
     private final Integer partition;
     private final org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumer;
@@ -69,15 +76,15 @@ public class KafkaConsumer {
 
         populateCommonHeaders(headers, record);
 
-        headers.putAny(KafkaConsumerConstants.OFFSET, record.offset());
+        headers.putAny(OFFSET, record.offset());
         if (record.key() != null) {
-            headers.putAny(KafkaConsumerConstants.KEY, record.key());
+            headers.putAny(KEY, record.key());
         }
 
         var isValue = false;
         for (Header header : record.headers()) {
             headers.putAny(header.key(), header.value());
-            if (KafkaConsumerConstants.IS_VALUE.equals(header.key()))
+            if (IS_VALUE.equals(header.key()))
                 isValue = true;
         }
 
@@ -86,9 +93,9 @@ public class KafkaConsumer {
     }
 
     private void populateCommonHeaders(BObject headers, ConsumerRecord<Object, Object> record) {
-        headers.putAny(KafkaConsumerConstants.PARTITION, record.partition());
-        headers.putAny(KafkaConsumerConstants.TOPIC, record.topic());
-        headers.putAny(KafkaConsumerConstants.TIMESTAMP, record.timestamp());
+        headers.putAny(PARTITION, record.partition());
+        headers.putAny(TOPIC, record.topic());
+        headers.putAny(TIMESTAMP, record.timestamp());
     }
 
     private BElement deserializeWithFormat(ConsumerRecord<Object, Object> record) {
@@ -105,19 +112,4 @@ public class KafkaConsumer {
     public void close() {
         this.kafkaConsumer.close();
     }
-
-    private static class KafkaConsumerConstants {
-        public static final String KEY = "kafka.KEY";
-
-        public static final String PARTITION = "kafka.PARTITION";
-
-        public static final String TOPIC = "kafka.TOPIC";
-
-        public static final String OFFSET = "kafka.OFFSET";
-
-        public static final String TIMESTAMP = "kafka.TIMESTAMP";
-
-        public static final String IS_VALUE = "kafka.IS_VALUE";
-    }
-
 }

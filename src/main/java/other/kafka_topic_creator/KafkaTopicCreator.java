@@ -1,4 +1,4 @@
-package processor.other.kafka_topic_creator;
+package other.kafka_topic_creator;
 
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;

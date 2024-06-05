@@ -1,4 +1,4 @@
-package performance.generator;
+package other.performance_test.generator;
 
 import com.google.gson.Gson;
 import lombok.Getter;

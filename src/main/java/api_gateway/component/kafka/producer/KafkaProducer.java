@@ -10,6 +10,13 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.joo.promise4j.Deferred;
 
 public class KafkaProducer {
+    public static final String PARTITION = "kafka.PARTITION";
+    public static final String TOPIC = "kafka.TOPIC";
+    public static final String OFFSET = "kafka.OFFSET";
+    public static final String TIMESTAMP = "kafka.TIMESTAMP";
+    public static final String IS_ACK_MSG = "kafka.IS_ACK_MSG";
+    public static final String IS_VALUE = "kafka.IS_VALUE";
+
     private final String topic;
     private final Integer partition;
     private final org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer;
@@ -37,7 +44,7 @@ public class KafkaProducer {
         var record = new ProducerRecord<Object, Object>(topic, partition, key, convert(body));
 
         if (body != null) {
-            record.headers().add(KafkaProducerConstants.IS_VALUE, new byte[]{1});
+            record.headers().add(IS_VALUE, new byte[]{1});
         }
         for (var header : headers.entrySet()) {
             if (header.getValue().isValue())
@@ -73,11 +80,11 @@ public class KafkaProducer {
     private Message buildAckMessage(RecordMetadata metadata) {
         if (metadata == null)
             return null;
-        var headers = BObject.ofEmpty().setAny(KafkaProducerConstants.IS_ACK_MSG, true)
-                .setAny(KafkaProducerConstants.TIMESTAMP, metadata.timestamp())
-                .setAny(KafkaProducerConstants.OFFSET, metadata.offset())
-                .setAny(KafkaProducerConstants.PARTITION, metadata.partition())
-                .setAny(KafkaProducerConstants.TOPIC, metadata.topic());
+        var headers = BObject.ofEmpty().setAny(IS_ACK_MSG, true)
+                .setAny(TIMESTAMP, metadata.timestamp())
+                .setAny(OFFSET, metadata.offset())
+                .setAny(PARTITION, metadata.partition())
+                .setAny(TOPIC, metadata.topic());
         return Message.ofAny(headers, BValue.ofEmpty());
     }
 
@@ -85,19 +92,4 @@ public class KafkaProducer {
         if (this.kafkaProducer != null)
             this.kafkaProducer.close();
     }
-
-    private static class KafkaProducerConstants {
-        public static final String PARTITION = "kafka.PARTITION";
-
-        public static final String TOPIC = "kafka.TOPIC";
-
-        public static final String OFFSET = "kafka.OFFSET";
-
-        public static final String TIMESTAMP = "kafka.TIMESTAMP";
-
-        public static final String IS_ACK_MSG = "kafka.IS_ACK_MSG";
-
-        public static final String IS_VALUE = "kafka.IS_VALUE";
-    }
-
 }

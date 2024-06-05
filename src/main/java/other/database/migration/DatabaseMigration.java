@@ -1,4 +1,4 @@
-package processor.other.database.migration;
+package other.database.migration;
 
 import processor.component.database.DatabaseConnector;
 import processor.component.database.DatabaseConstants;
