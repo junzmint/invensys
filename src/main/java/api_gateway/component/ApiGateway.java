@@ -55,7 +55,7 @@ public class ApiGateway extends NonameComponentLifecycle {
 
         // open gateway
         this.appContext.openGateway(HTTP_GATEWAY).attachConnector(VERTX_URL);
-        this.appContext.openGateway(ZMQ_PULL_GATEWAY).attachConnector("zmq:pull:" + ZMQ_REPLY_ADR);
+        this.appContext.openGateway(ZMQ_PULL_GATEWAY).attachConnector("zmq:pull:tcp://0.0.0.0:5555");
         // handle http request
         this.appContext.attachComponent(this.httpGateway);
         // handle zero mq message
