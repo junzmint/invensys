@@ -56,7 +56,7 @@ end
 
 -- delay before each request
 function delay()
-   return 10
+   return 0
 end
 
 -- Function to initialize each thread
