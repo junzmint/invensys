@@ -44,7 +44,9 @@ config/processor/database.properties
 config/kafka/server.properties
 
 ### File generate ###
-src/main/java/other/performance_test/generator/data
+src/main/java/other/performance_test/script/test_data
+### Test result ###
+src/main/java/other/performance_test/script/test_result
 
 ### Logging ###
 logs

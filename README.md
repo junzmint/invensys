@@ -27,3 +27,10 @@ This will bring the zookeeper and kafka container up
 
 - Firstly you need to access to app container terminal ```docker-compose run app /bin/bash```
 - Then run ```java -cp target/invensys-1.0-SNAPSHOT.jar [[class package].[class name]]```
+
+### To run wrk performance test
+
+1. Download wrk tool [here](https://medium.com/@felipedutratine/intelligent-benchmark-with-wrk-163986c1587f)
+2. Download LuaRocks to install lua library: ```sudo apt install luarocks```
+3. Download ```luasocket``` to for a precise time counter : ```luarocks install luasocket```
+4. Change parameter that you want and run test at [wrk_test.sh](src/main/java/other/performance_test/script/wrk_test.sh)
