@@ -29,11 +29,6 @@
     <!--    </turboFilter>-->
     <!--    <appender name="DATABASE_INFO_FILE" class="ch.qos.logback.core.FileAppender">-->
     <!--        <file>logs/database/database_info.log</file>-->
-    <!--        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
-    <!--            <fileNamePattern>logs/processor.component.database/database_info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>-->
-    <!--            <maxFileSize>3GB</maxFileSize>-->
-    <!--            <maxHistory>3</maxHistory>-->
-    <!--        </rollingPolicy>-->
     <!--        <encoder>-->
     <!--            <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n</pattern>-->
     <!--        </encoder>-->
@@ -51,11 +46,6 @@
     </turboFilter>
     <appender name="DATABASE_ERROR_FILE" class="ch.qos.logback.core.FileAppender">
         <file>logs/database/database_error.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/processor.database/database_error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>3GB</maxFileSize>
-            <maxHistory>3</maxHistory>
-        </rollingPolicy>
         <encoder>
             <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n%ex</pattern>
             <charset>UTF-8</charset>
@@ -76,11 +66,6 @@
     </turboFilter>
     <appender name="API_GATEWAY_ERROR_FILE" class="ch.qos.logback.core.FileAppender">
         <file>logs/api_gateway/api_gateway_error.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/api_gateway/api_gateway_error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>3GB</maxFileSize>
-            <maxHistory>3</maxHistory>
-        </rollingPolicy>
         <encoder>
             <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n%ex</pattern>
             <charset>UTF-8</charset>
@@ -100,11 +85,6 @@
     </turboFilter>
     <appender name="HTTP_REQUEST_FILE" class="ch.qos.logback.core.FileAppender">
         <file>logs/api_gateway/http_request.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/api_gateway/http_request.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>3GB</maxFileSize>
-            <maxHistory>3</maxHistory>
-        </rollingPolicy>
         <encoder>
             <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n</pattern>
         </encoder>
@@ -122,11 +102,6 @@
     <!--    </turboFilter>-->
     <!--    <appender name="KAFKA_PRODUCER_INFO_FILE" class="ch.qos.logback.core.FileAppender">-->
     <!--        <file>logs/api_gateway/kafka_producer_info.log</file>-->
-    <!--        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
-    <!--            <fileNamePattern>logs/api_gateway/kafka_producer_info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>-->
-    <!--            <maxFileSize>3GB</maxFileSize>-->
-    <!--            <maxHistory>3</maxHistory>-->
-    <!--        </rollingPolicy>-->
     <!--        <encoder>-->
     <!--            <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n</pattern>-->
     <!--        </encoder>-->
@@ -144,11 +119,6 @@
     </turboFilter>
     <appender name="HTTP_RESPOND_FILE" class="ch.qos.logback.core.FileAppender">
         <file>logs/api_gateway/http_respond.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/api_gateway/http_respond.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>3GB</maxFileSize>
-            <maxHistory>3</maxHistory>
-        </rollingPolicy>
         <encoder>
             <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n</pattern>
         </encoder>
@@ -167,11 +137,6 @@
     </turboFilter>
     <appender name="PROCESSOR_ERROR_FILE" class="ch.qos.logback.core.FileAppender">
         <file>logs/processor/processor_error.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/processor/processor_error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>3GB</maxFileSize>
-            <maxHistory>3</maxHistory>
-        </rollingPolicy>
         <encoder>
             <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n%ex</pattern>
             <charset>UTF-8</charset>
@@ -191,11 +156,6 @@
     </turboFilter>
     <appender name="CACHE_STAT_FILE" class="ch.qos.logback.core.FileAppender">
         <file>logs/processor/cache_stat.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/processor/cache_stat.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>3GB</maxFileSize>
-            <maxHistory>3</maxHistory>
-        </rollingPolicy>
         <encoder>
             <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n</pattern>
         </encoder>
@@ -213,11 +173,6 @@
     <!--    </turboFilter>-->
     <!--    <appender name="KAFKA_CONSUMER_INFO_FILE" class="ch.qos.logback.core.FileAppender">-->
     <!--        <file>logs/processor/kafka_consumer_info.log</file>-->
-    <!--        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
-    <!--            <fileNamePattern>logs/processor/kafka_consumer_info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>-->
-    <!--            <maxFileSize>3GB</maxFileSize>-->
-    <!--            <maxHistory>3</maxHistory>-->
-    <!--        </rollingPolicy>-->
     <!--        <encoder>-->
     <!--            <pattern>%date [%thread] %-5level [%logger{35}] - %msg%n</pattern>-->
     <!--        </encoder>-->
