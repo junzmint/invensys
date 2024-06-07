@@ -59,7 +59,7 @@ public class Processor {
         this.batchHandler = new BatchHandler();
         this.batchEventProducer = new BatchEventProducer(new BatchRingBuffer(
                 new BatchEventFactory(),
-                4096,
+                8192,
                 new BatchEventConsumer(this.batchHandler),
                 new ClearEventConsumer<>()
         ).getRingBuffer());

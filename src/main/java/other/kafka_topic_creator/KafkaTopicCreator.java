@@ -35,7 +35,7 @@ public class KafkaTopicCreator {
                 adminClient.deleteTopics(Collections.singletonList(topicName)).all().get();
                 System.out.println("TOPIC_DELETED: " + topicName);
                 // Wait 5 sec to delete
-                TimeUnit.SECONDS.sleep(5);
+                TimeUnit.SECONDS.sleep(10);
             }
             // Create new topic
             NewTopic newTopic = new NewTopic(topicName, partitions, replications);
