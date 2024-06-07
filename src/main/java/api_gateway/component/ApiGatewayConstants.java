@@ -5,16 +5,25 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class ApiGatewayConstants {
-    private static final String CONFIG_FILE_PATH = "config/api_gateway/api_gateway.properties";
     private static final Properties ApiGatewayProps;
+    private static String configFilePath = "config/api_gateway/api_gateway.properties";
 
     static {
         ApiGatewayProps = new Properties();
+        loadProperties();
+    }
+
+    private static void loadProperties() {
         try {
-            ApiGatewayProps.load(new FileInputStream(CONFIG_FILE_PATH));
+            ApiGatewayProps.load(new FileInputStream(configFilePath));
         } catch (IOException exception) {
             ApiGatewayLogger.logApiGatewayError("CONFIG_LOADER_ERROR", exception);
         }
+    }
+
+    public static void setConfigFilePath(String path) {
+        configFilePath = path;
+        loadProperties();
     }
 
     public static String getVertxUrl() {
