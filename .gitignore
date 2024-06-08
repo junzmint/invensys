@@ -41,7 +41,6 @@ build/
 config/api_gateway/api_gateway.properties
 config/processor/processor.properties
 config/processor/database.properties
-.env
 
 ### File generate ###
 src/main/java/other/performance_test/script/test_data
