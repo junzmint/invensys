@@ -47,6 +47,7 @@ config/processor/database.properties
 src/main/java/other/performance_test/script/test_data
 ### Test result ###
 src/main/java/other/performance_test/script/test_result
-
+### Dependency reduced ###
+dependency-reduced-pom.xml
 ### Logging ###
 logs
