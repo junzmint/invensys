@@ -1,13 +1,11 @@
 package api_gateway.component.kafka.producer;
 
-import lombok.Data;
 import lombok.Getter;
 import org.apache.kafka.clients.producer.ProducerConfig;
 
 import java.util.Properties;
 
 // This project will work with a topic with single partition
-@Data
 @Getter
 public class KafkaProducerConfig {
     private final String topic;

@@ -5,21 +5,23 @@ import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
 import io.gridgo.framework.support.Message;
 import lombok.NonNull;
+import lombok.Setter;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.joo.promise4j.Deferred;
 
+@Setter
 public class KafkaProducer {
-    public static final String PARTITION = "kafka.PARTITION";
-    public static final String TOPIC = "kafka.TOPIC";
-    public static final String OFFSET = "kafka.OFFSET";
-    public static final String TIMESTAMP = "kafka.TIMESTAMP";
-    public static final String IS_ACK_MSG = "kafka.IS_ACK_MSG";
-    public static final String IS_VALUE = "kafka.IS_VALUE";
+    private static final String PARTITION = "kafka.PARTITION";
+    private static final String TOPIC = "kafka.TOPIC";
+    private static final String OFFSET = "kafka.OFFSET";
+    private static final String TIMESTAMP = "kafka.TIMESTAMP";
+    private static final String IS_ACK_MSG = "kafka.IS_ACK_MSG";
+    private static final String IS_VALUE = "kafka.IS_VALUE";
 
-    private final String topic;
-    private final Integer partition;
-    private final org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer;
+    private org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer;
+    private Integer partition;
+    private String topic;
 
     public KafkaProducer(final @NonNull KafkaProducerConfig config) {
         this.topic = config.getTopic();
@@ -43,7 +45,7 @@ public class KafkaProducer {
 
         var record = new ProducerRecord<Object, Object>(topic, partition, key, convert(body));
 
-        if (body != null) {
+        if (!body.isNullValue()) {
             record.headers().add(IS_VALUE, new byte[]{1});
         }
         for (var header : headers.entrySet()) {
