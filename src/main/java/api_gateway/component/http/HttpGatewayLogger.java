@@ -15,6 +15,7 @@ public class HttpGatewayLogger extends ApiGatewayLogger {
     private static Logger logger = LoggerFactory.getLogger(HttpGatewayLogger.class);
 
     public static void logHttpRequest(Message message, Deferred<Message, Exception> deferred) {
-        logger.info(HTTP_REQUEST_MARKER, "POST: {}\nfrom {}", message.body().toJson(), deferred.toString());
+        String bodyJson = message.body() != null ? message.body().toJson() : "null";
+        logger.info(HTTP_REQUEST_MARKER, "POST: {}\nfrom {}", bodyJson, deferred.toString());
     }
 }

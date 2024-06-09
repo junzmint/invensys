@@ -4,16 +4,19 @@ import api_gateway.component.kafka.producer.KafkaProducer;
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.support.RoutingContext;
 import io.gridgo.framework.support.Message;
+import lombok.Getter;
 import org.joo.promise4j.Deferred;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+
 public class HttpGateway extends HttpGatewayBaseComponent {
     private final KafkaProducer kafkaProducer;
-    private final AtomicLong corrId;
     private final String replyTo;
     private final Map<String, Deferred<Message, Exception>> deferredMap;
+    @Getter
+    private final AtomicLong corrId;
 
     public HttpGateway(String gatewayName, KafkaProducer kafkaProducer, Map<String, Deferred<Message, Exception>> deferredMap, String replyTo) {
         super(gatewayName);
