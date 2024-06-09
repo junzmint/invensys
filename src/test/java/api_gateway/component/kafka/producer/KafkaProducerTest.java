@@ -4,6 +4,7 @@ import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
 import io.gridgo.framework.support.Message;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.joo.promise4j.Deferred;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.lang.reflect.Method;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,6 +40,44 @@ public class KafkaProducerTest {
 
         kafkaProducer = new KafkaProducer(config);
         kafkaProducer.setKafkaProducer(mockKafkaProducer);
+    }
+
+    @Test
+    void testKafkaProducerConfigWithNullValues() {
+        String broker = "localhost:9092";
+        String topic = "test-topic";
+        Integer partition = 1;
+
+        KafkaProducerConfig config = new KafkaProducerConfig(broker, null, null, null, topic, partition);
+
+        Properties props = config.getKafkaProps();
+        assertEquals(broker, props.getProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG));
+        assertNull(props.getProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG));
+        assertNull(props.getProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG));
+        assertNull(props.getProperty(ProducerConfig.ACKS_CONFIG));
+        assertEquals(topic, config.getTopic());
+        assertEquals(partition, config.getPartition());
+    }
+
+    @Test
+    void testKafkaProducerConfigGetters() {
+        String broker = "localhost:9092";
+        String keySerializerClass = "org.apache.kafka.common.serialization.StringSerializer";
+        String valueSerializerClass = "org.apache.kafka.common.serialization.StringSerializer";
+        String acksConfig = "all";
+        String topic = "test-topic";
+        Integer partition = 1;
+
+        KafkaProducerConfig config = new KafkaProducerConfig(broker, keySerializerClass, valueSerializerClass, acksConfig, topic, partition);
+
+        assertEquals(topic, config.getTopic());
+        assertEquals(partition, config.getPartition());
+
+        Properties props = config.getKafkaProps();
+        assertEquals(broker, props.getProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG));
+        assertEquals(keySerializerClass, props.getProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG));
+        assertEquals(valueSerializerClass, props.getProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG));
+        assertEquals(acksConfig, props.getProperty(ProducerConfig.ACKS_CONFIG));
     }
 
     @Test

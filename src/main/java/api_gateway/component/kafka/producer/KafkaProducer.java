@@ -4,7 +4,6 @@ import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
 import io.gridgo.framework.support.Message;
-import lombok.NonNull;
 import lombok.Setter;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -23,7 +22,7 @@ public class KafkaProducer {
     private Integer partition;
     private String topic;
 
-    public KafkaProducer(final @NonNull KafkaProducerConfig config) {
+    public KafkaProducer(final KafkaProducerConfig config) {
         this.topic = config.getTopic();
         this.partition = config.getPartition();
         this.kafkaProducer = new org.apache.kafka.clients.producer.KafkaProducer<>(config.getKafkaProps());
