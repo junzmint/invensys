@@ -1,13 +1,11 @@
 package processor.component.kafka.consumer;
 
-import lombok.Data;
 import lombok.Getter;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 
 import java.util.Properties;
 
 // This project will work with a topic with single partition
-@Data
 @Getter
 public class KafkaConsumerConfig {
     private final String topic;
