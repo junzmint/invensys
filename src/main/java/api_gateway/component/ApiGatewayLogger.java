@@ -8,7 +8,6 @@ import org.slf4j.MarkerFactory;
 
 public class ApiGatewayLogger {
     private static final Marker API_GATEWAY_ERROR_MARKER = MarkerFactory.getMarker("API_GATEWAY_ERROR");
-    // Setter for testing purposes
     @Setter
     private static Logger logger = LoggerFactory.getLogger(ApiGatewayLogger.class);
 

@@ -5,16 +5,25 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class ProcessorConstants {
-    private static final String CONFIG_FILE_PATH = "config/processor/processor.properties";
     private static final Properties ProcessorProps;
+    private static String configFilePath = "config/processor/processor.properties";
 
     static {
         ProcessorProps = new Properties();
+        loadProperties();
+    }
+
+    private static void loadProperties() {
         try {
-            ProcessorProps.load(new FileInputStream(CONFIG_FILE_PATH));
+            ProcessorProps.load(new FileInputStream(configFilePath));
         } catch (IOException exception) {
             ProcessorLogger.logProcessorError("CONFIG_LOADER_ERROR", exception);
         }
+    }
+
+    public static void setConfigFilePath(String path) {
+        configFilePath = path;
+        loadProperties();
     }
 
     public static String getKafkaBroker() {
