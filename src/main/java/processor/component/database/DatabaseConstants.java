@@ -1,20 +1,31 @@
 package processor.component.database;
 
+import processor.component.ProcessorLogger;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
 public class DatabaseConstants {
-    private static final String CONFIG_FILE_PATH = "config/processor/database.properties";
     private static final Properties DatabaseProps;
+    private static String configFilePath = "config/processor/database.properties";
 
     static {
         DatabaseProps = new Properties();
+        loadProperties();
+    }
+
+    private static void loadProperties() {
         try {
-            DatabaseProps.load(new FileInputStream(CONFIG_FILE_PATH));
+            DatabaseProps.load(new FileInputStream(configFilePath));
         } catch (IOException exception) {
-            DatabaseLogger.logDatabaseError("CONFIG_LOADER_ERROR", exception);
+            ProcessorLogger.logProcessorError("CONFIG_LOADER_ERROR", exception);
         }
+    }
+
+    public static void setConfigFilePath(String path) {
+        configFilePath = path;
+        loadProperties();
     }
 
     public static String getDatabaseConnection() {

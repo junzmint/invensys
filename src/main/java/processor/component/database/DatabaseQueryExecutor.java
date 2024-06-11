@@ -13,7 +13,7 @@ public class DatabaseQueryExecutor {
         this.connection = connection;
     }
 
-    // create processor.component.database, drop processor.component.database if it exists
+    // create database, drop database if it exists
     public void dropAndCreateDatabase(String dbName) {
         dropDatabase(dbName);
         createDatabase(dbName);
@@ -23,7 +23,6 @@ public class DatabaseQueryExecutor {
         String sql = "DROP DATABASE IF EXISTS " + dbName;
         try (PreparedStatement statement = this.connection.prepareStatement(sql)) {
             statement.executeUpdate();
-            statement.close();
             DatabaseLogger.logDatabaseInfo("DB_DROPPED", Thread.currentThread().getStackTrace());
         } catch (SQLException exception) {
             DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
@@ -34,7 +33,6 @@ public class DatabaseQueryExecutor {
         String sql = "CREATE DATABASE " + dbName;
         try (PreparedStatement statement = this.connection.prepareStatement(sql)) {
             statement.executeUpdate();
-            statement.close();
             DatabaseLogger.logDatabaseInfo("DB_CREATED", Thread.currentThread().getStackTrace());
         } catch (SQLException exception) {
             DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
@@ -43,10 +41,8 @@ public class DatabaseQueryExecutor {
 
     // create table if it not exists
     public void createTable(String queryStatement, String tableName) {
-        try {
-            Statement statement = this.connection.createStatement();
+        try (Statement statement = this.connection.createStatement()) {
             statement.executeUpdate(queryStatement);
-            statement.close();
             DatabaseLogger.logDatabaseInfo("TABLE_CREATED: " + tableName, Thread.currentThread().getStackTrace());
         } catch (SQLException exception) {
             DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
@@ -56,12 +52,10 @@ public class DatabaseQueryExecutor {
     // insert Offset table
     public void insertOffsetTable(String id, Long offset) {
         String SQL = "INSERT INTO Offset(id, offset) VALUES(?, ?)";
-        try {
-            PreparedStatement statement = this.connection.prepareStatement(SQL);
+        try (PreparedStatement statement = this.connection.prepareStatement(SQL)) {
             statement.setString(1, id);
             statement.setLong(2, offset);
             statement.executeUpdate();
-            statement.close();
             // DatabaseLogger.logDatabaseInfo("OFFSET_INSERTED", Thread.currentThread().getStackTrace());
         } catch (SQLException exception) {
             DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
@@ -72,15 +66,13 @@ public class DatabaseQueryExecutor {
     // insert Inventory table batch
     public void insertInventoryTable(Map<String, Long> inventoryBatch) {
         String SQL = "INSERT INTO Inventory(sku_id,quantity) " + "VALUES(?, ?)";
-        try {
-            PreparedStatement statement = this.connection.prepareStatement(SQL);
+        try (PreparedStatement statement = this.connection.prepareStatement(SQL)) {
             for (Map.Entry<String, Long> entry : inventoryBatch.entrySet()) {
                 statement.setString(1, entry.getKey());
                 statement.setLong(2, entry.getValue());
                 statement.addBatch();
             }
             statement.executeBatch();
-            statement.close();
             // DatabaseLogger.logDatabaseInfo("INVENTORY_BATCH_INSERTED", Thread.currentThread().getStackTrace());
         } catch (SQLException exception) {
             DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
@@ -90,12 +82,10 @@ public class DatabaseQueryExecutor {
     // update Offset table
     public void updateOffsetTable(String id, Long offset) {
         String SQL = "UPDATE Offset SET offset = ? WHERE id = ?";
-        try {
-            PreparedStatement statement = this.connection.prepareStatement(SQL);
+        try (PreparedStatement statement = this.connection.prepareStatement(SQL)) {
             statement.setLong(1, offset);
             statement.setString(2, id);
             statement.executeUpdate();
-            statement.close();
             // DatabaseLogger.logDatabaseInfo("OFFSET_UPDATED", Thread.currentThread().getStackTrace());
         } catch (SQLException exception) {
             DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
@@ -106,15 +96,13 @@ public class DatabaseQueryExecutor {
     // update Inventory table batch
     public void updateInventoryTable(Map<String, Long> inventoryBatch) {
         String SQL = "UPDATE Inventory SET quantity = ? WHERE sku_id = ?";
-        try {
-            PreparedStatement statement = this.connection.prepareStatement(SQL);
+        try (PreparedStatement statement = this.connection.prepareStatement(SQL)) {
             for (Map.Entry<String, Long> entry : inventoryBatch.entrySet()) {
                 statement.setLong(1, entry.getValue());
                 statement.setString(2, entry.getKey());
                 statement.addBatch();
             }
             statement.executeBatch();
-            statement.close();
             // DatabaseLogger.logDatabaseInfo("INVENTORY_BATCH_UPDATED", Thread.currentThread().getStackTrace());
         } catch (SQLException exception) {
             DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
@@ -124,14 +112,12 @@ public class DatabaseQueryExecutor {
     // delete Inventory table batch
     public void deleteInventoryTable(List<String> skuList) {
         String SQL = "DELETE FROM Inventory WHERE sku_id = ?";
-        try {
-            PreparedStatement statement = this.connection.prepareStatement(SQL);
+        try (PreparedStatement statement = this.connection.prepareStatement(SQL)) {
             for (String skuId : skuList) {
                 statement.setString(1, skuId);
                 statement.addBatch();
             }
             statement.executeBatch();
-            statement.close();
             // DatabaseLogger.logDatabaseInfo("INVENTORY_BATCH_DELETED", Thread.currentThread().getStackTrace());
         } catch (SQLException exception) {
             DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
@@ -141,8 +127,7 @@ public class DatabaseQueryExecutor {
     // get MaxOffset
     public Long getMaxOffset(String id) {
         String SQL = "SELECT offset FROM Offset WHERE id = ?";
-        try {
-            PreparedStatement statement = this.connection.prepareStatement(SQL);
+        try (PreparedStatement statement = this.connection.prepareStatement(SQL)) {
             statement.setString(1, id);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
@@ -159,8 +144,7 @@ public class DatabaseQueryExecutor {
     // get quantity of a sku
     public Long getSkuQuantity(String skuId) {
         String SQL = "SELECT quantity FROM Inventory WHERE sku_id = ?";
-        try {
-            PreparedStatement statement = this.connection.prepareStatement(SQL);
+        try (PreparedStatement statement = this.connection.prepareStatement(SQL)) {
             statement.setString(1, skuId);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
@@ -178,15 +162,13 @@ public class DatabaseQueryExecutor {
     public Map<String, Long> getInventoryRecords(Long numberOfRecords) {
         Map<String, Long> inventoryRecords = new HashMap<>();
         String SQL = "SELECT sku_id, quantity FROM Inventory LIMIT " + numberOfRecords;
-        try {
-            Statement statement = this.connection.createStatement();
+        try (Statement statement = this.connection.createStatement()) {
             ResultSet result = statement.executeQuery(SQL);
             while (result.next()) {
                 String skuId = result.getString("sku_id");
                 long quantity = result.getLong("quantity");
                 inventoryRecords.put(skuId, quantity);
             }
-            statement.close();
         } catch (SQLException exception) {
             DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
@@ -197,14 +179,12 @@ public class DatabaseQueryExecutor {
     public List<String> getInventorySkuIds() {
         List<String> inventorySkuIds = new ArrayList<>();
         String SQL = "SELECT sku_id FROM Inventory";
-        try {
-            Statement statement = this.connection.createStatement();
+        try (Statement statement = this.connection.createStatement()) {
             ResultSet result = statement.executeQuery(SQL);
             while (result.next()) {
                 String skuId = result.getString("sku_id");
                 inventorySkuIds.add(skuId);
             }
-            statement.close();
         } catch (SQLException exception) {
             DatabaseLogger.logDatabaseError("SQL_EXCEPTION: ", exception);
         }
