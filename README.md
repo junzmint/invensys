@@ -34,4 +34,4 @@ This will bring the zookeeper and kafka container up
 2. Download LuaRocks to install lua library: ```sudo apt install luarocks```
 3. Download ```luasocket``` to for a precise time counter : ```luarocks install luasocket```
 4. Change parameter that you want and run test
-   at [wrk_test.sh](src/main/java/other/performance_test/generator/wrk_test.sh)
+   at [wrk_test.sh](src/main/java/other/performance_test/wrk_test.sh)

@@ -1,7 +1,15 @@
 local socket = require("socket")
 local counter = 1
 local threads = {}
-local log_file_path = "test_result/req_res_log.csv"
+
+-- Get the current time in a format suitable for filenames
+local function get_time_for_filename()
+    return os.date("%Y%m%d_%H%M%S")
+end
+
+-- Create log file paths with current time
+local log_file_path = string.format("test_result/req_res_log_%s.csv", get_time_for_filename())
+local result_file_path = string.format("test_result/wrk_result_%s.csv", get_time_for_filename())
 
 -- Function to open the log file and write the header if it's empty
 local function open_log_file()
@@ -13,14 +21,15 @@ local function open_log_file()
     file:close()
 end
 
-open_log_file()
-
 -- Function to log request and response times
 local function log_times(id, request_num, req_time, res_time)
     local file = io.open(log_file_path, "a")
     file:write(string.format("%d,%d,%.6f,%.6f\n", id, request_num, req_time * 1000, res_time * 1000))
     file:close()
 end
+
+-- Open the log file and write the header
+open_log_file()
 
 -- Load the CSV file and parse it
 local function load_csv(file)
@@ -101,7 +110,7 @@ end
 
 -- Function to summarize results
 function done(summary, latency, requests)
-    local result_file = io.open("test_result/wrk_result.csv", "w")
+    local result_file = io.open(result_file_path, "w")
     result_file:write("Thread ID,Requests,Responses\n")
 
     local total_requests = 0
