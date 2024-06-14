@@ -1,7 +1,9 @@
 package processor.component.disruptor.ringbuffer;
 
+import com.lmax.disruptor.BlockingWaitStrategy;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
+import com.lmax.disruptor.dsl.ProducerType;
 import com.lmax.disruptor.util.DaemonThreadFactory;
 import processor.component.disruptor.consumer.ClearEventConsumer;
 import processor.component.disruptor.consumer.InventoryEventConsumer;
@@ -22,8 +24,13 @@ public class InventoryRingBuffer {
     }
 
     public RingBuffer<InventoryEvent> getRingBuffer() {
-        Disruptor<InventoryEvent> disruptor =
-                new Disruptor<>(this.factory, this.bufferSize, DaemonThreadFactory.INSTANCE);
+        Disruptor<InventoryEvent> disruptor = new Disruptor<>(
+                this.factory,
+                this.bufferSize,
+                DaemonThreadFactory.INSTANCE,
+                ProducerType.SINGLE,
+                new BlockingWaitStrategy());
+        
         disruptor.handleEventsWith(this.inventoryEventConsumer).then(this.clearEventConsumer);
         disruptor.start();
 
