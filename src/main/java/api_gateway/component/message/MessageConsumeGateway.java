@@ -21,15 +21,15 @@ public class MessageReceiveGateway extends MessageReceiveGatewayBaseComponent {
         var deferred = this.deferredMap.remove(message.headers().get("corrId"));
 
         if (deferred == null) {
-            MessageReceiveGatewayLogger.logApiGatewayError("NULL_DEFERRED", new NullPointerException("deferred"));
+            MessageConsumeGatewayLogger.logApiGatewayError("NULL_DEFERRED", new NullPointerException("deferred"));
         } else {
             // http respond
             try {
                 deferred.resolve(Message.ofAny(message.body()));
-                MessageReceiveGatewayLogger.logHttpRespond(message.body().toString(), deferred);
+                MessageConsumeGatewayLogger.logHttpRespond(message.body().toString(), deferred);
             } catch (Exception exception) {
                 deferred.reject(exception);
-                MessageReceiveGatewayLogger.logApiGatewayError("INTERNAL_ERROR", exception);
+                MessageConsumeGatewayLogger.logApiGatewayError("INTERNAL_ERROR", exception);
             }
         }
     }
