@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import io.gridgo.bean.BElement;
 import io.gridgo.framework.support.Message;
 import lombok.Getter;
+import lombok.Setter;
 import processor.component.cache.LocalCache;
 import processor.component.disruptor.producer.BatchEventProducer;
 import processor.component.disruptor.producer.MessageEventProducer;
@@ -218,7 +219,8 @@ public class InventoryHandler {
     }
 
     @Getter
-    private static class InventoryRequest {
+    @Setter
+    static class InventoryRequest {
         private String type;
         private HashMap<String, Long> skuList;
     }
