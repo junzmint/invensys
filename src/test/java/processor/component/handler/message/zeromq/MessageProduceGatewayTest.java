@@ -6,7 +6,7 @@ import io.gridgo.core.support.subscription.GatewaySubscription;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import processor.component.handler.HandlerLogger;
+import processor.component.ProcessorLogger;
 
 import java.lang.reflect.Method;
 
@@ -65,7 +65,7 @@ class MessageProduceGatewayTest {
         onExceptionMethod.setAccessible(true);
 
         // Mock the static method before invoking the private method
-        try (MockedStatic<HandlerLogger> ignored = mockStatic(HandlerLogger.class)) {
+        try (MockedStatic<ProcessorLogger> ignored = mockStatic(ProcessorLogger.class)) {
             // Invoke the private method
             onExceptionMethod.invoke(messageProduceGateway, exception);
         }

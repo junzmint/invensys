@@ -5,10 +5,10 @@ import io.gridgo.bean.BElement;
 import io.gridgo.framework.support.Message;
 import lombok.Getter;
 import lombok.Setter;
+import processor.component.ProcessorLogger;
 import processor.component.cache.LocalCache;
 import processor.component.disruptor.producer.BatchEventProducer;
 import processor.component.disruptor.producer.MessageEventProducer;
-import processor.component.handler.HandlerLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -213,7 +213,7 @@ public class InventoryHandler {
 
             return inventoryRequest;
         } catch (Exception exception) {
-            HandlerLogger.logProcessorError("PARSE_OBJECT_ERROR", exception);
+            ProcessorLogger.logProcessorError("PARSE_OBJECT_ERROR", exception);
             return null;
         }
     }

@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
+import processor.component.ProcessorLogger;
 import processor.component.cache.LocalCache;
 import processor.component.disruptor.producer.BatchEventProducer;
 import processor.component.disruptor.producer.MessageEventProducer;
-import processor.component.handler.HandlerLogger;
 import processor.component.handler.inventory.InventoryHandler.InventoryRequest;
 
 import java.lang.reflect.Field;
@@ -229,7 +229,7 @@ class InventoryHandlerTest {
         Message message = mock(Message.class);
         when(message.body()).thenReturn(BElement.ofAny("invalid_json"));
 
-        try (MockedStatic<HandlerLogger> ignored = mockStatic(HandlerLogger.class)) {
+        try (MockedStatic<ProcessorLogger> ignored = mockStatic(ProcessorLogger.class)) {
             InventoryRequest result = invokeObjectMap(message);
 
             assertNull(result);
