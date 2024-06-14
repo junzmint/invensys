@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 
 public class MessageReceiveGatewayTest {
 
-    private MessageReceiveGateway messageReceiveGateway;
+    private MessageConsumeGateway messageConsumeGateway;
     private GridgoContext mockGridgoContext;
     private RoutingContext mockRoutingContext;
     private Deferred<Message, Exception> mockDeferred;
@@ -30,7 +30,7 @@ public class MessageReceiveGatewayTest {
     @BeforeEach
     void setUp() {
         deferredMap = new HashMap<>();
-        messageReceiveGateway = new MessageReceiveGateway("testGateway", deferredMap);
+        messageConsumeGateway = new MessageConsumeGateway("testGateway", deferredMap);
 
         mockGridgoContext = mock(GridgoContext.class);
         mockRoutingContext = mock(RoutingContext.class);
@@ -38,7 +38,7 @@ public class MessageReceiveGatewayTest {
         mockDeferred = mock(Deferred.class);
         mockMessage = mock(Message.class);
 
-        messageReceiveGateway.setContext(mockGridgoContext);
+        messageConsumeGateway.setContext(mockGridgoContext);
 
         when(mockRoutingContext.getMessage()).thenReturn(mockMessage);
     }
@@ -47,7 +47,7 @@ public class MessageReceiveGatewayTest {
     void testProcessRequestWithNullDeferred() {
         when(mockMessage.headers()).thenReturn(io.gridgo.bean.BObject.ofEmpty());
 
-        messageReceiveGateway.processRequest(mockRoutingContext, mockGridgoContext);
+        messageConsumeGateway.processRequest(mockRoutingContext, mockGridgoContext);
 
         verify(mockDeferred, never()).resolve(any());
         verify(mockDeferred, never()).reject(any());
@@ -62,7 +62,7 @@ public class MessageReceiveGatewayTest {
         when(mockMessage.body()).thenReturn(BObject.ofEmpty());
         deferredMap.put("testId", mockDeferred);
 
-        messageReceiveGateway.processRequest(mockRoutingContext, mockGridgoContext);
+        messageConsumeGateway.processRequest(mockRoutingContext, mockGridgoContext);
 
         verify(mockDeferred).resolve(any(Message.class));
         verify(mockDeferred, never()).reject(any());
@@ -80,7 +80,7 @@ public class MessageReceiveGatewayTest {
         when(mockMessage.body()).thenThrow(new RuntimeException("Test exception"));
         deferredMap.put("testId", mockDeferred);
 
-        messageReceiveGateway.processRequest(mockRoutingContext, mockGridgoContext);
+        messageConsumeGateway.processRequest(mockRoutingContext, mockGridgoContext);
 
         verify(mockDeferred, never()).resolve(any());
         verify(mockDeferred).reject(any(Exception.class));
@@ -90,7 +90,7 @@ public class MessageReceiveGatewayTest {
     void testOnStartWithGatewayPresent() {
         when(mockGridgoContext.getGatewaySubscription("testGateway")).thenReturn(java.util.Optional.of(mockSubscription));
 
-        messageReceiveGateway.onStart();
+        messageConsumeGateway.onStart();
 
         verify(mockSubscription).subscribe(any());
     }
@@ -99,14 +99,14 @@ public class MessageReceiveGatewayTest {
     void testOnStartWithGatewayAbsent() {
         when(mockGridgoContext.getGatewaySubscription("testGateway")).thenReturn(Optional.empty());
 
-        messageReceiveGateway.onStart();
+        messageConsumeGateway.onStart();
 
         verify(mockSubscription, never()).subscribe(any());
     }
 
     @Test
     void testOnStop() {
-        messageReceiveGateway.onStop();
+        messageConsumeGateway.onStop();
 
         verify(mockGridgoContext).stop();
     }

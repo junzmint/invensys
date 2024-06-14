@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
-public class MessageReceiveGatewayLogger extends ApiGatewayLogger {
+public class MessageConsumeGatewayLogger extends ApiGatewayLogger {
     private static final Marker HTTP_RESPOND_MARKER = MarkerFactory.getMarker("HTTP_RESPOND");
     @Setter
-    private static Logger logger = LoggerFactory.getLogger(MessageReceiveGatewayLogger.class);
+    private static Logger logger = LoggerFactory.getLogger(MessageConsumeGatewayLogger.class);
 
     public static void logHttpRespond(String message, Deferred<Message, Exception> deferred) {
         logger.info(HTTP_RESPOND_MARKER, "Resolved: {} to {}", message, deferred.toString());

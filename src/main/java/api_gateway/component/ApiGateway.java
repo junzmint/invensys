@@ -3,7 +3,7 @@ package api_gateway.component;
 import api_gateway.component.http.HttpGateway;
 import api_gateway.component.kafka.producer.KafkaProducer;
 import api_gateway.component.kafka.producer.KafkaProducerConfig;
-import api_gateway.component.message.MessageReceiveGateway;
+import api_gateway.component.message.MessageConsumeGateway;
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.impl.DefaultGridgoContextBuilder;
 import io.gridgo.framework.impl.NonameComponentLifecycle;
@@ -26,7 +26,7 @@ public class ApiGateway extends NonameComponentLifecycle {
     private final KafkaProducer kafkaProducer;
     private final HttpGateway httpGateway;
     private final Map<String, Deferred<Message, Exception>> deferredMap;
-    private final MessageReceiveGateway messageReceiveGateway;
+    private final MessageConsumeGateway messageConsumeGateway;
 
     // init components and inject components
     public ApiGateway() {
@@ -51,7 +51,7 @@ public class ApiGateway extends NonameComponentLifecycle {
                 this.deferredMap,
                 ZMQ_REPLY_ADR);
 
-        this.messageReceiveGateway = new MessageReceiveGateway(ZMQ_PULL_GATEWAY, this.deferredMap);
+        this.messageConsumeGateway = new MessageConsumeGateway(ZMQ_PULL_GATEWAY, this.deferredMap);
 
         // open gateway
         this.appContext.openGateway(HTTP_GATEWAY).attachConnector(VERTX_URL);
@@ -59,7 +59,7 @@ public class ApiGateway extends NonameComponentLifecycle {
         // handle http request
         this.appContext.attachComponent(this.httpGateway);
         // handle zero mq message
-        this.appContext.attachComponent(this.messageReceiveGateway);
+        this.appContext.attachComponent(this.messageConsumeGateway);
     }
 
     private void onException(Throwable exception) {
@@ -75,7 +75,7 @@ public class ApiGateway extends NonameComponentLifecycle {
     protected void onStop() {
         this.kafkaProducer.onClose();
         this.httpGateway.stop();
-        this.messageReceiveGateway.stop();
+        this.messageConsumeGateway.stop();
         this.deferredMap.clear();
         this.appContext.stop();
     }

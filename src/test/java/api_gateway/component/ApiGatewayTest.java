@@ -2,7 +2,7 @@ package api_gateway.component;
 
 import api_gateway.component.http.HttpGateway;
 import api_gateway.component.kafka.producer.KafkaProducer;
-import api_gateway.component.message.MessageReceiveGateway;
+import api_gateway.component.message.MessageConsumeGateway;
 import io.gridgo.core.GridgoContext;
 import io.gridgo.core.impl.DefaultGridgoContextBuilder;
 import io.gridgo.core.support.ContextAwareComponent;
@@ -30,7 +30,7 @@ public class ApiGatewayTest {
     private KafkaProducer mockKafkaProducer;
     private HttpGateway mockHttpGateway;
     private Map<String, Deferred<Message, Exception>> mockDeferredMap;
-    private MessageReceiveGateway mockMessageReceiveGateway;
+    private MessageConsumeGateway mockMessageConsumeGateway;
     private GatewaySubscription mockHttpGatewaySubscription;
     private GatewaySubscription mockZmqGatewaySubscription;
 
@@ -41,7 +41,7 @@ public class ApiGatewayTest {
         mockKafkaProducer = mock(KafkaProducer.class);
         mockHttpGateway = mock(HttpGateway.class);
         mockDeferredMap = mock(ConcurrentHashMap.class);
-        mockMessageReceiveGateway = mock(MessageReceiveGateway.class);
+        mockMessageConsumeGateway = mock(MessageConsumeGateway.class);
         mockHttpGatewaySubscription = mock(GatewaySubscription.class);
         mockZmqGatewaySubscription = mock(GatewaySubscription.class);
 
@@ -78,9 +78,9 @@ public class ApiGatewayTest {
             fieldDeferredMap.setAccessible(true);
             fieldDeferredMap.set(apiGateway, mockDeferredMap);
 
-            var fieldMessageReceiveGateway = ApiGateway.class.getDeclaredField("messageReceiveGateway");
+            var fieldMessageReceiveGateway = ApiGateway.class.getDeclaredField("messageConsumeGateway");
             fieldMessageReceiveGateway.setAccessible(true);
-            fieldMessageReceiveGateway.set(apiGateway, mockMessageReceiveGateway);
+            fieldMessageReceiveGateway.set(apiGateway, mockMessageConsumeGateway);
 
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -96,7 +96,7 @@ public class ApiGatewayTest {
         inOrder.verify(mockAppContext).openGateway(ApiGatewayConstants.getZMQPullGateway());
         inOrder.verify(mockZmqGatewaySubscription).attachConnector("zmq:pull:tcp://0.0.0.0:5555");
 
-        // Check if HttpGateway and MessageReceiveGateway instances are attached to AppContext
+        // Check if HttpGateway and MessageConsumeGateway instances are attached to AppContext
         // Instance capture the params (the instances) will be attached to AppContext
         ArgumentCaptor<ContextAwareComponent> argumentCaptor = ArgumentCaptor.forClass(ContextAwareComponent.class);
         // Check attachComponent is called 2 times with 2 instances and capture the instances
@@ -106,7 +106,7 @@ public class ApiGatewayTest {
         var capturedValues = argumentCaptor.getAllValues();
         // Check captured instances
         assertTrue(capturedValues.stream().anyMatch(component -> component.getClass().equals(HttpGateway.class)));
-        assertTrue(capturedValues.stream().anyMatch(component -> component.getClass().equals(MessageReceiveGateway.class)));
+        assertTrue(capturedValues.stream().anyMatch(component -> component.getClass().equals(MessageConsumeGateway.class)));
     }
 
     @Test
@@ -121,7 +121,7 @@ public class ApiGatewayTest {
 
         verify(mockKafkaProducer).onClose();
         verify(mockHttpGateway).stop();
-        verify(mockMessageReceiveGateway).stop();
+        verify(mockMessageConsumeGateway).stop();
         verify(mockDeferredMap).clear();
         verify(mockAppContext).stop();
     }

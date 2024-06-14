@@ -7,10 +7,10 @@ import org.joo.promise4j.Deferred;
 
 import java.util.Map;
 
-public class MessageReceiveGateway extends MessageReceiveGatewayBaseComponent {
+public class MessageConsumeGateway extends MessageConsumeGatewayBaseComponent {
     private final Map<String, Deferred<Message, Exception>> deferredMap;
 
-    public MessageReceiveGateway(String gatewayName, Map<String, Deferred<Message, Exception>> deferredMap) {
+    public MessageConsumeGateway(String gatewayName, Map<String, Deferred<Message, Exception>> deferredMap) {
         super(gatewayName);
         this.deferredMap = deferredMap;
     }

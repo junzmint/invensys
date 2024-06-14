@@ -11,13 +11,13 @@ import lombok.Setter;
 
 import java.util.Optional;
 
-abstract class MessageReceiveGatewayBaseComponent extends NonameComponentLifecycle implements ContextAwareComponent {
+abstract class MessageConsumeGatewayBaseComponent extends NonameComponentLifecycle implements ContextAwareComponent {
     private final String gatewayName;
     @Setter
     @Getter(AccessLevel.PROTECTED)
     private GridgoContext context;
 
-    protected MessageReceiveGatewayBaseComponent(String gatewayName) {
+    protected MessageConsumeGatewayBaseComponent(String gatewayName) {
         this.gatewayName = gatewayName;
     }
 

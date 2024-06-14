@@ -21,14 +21,14 @@ public class MessageReceiveGatewayLoggerTest {
     @BeforeEach
     void setUp() {
         mockLogger = mock(Logger.class);
-        MessageReceiveGatewayLogger.setLogger(mockLogger); // Add a setter in MessageReceiveGatewayLogger for testing
+        MessageConsumeGatewayLogger.setLogger(mockLogger); // Add a setter in MessageConsumeGatewayLogger for testing
         mockDeferred = mock(Deferred.class);
     }
 
     @Test
     void testLogHttpRespond() {
         String message = "Test message";
-        MessageReceiveGatewayLogger.logHttpRespond(message, mockDeferred);
+        MessageConsumeGatewayLogger.logHttpRespond(message, mockDeferred);
 
         ArgumentCaptor<Marker> markerCaptor = ArgumentCaptor.forClass(Marker.class);
         ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
