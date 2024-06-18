@@ -1,4 +1,4 @@
-package processor.component.database;
+package database;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

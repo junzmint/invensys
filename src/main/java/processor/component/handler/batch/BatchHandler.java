@@ -1,7 +1,7 @@
 package processor.component.handler.batch;
 
-import processor.component.database.DatabaseConnector;
-import processor.component.database.DatabaseQueryExecutor;
+import database.DatabaseConnector;
+import database.DatabaseQueryExecutor;
 
 import java.sql.Connection;
 import java.util.ArrayList;

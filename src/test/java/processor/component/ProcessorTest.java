@@ -1,13 +1,13 @@
 package processor.component;
 
+import database.DatabaseConnector;
+import database.DatabaseQueryExecutor;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import processor.component.database.DatabaseConnector;
-import processor.component.database.DatabaseQueryExecutor;
 import processor.component.disruptor.producer.BatchEventProducer;
 import processor.component.disruptor.producer.InventoryEventProducer;
 import processor.component.disruptor.producer.MessageEventProducer;

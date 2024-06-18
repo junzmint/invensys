@@ -1,4 +1,4 @@
-package processor.component.database;
+package database;
 
 import processor.component.ProcessorLogger;
 

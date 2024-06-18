@@ -1,10 +1,10 @@
 package other.performance_test;
 
 import com.google.gson.Gson;
+import database.DatabaseConnector;
+import database.DatabaseQueryExecutor;
 import lombok.Getter;
 import lombok.Setter;
-import processor.component.database.DatabaseConnector;
-import processor.component.database.DatabaseQueryExecutor;
 
 import java.io.FileWriter;
 import java.io.IOException;

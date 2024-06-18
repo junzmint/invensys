@@ -1,12 +1,12 @@
 package processor.component.handler.batch;
 
+import database.DatabaseConnector;
+import database.DatabaseQueryExecutor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import processor.component.database.DatabaseConnector;
-import processor.component.database.DatabaseQueryExecutor;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;

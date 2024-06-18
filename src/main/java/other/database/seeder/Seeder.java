@@ -1,8 +1,8 @@
 package other.database.seeder;
 
-import processor.component.database.DatabaseConnector;
-import processor.component.database.DatabaseLogger;
-import processor.component.database.DatabaseQueryExecutor;
+import database.DatabaseConnector;
+import database.DatabaseLogger;
+import database.DatabaseQueryExecutor;
 
 import java.io.IOException;
 import java.sql.Connection;

@@ -1,4 +1,4 @@
-package processor.component.database;
+package database;
 
 import lombok.Setter;
 import org.slf4j.Logger;

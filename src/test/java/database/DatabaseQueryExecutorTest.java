@@ -1,5 +1,6 @@
-package processor.component.database;
+package database;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -50,7 +51,7 @@ public class DatabaseQueryExecutorTest {
             dropDatabaseMethod.setAccessible(true);
 
             // Execute the method
-            assertDoesNotThrow(() -> dropDatabaseMethod.invoke(databaseQueryExecutor, "testDB"));
+            Assertions.assertDoesNotThrow(() -> dropDatabaseMethod.invoke(databaseQueryExecutor, "testDB"));
 
             // Verify that the SQL statement was prepared and executed
             verify(mockConnection).prepareStatement("DROP DATABASE IF EXISTS testDB");
@@ -74,7 +75,7 @@ public class DatabaseQueryExecutorTest {
             dropDatabaseMethod.setAccessible(true);
 
             // Execute the method and verify that no exception is thrown
-            assertDoesNotThrow(() -> dropDatabaseMethod.invoke(databaseQueryExecutor, "testDB"));
+            Assertions.assertDoesNotThrow(() -> dropDatabaseMethod.invoke(databaseQueryExecutor, "testDB"));
 
             // Verify logging
             ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
@@ -95,7 +96,7 @@ public class DatabaseQueryExecutorTest {
             createDatabaseMethod.setAccessible(true);
 
             // Execute the method
-            assertDoesNotThrow(() -> createDatabaseMethod.invoke(databaseQueryExecutor, "testDB"));
+            Assertions.assertDoesNotThrow(() -> createDatabaseMethod.invoke(databaseQueryExecutor, "testDB"));
 
             // Verify that the SQL statement was prepared and executed
             verify(mockConnection).prepareStatement("CREATE DATABASE testDB");
@@ -119,7 +120,7 @@ public class DatabaseQueryExecutorTest {
             createDatabaseMethod.setAccessible(true);
 
             // Execute the method and verify that no exception is thrown
-            assertDoesNotThrow(() -> createDatabaseMethod.invoke(databaseQueryExecutor, "testDB"));
+            Assertions.assertDoesNotThrow(() -> createDatabaseMethod.invoke(databaseQueryExecutor, "testDB"));
 
             // Verify logging
             ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);

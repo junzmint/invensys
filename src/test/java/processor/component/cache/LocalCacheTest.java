@@ -1,10 +1,10 @@
 package processor.component.cache;
 
+import database.DatabaseQueryExecutor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.slf4j.Marker;
-import processor.component.database.DatabaseQueryExecutor;
 
 import java.util.HashMap;
 import java.util.Map;

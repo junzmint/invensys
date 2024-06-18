@@ -1,7 +1,7 @@
 package processor.component;
 
-import processor.component.database.DatabaseConnector;
-import processor.component.database.DatabaseQueryExecutor;
+import database.DatabaseConnector;
+import database.DatabaseQueryExecutor;
 import processor.component.disruptor.consumer.BatchEventConsumer;
 import processor.component.disruptor.consumer.ClearEventConsumer;
 import processor.component.disruptor.consumer.InventoryEventConsumer;

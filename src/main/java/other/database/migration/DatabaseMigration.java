@@ -1,8 +1,8 @@
 package other.database.migration;
 
-import processor.component.database.DatabaseConnector;
-import processor.component.database.DatabaseConstants;
-import processor.component.database.DatabaseQueryExecutor;
+import database.DatabaseConnector;
+import database.DatabaseConstants;
+import database.DatabaseQueryExecutor;
 
 import java.io.IOException;
 import java.sql.Connection;
