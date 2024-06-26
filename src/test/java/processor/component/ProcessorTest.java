@@ -140,7 +140,7 @@ public class ProcessorTest {
         processor.start();
 
         verify(mockInventoryHandler).start(anyLong(), anyLong());
-        verify(mockConsumer).run(anyLong(), any(Duration.class));
+        verify(mockConsumer).run(any(), any(Duration.class));
     }
 
     @Test
