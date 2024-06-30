@@ -75,11 +75,13 @@ these two flows can be processed concurrently, to optimize performance and ensur
 ## Detail: System design model diagram
 
 ![invensys-detail](image/DetailInventoryModel.png)
+
 Applying LMAX disruptor and ZeroMQ, this diagram was created.
 
 ## Processor node: Recovery model
 
 ![invensys-proccesor-recovery](image/RecoveryProcessor.png)
+
 When the system restarts or crashes, the processor node queries the inventory database to find the current `maxOffset`
 value. This `maxOffset` value identifies the latest event that the system successfully processed before the failure
 occurred. This ensures that the system can continue processing from the exact position it left off, avoiding
@@ -233,6 +235,18 @@ during testing. These bottlenecks may affect the system's ability to handle sudd
 
 These limitations need to be addressed to improve the system's performance and reliability, ensure that the system can
 meet increasingly high business requirements and provide the best user experience.
+
+# Read more:
+
+- [Arcturus — Inventory Processing System](https://engineering.tiki.vn/arcturus-inventory-processing-system/)
+- [The LMAX Architecture](https://martinfowler.com/articles/lmax.html)
+- [LMAX Disruptor: High performance alternative to bounded queues for exchanging data between concurrent threads](https://lmax-exchange.github.io/disruptor/disruptor.html)
+- [CPU Cache - Martin Thompson](https://mechanical-sympathy.blogspot.com/2013/02/cpu-cache-flushing-fallacy.html)
+- [LMAX Disruptor Blogs and Articles](https://github.com/LMAX-Exchange/disruptor/wiki/Blogs-And-Articles)
+- [Mechanical Sympathy in Software engineering (Vietnamese) - Nam Vu](https://batnamv.medium.com/t%C3%ACm-hi%E1%BB%83u-v%E1%BB%81-kh%C3%A1i-ni%E1%BB%87m-mechanical-sympathy-v%C3%A0-b%E1%BB%99-th%C6%B0-vi%E1%BB%87n-lmax-disruptor-4d553dc7fa55)
+- [Memory Ordering at Compile Time - Jeff Preshing](https://preshing.com/20120625/memory-ordering-at-compile-time/)
+- [An Introduction to Lock-Free Programming - Jeff Preshing](https://preshing.com/20120612/an-introduction-to-lock-free-programming/)
+ 
 
 
 
