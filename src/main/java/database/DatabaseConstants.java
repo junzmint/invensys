@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class DatabaseConstants {
     private static final Properties DatabaseProps;
-    private static String configFilePath = "config/processor/database.properties";
+    private static String configFilePath = "config/database/database.properties";
 
     static {
         DatabaseProps = new Properties();

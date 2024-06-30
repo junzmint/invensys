@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 
 public class DatabaseConstantsTest {
 
-    private static final String TEST_CONFIG_FILE_PATH = "config/processor/example.database.properties";
+    private static final String TEST_CONFIG_FILE_PATH = "config/database/example.database.properties";
 
     @BeforeAll
     static void setUp() throws IOException {

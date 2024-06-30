@@ -40,7 +40,7 @@ build/
 ### Config ###
 config/api_gateway/api_gateway.properties
 config/processor/processor.properties
-config/processor/database.properties
+config/database/database.properties
 
 ### File generate ###
 src/main/java/other/performance_test/test_data
