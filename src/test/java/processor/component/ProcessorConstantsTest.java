@@ -61,7 +61,7 @@ public class ProcessorConstantsTest {
 
     @Test
     void testGetCacheStatLogAfter() {
-        assertEquals(Long.valueOf(30), ProcessorConstants.getCacheStatLogAfter());
+        assertEquals(Long.valueOf(60), ProcessorConstants.getCacheStatLogAfter());
     }
 
     @Test
