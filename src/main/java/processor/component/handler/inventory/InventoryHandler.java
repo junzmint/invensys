@@ -17,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 public class InventoryHandler {
     private static final String DEFERRED_ERROR = "DEFERRED_ERROR";
     private static final String MSG_BODY_ERROR = "MSG_BODY_ERROR";
+    private static final String ORDER_EXCEED_LIMIT = "ORDER_EXCEED_LIMIT";
+    private static final int ORDER_LIMIT = 20;
 
     private final LocalCache localCache;
 
@@ -133,6 +135,13 @@ public class InventoryHandler {
             this.messageEventProducer.onData(corrId, replyTo, MSG_BODY_ERROR);
             return;
         }
+
+        if (inventoryRequest.skuList.size() > ORDER_LIMIT) {
+            // reply produce
+            this.messageEventProducer.onData(corrId, replyTo, ORDER_EXCEED_LIMIT);
+            return;
+        }
+
         switch (inventoryRequest.type) {
             case "order":
                 this.order(inventoryRequest, corrId, replyTo);

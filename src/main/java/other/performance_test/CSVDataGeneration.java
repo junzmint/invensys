@@ -37,7 +37,7 @@ public class CSVDataGeneration {
         Random random = new Random();
         List<Map<String, Long>> data = new ArrayList<>();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             // get 10 random skuIds
             Collections.shuffle(skuIds);
             List<String> skuIdsTen = skuIds.subList(0, 10);
