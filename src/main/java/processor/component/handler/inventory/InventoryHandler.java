@@ -136,7 +136,7 @@ public class InventoryHandler {
             return;
         }
 
-        if (inventoryRequest.skuList.size() > ORDER_LIMIT) {
+        if (inventoryRequest.type.equals("order") && inventoryRequest.skuList.size() > ORDER_LIMIT) {
             // reply produce
             this.messageEventProducer.onData(corrId, replyTo, ORDER_EXCEED_LIMIT);
             return;
