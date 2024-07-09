@@ -56,12 +56,12 @@ public class ProcessorConstantsTest {
 
     @Test
     void testGetCacheInitRecords() {
-        assertEquals(Long.valueOf(5000), ProcessorConstants.getCacheInitRecords());
+        assertEquals(Long.valueOf(10000), ProcessorConstants.getCacheInitRecords());
     }
 
     @Test
     void testGetCacheStatLogAfter() {
-        assertEquals(Long.valueOf(300), ProcessorConstants.getCacheStatLogAfter());
+        assertEquals(Long.valueOf(30), ProcessorConstants.getCacheStatLogAfter());
     }
 
     @Test

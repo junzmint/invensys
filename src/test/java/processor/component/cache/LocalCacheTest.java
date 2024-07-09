@@ -28,7 +28,7 @@ public class LocalCacheTest {
         mockDatabaseQueryExecutor = mock(DatabaseQueryExecutor.class);
         mockScheduler = mock(ScheduledExecutorService.class);
 
-        cache = new LocalCache(100L);
+        cache = new LocalCache(10000L);
 
         // Inject the mocks using reflection
         var fieldDatabaseQueryExecutor = LocalCache.class.getDeclaredField("databaseQueryExecutor");
