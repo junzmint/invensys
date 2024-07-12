@@ -124,8 +124,8 @@ function done(summary, latency, requests)
         total_responses = total_responses + thread_responses
         local line = string.format("%d,%d,%d\n", id, thread_requests, thread_responses)
         result_file:write(line)
-        local msg = "Thread %d made %d requests and got %d responses"
-        print(msg:format(id, thread_requests, thread_responses))
+--         local msg = "Thread %d made %d requests and got %d responses"
+--         print(msg:format(id, thread_requests, thread_responses))
     end
 
     result_file:close()
