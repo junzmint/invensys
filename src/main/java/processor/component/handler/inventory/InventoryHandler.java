@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import processor.component.ProcessorLogger;
 import processor.component.cache.LocalCache;
-import processor.component.disruptor.producer.BatchEventProducer;
-import processor.component.disruptor.producer.MessageEventProducer;
+import processor.component.queue.producer.BatchEventProducer;
+import processor.component.queue.producer.MessageEventProducer;
 
 import java.util.HashMap;
 import java.util.Map;

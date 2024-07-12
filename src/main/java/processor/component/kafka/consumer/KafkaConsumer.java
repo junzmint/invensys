@@ -9,7 +9,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.header.Header;
-import processor.component.disruptor.producer.InventoryEventProducer;
+import processor.component.queue.producer.InventoryEventProducer;
 
 import java.time.Duration;
 import java.util.List;

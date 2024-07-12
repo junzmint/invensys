@@ -2,27 +2,24 @@ package processor.component;
 
 import database.DatabaseConnector;
 import database.DatabaseQueryExecutor;
-import processor.component.disruptor.consumer.BatchEventConsumer;
-import processor.component.disruptor.consumer.ClearEventConsumer;
-import processor.component.disruptor.consumer.InventoryEventConsumer;
-import processor.component.disruptor.consumer.MessageEventConsumer;
-import processor.component.disruptor.event.batch.BatchEventFactory;
-import processor.component.disruptor.event.inventory.InventoryEventFactory;
-import processor.component.disruptor.event.message.MessageEventFactory;
-import processor.component.disruptor.producer.BatchEventProducer;
-import processor.component.disruptor.producer.InventoryEventProducer;
-import processor.component.disruptor.producer.MessageEventProducer;
-import processor.component.disruptor.ringbuffer.BatchRingBuffer;
-import processor.component.disruptor.ringbuffer.InventoryRingBuffer;
-import processor.component.disruptor.ringbuffer.MessageRingBuffer;
 import processor.component.handler.batch.BatchHandler;
 import processor.component.handler.inventory.InventoryHandler;
 import processor.component.handler.message.MessageHandler;
 import processor.component.kafka.consumer.KafkaConsumer;
 import processor.component.kafka.consumer.KafkaConsumerConfig;
+import processor.component.queue.consumer.BatchEventConsumer;
+import processor.component.queue.consumer.InventoryEventConsumer;
+import processor.component.queue.consumer.MessageEventConsumer;
+import processor.component.queue.event.batch.BatchEvent;
+import processor.component.queue.event.inventory.InventoryEvent;
+import processor.component.queue.event.message.MessageEvent;
+import processor.component.queue.producer.BatchEventProducer;
+import processor.component.queue.producer.InventoryEventProducer;
+import processor.component.queue.producer.MessageEventProducer;
 
 import java.sql.Connection;
 import java.time.Duration;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class Processor {
     // constants
@@ -37,9 +34,12 @@ public class Processor {
 
     // components
     private final MessageEventProducer messageEventProducer;
+    private final MessageEventConsumer messageEventConsumer;
     private final BatchEventProducer batchEventProducer;
+    private final BatchEventConsumer batchEventConsumer;
     private final InventoryHandler inventoryHandler;
     private final InventoryEventProducer inventoryEventProducer;
+    private final InventoryEventConsumer inventoryEventConsumer;
     private final MessageHandler messageHandler;
     private final BatchHandler batchHandler;
     private final KafkaConsumer consumer;
@@ -48,35 +48,43 @@ public class Processor {
     public Processor() {
         // message producer
         this.messageHandler = new MessageHandler();
-        this.messageEventProducer = new MessageEventProducer(new MessageRingBuffer(
-                new MessageEventFactory(),
-                1 << 14,
-                new MessageEventConsumer(this.messageHandler),
-                new ClearEventConsumer<>()
-        ).getRingBuffer());
+        ArrayBlockingQueue<MessageEvent> messageEventArrayBlockingQueue = new ArrayBlockingQueue<>(1 << 14);
+//        this.messageEventProducer = new MessageEventProducer(new MessageRingBuffer(
+//                new MessageEventFactory(),
+//                1 << 14,
+//                new MessageEventConsumer(this.messageHandler),
+//                new ClearEventConsumer<>()
+//        ).getRingBuffer());
+        this.messageEventProducer = new MessageEventProducer(messageEventArrayBlockingQueue);
+        this.messageEventConsumer = new MessageEventConsumer(messageEventArrayBlockingQueue, messageHandler);
 
         // batch producer
         this.batchHandler = new BatchHandler();
-        this.batchEventProducer = new BatchEventProducer(new BatchRingBuffer(
-                new BatchEventFactory(),
-                1 << 14,
-                new BatchEventConsumer(this.batchHandler),
-                new ClearEventConsumer<>()
-        ).getRingBuffer());
+        ArrayBlockingQueue<BatchEvent> batchEventArrayBlockingQueue = new ArrayBlockingQueue<>(1 << 14);
+//        this.batchEventProducer = new BatchEventProducer(new BatchRingBuffer(
+//                new BatchEventFactory(),
+//                1 << 14,
+//                new BatchEventConsumer(this.batchHandler),
+//                new ClearEventConsumer<>()
+//        ).getRingBuffer());
+        this.batchEventProducer = new BatchEventProducer(batchEventArrayBlockingQueue);
+        this.batchEventConsumer = new BatchEventConsumer(batchEventArrayBlockingQueue, batchHandler);
 
         // create an inventory handler
         this.inventoryHandler = new InventoryHandler(
                 CACHE_SIZE,
                 this.messageEventProducer,
                 this.batchEventProducer);
-
+        ArrayBlockingQueue<InventoryEvent> inventoryEventArrayBlockingQueue = new ArrayBlockingQueue<>(1 << 14);
         // inventory producer
-        this.inventoryEventProducer = new InventoryEventProducer(new InventoryRingBuffer(
-                new InventoryEventFactory(),
-                1 << 14,
-                new InventoryEventConsumer(inventoryHandler),
-                new ClearEventConsumer<>()
-        ).getRingBuffer());
+//        this.inventoryEventProducer = new InventoryEventProducer(new InventoryRingBuffer(
+//                new InventoryEventFactory(),
+//                1 << 14,
+//                new InventoryEventConsumer(inventoryHandler),
+//                new ClearEventConsumer<>()
+//        ).getRingBuffer());
+        this.inventoryEventProducer = new InventoryEventProducer(inventoryEventArrayBlockingQueue);
+        this.inventoryEventConsumer = new InventoryEventConsumer(inventoryEventArrayBlockingQueue, inventoryHandler);
 
         // kafka consumer config
         KafkaConsumerConfig config = new KafkaConsumerConfig(
@@ -102,6 +110,14 @@ public class Processor {
         databaseQueryExecutor.close();
         // inventory start action
         this.inventoryHandler.start(CACHE_INIT_RECORDS, CACHE_STAT_LOG_AFTER);
+        // start queue consumer
+        Thread messageEventThread = new Thread(this.messageEventConsumer);
+        Thread batchEventThread = new Thread(this.batchEventConsumer);
+        Thread inventoryEventThread = new Thread(this.inventoryEventConsumer);
+
+        messageEventThread.start();
+        batchEventThread.start();
+        inventoryEventThread.start();
         // run consumer
         this.consumer.run(maxOffset, Duration.ofMillis(100));
     }
@@ -109,11 +125,8 @@ public class Processor {
     public void stop() {
         // clear components
         this.consumer.close();
-        this.inventoryEventProducer.close();
         this.inventoryHandler.close();
-        this.batchEventProducer.close();
         this.batchHandler.close();
-        this.messageEventProducer.close();
         this.messageHandler.close();
     }
 }
