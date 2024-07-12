@@ -44,7 +44,7 @@ class BatchEventConsumerTest {
         batchEventConsumer.onEvent(mockEvent, 0, true);
 
         // Verify that the batchHandler's handle method was called with the correct parameters
-        verify(mockBatchHandler, times(1)).handle(eq(eventType), eq(offset), eq(batch));
+        verify(mockBatchHandler, times(1)).handle(eq(eventType), eq(offset), eq(batch), eq(true));
     }
 
     @Test
@@ -63,7 +63,7 @@ class BatchEventConsumerTest {
         batchEventConsumer.onEvent(mockEvent, 0, true);
 
         // Verify that the batchHandler's handle method was called with the correct parameters
-        verify(mockBatchHandler, times(1)).handle(eq(eventType), eq(offset), eq(null));
+        verify(mockBatchHandler, times(1)).handle(eq(eventType), eq(offset), eq(null), eq(true));
     }
 }
 

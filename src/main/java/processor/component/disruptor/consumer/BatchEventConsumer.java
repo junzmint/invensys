@@ -13,6 +13,6 @@ public class BatchEventConsumer implements EventHandler<BatchEvent> {
 
     @Override
     public void onEvent(BatchEvent event, long sequence, boolean endOfBatch) {
-        this.batchHandler.handle(event.getType(), event.getOffset(), event.getBatch());
+        this.batchHandler.handle(event.getType(), event.getOffset(), event.getBatch(), endOfBatch);
     }
 }

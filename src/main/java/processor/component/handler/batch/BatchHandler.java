@@ -5,22 +5,32 @@ import database.DatabaseQueryExecutor;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class BatchHandler {
+    private final Map<String, Long> batchEventBatch;
     private DatabaseQueryExecutor databaseQueryExecutor;
 
     public BatchHandler() {
         DatabaseConnector databaseConnector = DatabaseConnector.databaseConnectorFactory();
         Connection databaseConnection = databaseConnector.databaseConnect();
         this.databaseQueryExecutor = new DatabaseQueryExecutor(databaseConnection);
+
+        this.batchEventBatch = new HashMap<>();
     }
 
-    public void handle(String type, Long offset, Map<String, Long> batch) {
+    public void handle(String type, Long offset, Map<String, Long> batch, Boolean endOfBatch) {
         switch (type) {
             case "order":
-                this.databaseQueryExecutor.updateInventoryTable(batch);
-                this.databaseQueryExecutor.updateOffsetTable("MaxOffset", offset);
+//                this.databaseQueryExecutor.updateInventoryTable(batch);
+                this.batchEventBatch.putAll(batch);
+                
+                if (endOfBatch) {
+                    this.databaseQueryExecutor.updateOffsetTable("MaxOffset", offset);
+                    this.databaseQueryExecutor.updateInventoryTable(batchEventBatch);
+                    this.batchEventBatch.clear();
+                }
                 break;
             case "insert":
                 this.databaseQueryExecutor.insertInventoryTable(batch);
@@ -41,5 +51,6 @@ public class BatchHandler {
 
     public void close() {
         this.databaseQueryExecutor = null;
+        this.batchEventBatch.clear();
     }
 }
