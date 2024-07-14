@@ -48,7 +48,7 @@ public class Processor {
     public Processor() {
         // message producer
         this.messageHandler = new MessageHandler();
-        ArrayBlockingQueue<MessageEvent> messageEventArrayBlockingQueue = new ArrayBlockingQueue<>(1 << 14);
+        ArrayBlockingQueue<MessageEvent> messageEventArrayBlockingQueue = new ArrayBlockingQueue<>(1 << 12);
 //        this.messageEventProducer = new MessageEventProducer(new MessageRingBuffer(
 //                new MessageEventFactory(),
 //                1 << 14,
@@ -60,7 +60,7 @@ public class Processor {
 
         // batch producer
         this.batchHandler = new BatchHandler();
-        ArrayBlockingQueue<BatchEvent> batchEventArrayBlockingQueue = new ArrayBlockingQueue<>(1 << 14);
+        ArrayBlockingQueue<BatchEvent> batchEventArrayBlockingQueue = new ArrayBlockingQueue<>(1 << 13);
 //        this.batchEventProducer = new BatchEventProducer(new BatchRingBuffer(
 //                new BatchEventFactory(),
 //                1 << 14,
@@ -75,7 +75,7 @@ public class Processor {
                 CACHE_SIZE,
                 this.messageEventProducer,
                 this.batchEventProducer);
-        ArrayBlockingQueue<InventoryEvent> inventoryEventArrayBlockingQueue = new ArrayBlockingQueue<>(1 << 14);
+        ArrayBlockingQueue<InventoryEvent> inventoryEventArrayBlockingQueue = new ArrayBlockingQueue<>(1 << 13);
         // inventory producer
 //        this.inventoryEventProducer = new InventoryEventProducer(new InventoryRingBuffer(
 //                new InventoryEventFactory(),
