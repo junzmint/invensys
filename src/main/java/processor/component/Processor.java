@@ -50,7 +50,7 @@ public class Processor {
         this.messageHandler = new MessageHandler();
         this.messageEventProducer = new MessageEventProducer(new MessageRingBuffer(
                 new MessageEventFactory(),
-                1 << 14,
+                1 << 12,
                 new MessageEventConsumer(this.messageHandler),
                 new ClearEventConsumer<>()
         ).getRingBuffer());
@@ -59,7 +59,7 @@ public class Processor {
         this.batchHandler = new BatchHandler();
         this.batchEventProducer = new BatchEventProducer(new BatchRingBuffer(
                 new BatchEventFactory(),
-                1 << 14,
+                1 << 13,
                 new BatchEventConsumer(this.batchHandler),
                 new ClearEventConsumer<>()
         ).getRingBuffer());
@@ -73,7 +73,7 @@ public class Processor {
         // inventory producer
         this.inventoryEventProducer = new InventoryEventProducer(new InventoryRingBuffer(
                 new InventoryEventFactory(),
-                1 << 14,
+                1 << 13,
                 new InventoryEventConsumer(inventoryHandler),
                 new ClearEventConsumer<>()
         ).getRingBuffer());
